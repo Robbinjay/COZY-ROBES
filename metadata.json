@@ -1,0 +1,6 @@
+{
+  "name": "CozyCorobes",
+  "description": "Wrap yourself in everyday comfort with soft, cozy heated robes designed for slow mornings, chilly evenings, work-from-home days, and everything in between.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
