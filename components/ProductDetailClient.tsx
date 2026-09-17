@@ -80,7 +80,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
   };
 
   const handleAddToCart = () => {
-    addToCart(product, product.colors[0]?.name || '', 'Standard', selectedBundle);
+    addToCart(product, product.colors[0]?.name || '', 'Standard', isCozyRobe ? selectedBundle : 1);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -154,34 +154,39 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
             </div>
 
             <h1 className="font-serif text-4xl sm:text-[44px] font-bold text-[#2B2623] mb-4 tracking-tight leading-[1.1]">
-              The CozyCo Robe
+              {product.name}
             </h1>
             <p className="text-[15px] text-[#5C554F] leading-[1.6] max-w-[95%]">
-              A sherpa-lined robe with seven adjustable heat levels and 50&quot; × 70&quot; full-body coverage — so you can turn the thermostat down and stay warm anyway.
+              {product.description}
             </p>
 
             {/* Price block */}
             <div className="flex items-center gap-4 mt-6">
               <span className="font-serif text-[38px] font-bold text-[#2B2623] leading-none">
-                $119.00
+                ${product.price.toFixed(2)}
               </span>
-              <span className="text-lg text-[#8C8278] line-through decoration-1 font-medium">
-                $279.99
-              </span>
-              <span className="bg-[#EAE1D3] text-[#2B2623] text-[11px] font-bold px-3 py-1.5 rounded-full tracking-wide">
-                Save $160.99
-              </span>
+              {product.compareAtPrice && (
+                <span className="text-lg text-[#8C8278] line-through decoration-1 font-medium">
+                  ${product.compareAtPrice.toFixed(2)}
+                </span>
+              )}
+              {product.compareAtPrice && (
+                <span className="bg-[#EAE1D3] text-[#2B2623] text-[11px] font-bold px-3 py-1.5 rounded-full tracking-wide">
+                  Save ${(product.compareAtPrice - product.price).toFixed(2)}
+                </span>
+              )}
             </div>
           </div>
 
-          <div className="py-2">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="h-px bg-[#D9D0C3] flex-1"></div>
-              <span className="text-[11px] font-bold uppercase tracking-widest text-[#2B2623]">
-                BUY MORE - SAVE MORE
-              </span>
-              <div className="h-px bg-[#D9D0C3] flex-1"></div>
-            </div>
+          {isCozyRobe && (
+            <div className="py-2">
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <div className="h-px bg-[#D9D0C3] flex-1"></div>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[#2B2623]">
+                  BUY MORE - SAVE MORE
+                </span>
+                <div className="h-px bg-[#D9D0C3] flex-1"></div>
+              </div>
 
             {/* Bundle Selector */}
             <div className="space-y-3">
@@ -269,6 +274,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
               })}
             </div>
           </div>
+          )}
 
           <div className="pt-2">
             <button
