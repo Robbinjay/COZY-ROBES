@@ -65,7 +65,7 @@ export async function POST(req: Request) {
         html: `<h2>Thank you for your order!</h2>
                <p>Hi ${customerInfo.firstName}, we have received your order and are getting it ready for shipment.</p>
                ${customerHtml}
-               <p>If you selected Bank Transfer, Crypto, or Revolut, our team will contact you shortly with payment instructions.</p>`,
+               <p>Our team will contact you shortly with instructions to complete your payment via ${paymentMethod.label}.</p>`,
       });
     } else {
       console.log('Skipping email dispatch: Zoho credentials not found in environment.');

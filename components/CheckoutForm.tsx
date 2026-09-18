@@ -23,9 +23,6 @@ export default function CheckoutForm() {
     postalCode: '',
     country: 'United Kingdom',
     phone: '',
-    cardNumber: '',
-    cardExp: '',
-    cardCvc: '',
   });
 
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'express' | 'international'>('standard');
@@ -271,36 +268,21 @@ export default function CheckoutForm() {
             </label>
           </div>
 
-          {paymentMethod === 'credit_card' && (
-            <div className="pt-4 border-t border-[#EAE3D9] space-y-4 animate-fadeIn">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#2B2623] mb-1">Card Number *</label>
-                <div className="relative">
-                  <input type="text" required={paymentMethod === 'credit_card'} value={formData.cardNumber} onChange={(e) => setFormData({ ...formData, cardNumber: e.target.value })} className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-2.5 pl-9 text-xs text-[#2B2623] focus:outline-none focus:border-[#8C6A54]" />
-                  <CreditCard className="w-4 h-4 text-[#8C6A54] absolute left-3 top-1/2 -translate-y-1/2" />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2B2623] mb-1">Expiration (MM/YY) *</label>
-                  <input type="text" required={paymentMethod === 'credit_card'} value={formData.cardExp} onChange={(e) => setFormData({ ...formData, cardExp: e.target.value })} className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-2.5 text-xs text-[#2B2623] focus:outline-none focus:border-[#8C6A54]" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#2B2623] mb-1">Security Code (CVC) *</label>
-                  <input type="text" required={paymentMethod === 'credit_card'} value={formData.cardCvc} onChange={(e) => setFormData({ ...formData, cardCvc: e.target.value })} className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-2.5 text-xs text-[#2B2623] focus:outline-none focus:border-[#8C6A54]" />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {paymentMethod !== 'credit_card' && (
-             <div className="p-4 bg-[#FAF8F5] border border-[#EAE3D9] rounded-sm flex items-start gap-3 mt-4 animate-fadeIn text-[#5C554F] text-xs">
-               <Info className="w-4 h-4 text-[#8C6A54] shrink-0 mt-0.5" />
-               <p>
-                 You will receive an email immediately after placing your order containing instructions on how to complete your payment via {paymentMethod === 'bank_transfer' ? 'Bank Transfer' : paymentMethod === 'crypto' ? 'Crypto' : 'Revolut'}.
-               </p>
-             </div>
-          )}
+          <div className="p-4 bg-[#FAF8F5] border border-[#EAE3D9] rounded-sm flex items-start gap-3 mt-4 animate-fadeIn text-[#5C554F] text-xs">
+            <Info className="w-4 h-4 text-[#8C6A54] shrink-0 mt-0.5" />
+            <p>
+              You will receive an email immediately after placing your order containing instructions on how to complete your payment via{' '}
+              <strong className="text-[#2B2623]">
+                {paymentMethod === 'credit_card'
+                  ? 'Credit or Debit Card'
+                  : paymentMethod === 'bank_transfer'
+                  ? 'Bank Transfer'
+                  : paymentMethod === 'crypto'
+                  ? 'Crypto Currency'
+                  : 'Revolut'}
+              </strong>.
+            </p>
+          </div>
         </div>
       </div>
 
