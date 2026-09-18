@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { PRODUCTS } from '@/lib/store-data';
 import ProductDetailClient from '@/components/ProductDetailClient';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { getProductSchema } from '@/lib/seo';
+import { getProductSchema, getBreadcrumbSchema } from '@/lib/seo';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -24,21 +24,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!product) {
     return {
-      title: 'Product Not Found',
+      title: 'Product Not Found | CozyCorobes',
     };
   }
 
   const appUrl = process.env.APP_URL || 'https://cozyrobe.co.uk';
+  const metaTitle = `${product.name} | Heated Wearable Robe & Loungewear UK | CozyCorobes`;
+  const metaDesc = product.description.slice(0, 155);
 
   return {
-    title: `${product.name} – ${product.subtitle}`,
-    description: product.description.slice(0, 155),
+    title: metaTitle,
+    description: metaDesc,
     alternates: {
       canonical: `/products/${product.slug}`,
     },
     openGraph: {
-      title: `${product.name} | CozyCorobes`,
-      description: product.subtitle,
+      title: metaTitle,
+      description: metaDesc,
       url: `${appUrl}/products/${product.slug}`,
       images: [
         {
@@ -64,6 +66,12 @@ export default async function ProductPage({ params }: Props) {
 
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
   const productSchema = getProductSchema(product);
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Shop All', url: '/shop' },
+    { name: product.name, url: `/products/${product.slug}` },
+  ];
+  const breadcrumbSchema = getBreadcrumbSchema(breadcrumbItems);
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen py-8 sm:py-12">
@@ -73,6 +81,11 @@ export default async function ProductPage({ params }: Props) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        />
+        {/* Schema.org Breadcrumbs structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
 
         <Breadcrumbs

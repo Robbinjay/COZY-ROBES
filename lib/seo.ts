@@ -71,6 +71,41 @@ export function getProductSchema(product: Product) {
         '@type': 'Organization',
         name: 'CozyCorobes',
       },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'GB',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 30,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: product.price >= 100 ? '0.00' : '3.99',
+          currency: 'GBP',
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'GB',
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: {
+            '@type': 'QuantitativeValue',
+            minValue: 0,
+            maxValue: 1,
+            unitCode: 'DAY',
+          },
+          transitTime: {
+            '@type': 'QuantitativeValue',
+            minValue: 2,
+            maxValue: 4,
+            unitCode: 'DAY',
+          },
+        },
+      },
     },
   };
 
@@ -85,6 +120,46 @@ export function getProductSchema(product: Product) {
   }
 
   return schema;
+}
+
+export function getCollectionSchema(title: string, description: string, slug: string, products: Product[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: title,
+    description: description,
+    url: `${SITE_URL}/collections/${slug}`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: products.map((prod, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${SITE_URL}/products/${prod.slug}`,
+        name: prod.name,
+        image: prod.images[0]?.startsWith('http') ? prod.images[0] : `${SITE_URL}${prod.images[0]}`,
+      })),
+    },
+  };
+}
+
+export function getCatalogSchema(products: Product[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'CozyCorobes Heated Loungewear Catalog',
+    description: 'Explore our full range of electric heated robes, wearable heated blankets, and cozy winter accessories.',
+    url: `${SITE_URL}/shop`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: products.map((prod, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${SITE_URL}/products/${prod.slug}`,
+        name: prod.name,
+        image: prod.images[0]?.startsWith('http') ? prod.images[0] : `${SITE_URL}${prod.images[0]}`,
+      })),
+    },
+  };
 }
 
 export function getBreadcrumbSchema(items: { name: string; url: string }[]) {

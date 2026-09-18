@@ -37,8 +37,8 @@ export const PRODUCTS: Product[] = [
     id: 'prod-cozyco-pillow',
     slug: 'cozyco-pillow',
     name: 'CozyCo Cloud Pillow',
-    subtitle: 'All Sleep Positions | Stays Cool All Night | Aligns Your Spine',
-    tagline: 'Engineered to deliver perfect head and neck support, keeping you comfortable all night.',
+    subtitle: 'Cooling Memory Foam Pillow | Ergonomic Cervical Spine Support',
+    tagline: 'Engineered with cooling memory foam to deliver perfect cervical spine support and all-night pressure relief.',
     price: 39.99,
     compareAtPrice: 59.99,
     rating: 4.8,
@@ -50,46 +50,47 @@ export const PRODUCTS: Product[] = [
     images: [
       '/images/cozyco_cloud_pillow.png',
     ],
-    description: 'The CozyCo Cloud Pillow is designed for all sleep positions, stays cool at night, and perfectly aligns your spine. Wake up feeling refreshed and without neck pain.',
+    description: 'The CozyCo Cloud Pillow is an ergonomic cooling memory foam pillow designed for side, back, and stomach sleepers. Featuring breathable heat-dissipating airflow channels and a silky hypoallergenic bamboo blend cover, it cradles your neck to eliminate morning stiffness and keep you pleasantly cool from bedtime to dawn.',
     features: [
-      '🛌 Supports All Sleep Positions: Side, back, and stomach sleepers',
-      '❄️ Stays Cool at Night: Breathable cooling fabric technology',
-      '🦴 Aligns Your Spine: Ergonomic design reduces neck and back pain',
-      'Premium Memory Foam: Adapts to your unique shape',
-      'Machine Washable Cover: Easy to remove and clean'
+      '🛌 Ergonomic Cervical Spine Alignment: Relieves pressure on neck, shoulders, and upper back',
+      '❄️ Advanced Cooling Airflow Channels: Regulates temperature to prevent overheating and night sweats',
+      '🌙 Supports All Sleep Positions: Optimal contours for side sleepers, back sleepers, and stomach sleepers',
+      '☁️ High-Density Adaptive Memory Foam: Retains structural shape night after night without sagging',
+      '🌿 Hypoallergenic Bamboo Washable Cover: Naturally dust-mite resistant, breathable, and machine washable'
     ],
     specs: [
-      { label: 'Material', value: 'Premium Cooling Memory Foam' },
-      { label: 'Cover', value: 'Hypoallergenic Bamboo Blend' },
-      { label: 'Dimensions', value: 'Standard / Queen' },
-      { label: 'Care Instructions', value: 'Machine wash cover cold, air dry' }
+      { label: 'Material', value: 'High-Density Adaptive Cooling Memory Foam Core' },
+      { label: 'Cover Fabric', value: 'Hypoallergenic Bamboo-Viscose Breathable Blend' },
+      { label: 'Dimensions', value: '60 cm x 40 cm x 12 cm (Standard / Queen)' },
+      { label: 'Care Instructions', value: 'Machine wash outer cover cold; spot clean memory foam core' },
+      { label: 'Firmness Level', value: 'Medium-Plush Adaptive Support' },
     ],
     howItWorks: [
-      'Unbox your pillow and let it expand for 24 hours.',
-      'Place on your bed and enjoy the perfect alignment.',
-      'Easily remove the cover for washing when needed.'
+      'Unbox your pillow and allow 24 hours for the compressed memory foam to fully expand.',
+      'Slip on the included cooling bamboo cover and rest your head in the gentle cervical contour.',
+      'Enjoy restorative spinal alignment and cool, uninterrupted sleep.',
     ],
     careInstructions: [
-      'Remove outer cover and machine wash on cold.',
-      'Do not machine wash the inner memory foam core.',
-      'Spot clean memory foam with mild detergent if necessary.'
+      'Unzip and remove the bamboo outer cover for cold machine washing.',
+      'Do not machine wash or soak the internal memory foam core.',
+      'Spot clean memory foam with a damp cloth and mild soap if needed; air dry away from direct sunlight.'
     ],
     colors: [
-      { name: 'White', hex: '#FFFFFF', inStock: true }
+      { name: 'Pure Cloud White', hex: '#FFFFFF', inStock: true }
     ],
     sizes: ['Standard / Queen'],
     variants: [
-      { id: 'ccp-white-std', name: 'White / Standard', colorName: 'White', colorHex: '#FFFFFF', size: 'Standard / Queen', inStock: true, sku: 'CCP-WHT-STD' }
+      { id: 'ccp-white-std', name: 'Pure Cloud White / Standard', colorName: 'Pure Cloud White', colorHex: '#FFFFFF', size: 'Standard / Queen', inStock: true, sku: 'CCP-WHT-STD' }
     ],
     inStock: true,
-    shippingNote: 'In stock. Dispatches via Royal Mail Tracked within 24 hours.',
+    shippingNote: 'In stock in our UK warehouse. Dispatches via Royal Mail Tracked within 24 hours.',
   },
   {
     id: 'prod-cozy-co-robes',
     slug: 'cozy-co-robes',
     name: 'The Cozy Co. Robe',
     subtitle: 'Oversized 50" x 70" Heated Wearable Blanket with 7 Heat Settings',
-    tagline: 'An oversized wearable cocoon of deep sherpa warmth, 7 precision heat settings, and full-body coverage.',
+    tagline: 'The UK’s premier electric heated robe and oversized wearable blanket with 7 heat levels and deep cloud sherpa warmth.',
     price: 89.00,
     compareAtPrice: 119.00,
     rating: 4.9,
@@ -113,41 +114,43 @@ export const PRODUCTS: Product[] = [
       '/images/products/cozy-co-robe/img_12.png',
     ],
     description:
-      'Experience true cold-weather sanctuary with The Cozy Co. Robe. Generously cut in an oversized 50” x 70” wearable silhouette, this ultra-plush wearable heated blanket wraps you from shoulders to ankles in deep cloud sherpa and velvety fleece. Powered by advanced carbon-fiber micro-elements across the chest, shoulders, back, and dual front pockets, it delivers 7 customizable warmth levels at the touch of a button. Machine washable, whisper-quiet, and energy-efficient for working from home or relaxing in the evening.',
+      'Experience true cold-weather sanctuary with The Cozy Co. Robe — the UK’s favorite electric heated robe and wearable heated blanket. Generously cut in an oversized 50” x 70” (127 cm x 178 cm) silhouette, this ultra-plush wearable throw wraps you from shoulders to ankles in deep cloud sherpa and velvety 320 GSM micro-fleece. Powered by safe low-voltage carbon-fiber micro-conductors across the chest, shoulders, lower lumbar, and dual deep front pockets, it delivers 7 customizable heat settings at the touch of a button. Machine washable, whisper-quiet, and energy-efficient for working from home or evening unwinding.',
     features: [
-      '7 Adjustable Heat Levels: Fine-tune your warmth from subtle ambient comfort (Level 1 / 35°C) to intense restorative heat (Level 7 / 55°C)',
-      'Oversized 50" x 70" (127 cm x 178 cm) Full-Body Coverage: Comfortably fits heights 5’0” to 6’4” (XS to 3XL) with complete ankle coverage when seated',
-      'High-Loft Cloud Sherpa Interior: Traps and circulates radiant body heat naturally even when powered off',
-      'Targeted Multi-Zone Heat: Flexible carbon micro-wires warm shoulders, upper back, lower lumbar, and dual deep front pockets',
-      'Detachable Backlit LED Controller: Ergonomic remote with selectable 2, 4, or 8-hour auto safety shut-off',
-      '100% Machine Washable: Simply unplug the quick-release magnetic cord and wash on a gentle cold cycle',
-      'UK 3-Pin Fused Low-Voltage Power: Safe 12V DC system with 9.5-foot cord, low EMF, and UKCA & CE electrical safety compliance',
+      '🔥 7 Precision Heat Settings: Fine-tune your temperature from gentle ambient comfort (Level 1 / 35°C) to restorative deep heat (Level 7 / 55°C)',
+      '🛋️ Oversized 50" x 70" (127 cm x 178 cm) Full-Body Coverage: Comfortably drapes heights 5’0” to 6’4” (XS to 3XL) with complete ankle coverage when seated',
+      '☁️ 320 GSM Velvet Fleece & High-Loft Sherpa: Traps radiant body heat naturally even when powered down',
+      '⚡ Low-Voltage DC Carbon-Fiber Elements: Flexible, undetectable heating micro-wires with low EMF and UKCA & CE electrical compliance',
+      '🧤 Multi-Zone Warmth: Simultaneous heating across shoulders, upper back, lower lumbar, and dual heated front pockets',
+      '🎛️ Backlit LED Remote Controller: Ergonomic handheld control with selectable 2, 4, or 8-hour auto safety shut-off timer',
+      '🧼 100% Machine Washable: Detachable quick-release magnetic power harness with waterproof silicone safety cap',
+      '🇬🇧 UK 3-Pin Fused Low-Voltage Power: 9.5-foot power cord provides total lounging freedom around your living room or home office',
     ],
     specs: [
-      { label: 'Dimensions', value: '50 inches x 70 inches (127 cm x 178 cm) Oversized Silhouette' },
-      { label: 'Fit Range', value: 'One Size Fits Most (Unisex XS to 3XL, Heights 5’0” to 6’4”)' },
-      { label: 'Heat Settings', value: '7 Digital Levels (35°C / 95°F to 55°C / 131°F)' },
-      { label: 'Shell Fabric', value: '320 GSM High-Density Micro-Plush Velvet Fleece' },
-      { label: 'Lining Fabric', value: '280 GSM Deep-Loft Cloud Sherpa Fleece' },
-      { label: 'Heating Elements', value: 'Flexible ultra-thin carbon-fiber micro-conductors (Low EMF)' },
-      { label: 'Power Supply', value: 'UK 3-Pin Fused Wall Plug (220–240V AC to 12V DC low voltage)' },
-      { label: 'Cord Length', value: '9.5 ft (2.9 m) with quick-disconnect magnetic safety breakaway' },
-      { label: 'Auto Shut-Off', value: 'Selectable 2-hour, 4-hour, or 8-hour automatic shut-off timer' },
-      { label: 'Care & Wash', value: 'Machine wash cold on gentle cycle; line dry or tumble dry low' },
-      { label: 'Warranty', value: '1-Year UK Quality & Safety Warranty' },
+      { label: 'Dimensions', value: '50 inches x 70 inches (127 cm x 178 cm) Oversized Wrap Cut' },
+      { label: 'Fit Range', value: 'Unisex One Size Fits Most (Heights 5’0” to 6’4”, Sizes XS to 3XL)' },
+      { label: 'Heat Settings', value: '7 Digital Temperature Levels (35°C / 95°F to 55°C / 131°F)' },
+      { label: 'Shell Material', value: '320 GSM High-Density Micro-Plush Velvet Fleece' },
+      { label: 'Lining Material', value: '280 GSM Deep-Loft Cloud Sherpa Fleece' },
+      { label: 'Heating Elements', value: 'Ultra-thin flexible carbon-fiber micro-conductors (Low EMF)' },
+      { label: 'Power Supply', value: 'UK 3-Pin Fused Wall Plug (220–240V AC converted to safe 12V DC)' },
+      { label: 'Cord Length', value: '9.5 ft (2.9 m) with magnetic quick-breakaway safety coupling' },
+      { label: 'Safety Timer', value: 'Selectable 2-hour, 4-hour, or 8-hour automatic shut-off protection' },
+      { label: 'Care & Washing', value: 'Machine wash cold on delicate cycle; line dry or tumble dry low' },
+      { label: 'Certifications', value: 'UKCA, CE, RoHS certified for household electrical safety' },
+      { label: 'Warranty', value: '1-Year CozyCorobes UK Safety & Quality Warranty' },
     ],
     howItWorks: [
-      'Slip into the oversized robe and draw the generous hood or plush collar comfortably around your neck.',
-      'Connect the quick-release magnetic cord into the discreet interior waist port and plug the UK adapter into the wall.',
-      'Press the power button on the handheld backlit remote to cycle between 7 heat levels.',
-      'Feel enveloping, radiant warmth surround your shoulders, back, and hands in under 60 seconds.',
+      'Slip into the oversized wearable blanket robe and drape the generous hood or plush collar comfortably around your neck.',
+      'Connect the quick-release magnetic power lead into the discreet interior waist port and plug the UK adapter into the wall.',
+      'Press the power button on the backlit LED controller to choose between 7 customized temperature levels.',
+      'Feel enveloping, radiant warmth surround your chest, back, and hands in under 60 seconds.',
     ],
     careInstructions: [
-      'Always disconnect the power controller cord from the robe port before washing.',
-      'Ensure the protective waterproof garment cap is snapped over the port.',
-      'Machine wash on gentle or delicate cold cycle with mild detergent.',
-      'Do not use bleach, do not iron, and do not dry clean.',
-      'Line dry flat or tumble dry on low delicate heat. Make sure the connector is completely dry before re-connecting.',
+      'Always disconnect the power controller cord from the robe port before laundering.',
+      'Snap the integrated waterproof silicone garment cap firmly over the internal socket.',
+      'Machine wash on gentle or delicate cold cycle (max 30°C) with mild liquid detergent.',
+      'Do not use bleach, do not use fabric softeners, and never dry clean or iron.',
+      'Line dry flat or tumble dry on low delicate heat. Ensure the connector port is 100% dry before reconnecting power.',
     ],
     colors: [
       { name: 'Charcoal', hex: '#3E424B', inStock: true },
@@ -167,8 +170,8 @@ export const PRODUCTS: Product[] = [
     id: 'prod-cozy-glove',
     slug: 'cozy-glove',
     name: 'Cozy Glove',
-    subtitle: 'Warm hands, same sherpa feel.',
-    tagline: 'Keep your hands perfectly warm while working or relaxing.',
+    subtitle: 'Ultra-Soft Sherpa Fleece Lounge Gloves for Cold Hands',
+    tagline: 'Keep cold hands toasty while typing, reading, or relaxing with our plush sherpa fleece lounge gloves.',
     price: 7.99,
     compareAtPrice: 14.99,
     rating: 4.8,
@@ -180,40 +183,42 @@ export const PRODUCTS: Product[] = [
     images: [
       '/images/cozy_glove.png',
     ],
-    description: 'The Cozy Glove offers the same ultra-soft sherpa feel as our famous robes, tailored specifically to keep your hands warm without restricting movement.',
+    description: 'The Cozy Glove offers the same cloud-soft sherpa lining as our signature heated robes, tailored specifically to soothe cold hands during chilly mornings and remote work sessions. Breathable, stretchy, and luxuriously plush without restricting finger dexterity.',
     features: [
-      'Ultra-soft sherpa lining',
-      'Flexible fit for all hand sizes',
-      'Machine washable'
+      '🧤 High-Density Cloud Sherpa Lining: Traps natural body heat to warm cold fingers fast',
+      '💻 Work From Home Friendly: Flexible ergonomic fit allows effortless keyboard typing and tablet use',
+      '🌬️ Draft-Blocking Elastic Cuffs: Seals in warmth around wrists without tight constriction',
+      '🧺 Machine Washable: Easy care on gentle cold wash cycle',
     ],
     specs: [
-      { label: 'Material', value: 'Plush Sherpa Fleece' },
-      { label: 'Size', value: 'One Size Fits Most' }
+      { label: 'Material', value: 'Plush Sherpa & Thermal Micro-Fleece' },
+      { label: 'Size', value: 'Unisex Stretch One Size Fits Most' },
+      { label: 'Care Instructions', value: 'Machine wash cold delicate, air dry flat' },
     ],
     howItWorks: [
-      'Slip them on whenever your hands feel chilly.',
-      'Enjoy the immediate warmth of the sherpa lining.'
+      'Slip on the gloves whenever chilly room drafts or cold keyboards make your hands stiff.',
+      'Enjoy instant soothing thermal retention from the dual-layer fleece lining.',
     ],
     careInstructions: [
-      'Machine wash on gentle cold cycle.',
-      'Tumble dry low or air dry.'
+      'Machine wash on gentle cold cycle with similar colors.',
+      'Tumble dry on low delicate heat or air dry flat.',
     ],
     colors: [
-      { name: 'Classic Sherpa', hex: '#EBE4D8', inStock: true }
+      { name: 'Classic Sherpa Cream', hex: '#EBE4D8', inStock: true }
     ],
     sizes: ['One Size'],
     variants: [
-      { id: 'cg-os', name: 'Classic Sherpa / One Size', colorName: 'Classic Sherpa', colorHex: '#EBE4D8', size: 'One Size', inStock: true, sku: 'CG-SHERPA-OS' }
+      { id: 'cg-os', name: 'Classic Sherpa Cream / One Size', colorName: 'Classic Sherpa Cream', colorHex: '#EBE4D8', size: 'One Size', inStock: true, sku: 'CG-SHERPA-OS' }
     ],
     inStock: true,
-    shippingNote: 'In stock. Dispatches within 24 hours.',
+    shippingNote: 'In stock. Dispatches via Royal Mail Tracked within 24 hours.',
   },
   {
     id: 'prod-cozyco-foot-warmer',
     slug: 'cozyco-foot-warmer',
     name: 'CozyCo Foot Warmer',
-    subtitle: 'Heated pouch for under the desk.',
-    tagline: 'Say goodbye to cold feet while working or lounging.',
+    subtitle: 'Electric Heated Foot Warmer Pouch for Under Desk & Sofa',
+    tagline: 'Say goodbye to cold feet while working or lounging with this soothing, dual-foot electric heated pouch.',
     price: 19.99,
     compareAtPrice: 29.99,
     rating: 4.9,
@@ -225,35 +230,40 @@ export const PRODUCTS: Product[] = [
     images: [
       '/images/cozyco_foot_warmer.avif',
     ],
-    description: 'The CozyCo Foot Warmer is a heated pouch designed to keep your feet incredibly warm. Perfect for under the desk while working from home or while lounging on the couch.',
+    description: 'The CozyCo Foot Warmer is an electric heated foot warming pouch engineered to relieve ice-cold feet under your home office desk or on the couch. Featuring a spacious dual-foot sherpa pocket, fast 60-second warm-up, and safe low-voltage warmth, it delivers constant comforting heat so you can work and unwind in total comfort.',
     features: [
-      'Consistent, soothing heat',
-      'Spacious pouch fits both feet comfortably',
-      'Ultra-soft interior lining',
-      'Perfect for under-desk use'
+      '🔥 Fast Soothing Radiant Warmth: Rapid heating elements warm cold toes in under 60 seconds',
+      '👣 Spacious Dual-Foot Pocket: Roomy design accommodates up to UK Men’s Shoe Size 13',
+      '🛋️ Perfect Under Desk & Sofa Companion: Low profile fits neatly under work desks and coffee tables',
+      '☁️ Ultra-Plush Sherpa Interior: Soft, deep pile fleece provides cozy insulation even when powered off',
+      '🛡️ Overheat Protection & Auto Shut-Off: Built-in safety thermostat for complete peace of mind',
     ],
     specs: [
-      { label: 'Power', value: 'Electric Heated Core' },
-      { label: 'Material', value: 'Premium Plush Fleece' }
+      { label: 'Power Source', value: 'UK Fused Low-Voltage Electric Cord (Safe 12V DC)' },
+      { label: 'Interior Material', value: 'High-Loft Cloud Sherpa Fleece' },
+      { label: 'Exterior Fabric', value: 'High-Density Micro-Plush Velvet' },
+      { label: 'Dimensions', value: '38 cm x 35 cm x 20 cm' },
+      { label: 'Safety Feature', value: 'Automatic Safety Shut-Off Overheat Protection' },
     ],
     howItWorks: [
-      'Plug in the foot warmer and turn it on.',
-      'Slip both feet into the spacious pouch.',
-      'Enjoy consistent, soothing heat.'
+      'Place the foot warmer under your desk or in front of your sofa.',
+      'Plug into any standard UK wall outlet and switch on.',
+      'Slip both feet into the plush sherpa pouch and enjoy immediate soothing heat.',
     ],
     careInstructions: [
-      'Spot clean only.',
-      'Ensure device is unplugged before cleaning.'
+      'Unplug from power outlet before cleaning.',
+      'Removable inner fleece liner is machine washable on delicate cold cycle.',
+      'Spot clean outer shell with a slightly damp cloth.',
     ],
     colors: [
-      { name: 'Charcoal', hex: '#3E424B', inStock: true }
+      { name: 'Slate Charcoal', hex: '#3E424B', inStock: true }
     ],
-    sizes: ['One Size'],
+    sizes: ['One Size Fits All (Up to UK 13)'],
     variants: [
-      { id: 'cfw-os', name: 'Charcoal / One Size', colorName: 'Charcoal', colorHex: '#3E424B', size: 'One Size', inStock: true, sku: 'CFW-CHAR-OS' }
+      { id: 'cfw-os', name: 'Slate Charcoal / One Size', colorName: 'Slate Charcoal', colorHex: '#3E424B', size: 'One Size', inStock: true, sku: 'CFW-CHAR-OS' }
     ],
     inStock: true,
-    shippingNote: 'In stock. Dispatches within 24 hours.',
+    shippingNote: 'In stock in our UK facility. Dispatches via Royal Mail Tracked within 24 hours.',
   }
 ];
 
@@ -262,28 +272,28 @@ export const COLLECTIONS: Collection[] = [
     slug: 'heated-robes',
     title: 'Heated Robes & Wearables',
     subtitle: 'Advanced wearable heating technology tailored for personal comfort at home.',
-    description: 'Explore our flagship heated robes, heated poncho throws, and targeted warming garments designed to keep you toasty without heating the entire house.',
+    description: 'Explore our flagship electric heated robes, wearable heated blankets, and targeted warming garments designed to keep you toasty without heating the entire house.',
     heroImage: '/images/hero_heated_robe.jpg',
-    metaTitle: 'Heated Robes & Wearable Heated Blankets | CozyCorobes',
-    metaDescription: 'Shop premium electric heated robes and wearable warm blankets. Multi-zone safe carbon fiber heat, plush machine-washable fleece, and ultra-comfortable designs.',
+    metaTitle: 'Heated Robes UK & Wearable Heated Blankets | CozyCorobes',
+    metaDescription: 'Shop premium electric heated robes and wearable heated blankets in the UK. Multi-zone carbon-fiber heat, machine-washable sherpa fleece, and 7 heat settings.',
   },
   {
     slug: 'cozy-accessories',
     title: 'Cozy Accessories',
     subtitle: 'Thoughtful additions for ultimate home relaxation and cold-weather comfort.',
-    description: 'Complete your personal comfort sanctuary with heated bootie slippers, weighted calming heat wraps, and thermal sherpa socks.',
+    description: 'Complete your personal comfort sanctuary with electric heated foot warmers, cooling memory foam pillows, and thermal sherpa fleece gloves.',
     heroImage: '/images/bootie_slippers_1.jpg',
-    metaTitle: 'Cozy Home Accessories & Warmth Essentials | CozyCorobes',
-    metaDescription: 'Discover heated slippers, weighted neck heating pads, and cloud-soft lounge socks crafted for winter relaxation at home.',
+    metaTitle: 'Cozy Home Accessories, Heated Foot Warmers & Pillows | CozyCorobes',
+    metaDescription: 'Discover electric heated foot warmers, ergonomic cooling memory foam pillows, and plush sherpa lounge accessories crafted for winter relaxation at home.',
   },
   {
     slug: 'new-arrivals',
     title: 'New Arrivals',
     subtitle: 'The latest innovations in personal comfort, soft textures, and everyday warmth.',
-    description: 'Browse our newly released winter editions, seasonal colorways, and upgraded low-voltage heating technology.',
+    description: 'Browse our newly released winter comfort editions, seasonal colorways, and upgraded low-voltage carbon-fiber heating technology.',
     heroImage: '/images/featured_robe_studio.jpg',
-    metaTitle: 'New Heated Loungewear & Comfort Arrivals | CozyCorobes',
-    metaDescription: 'Check out the latest CozyCorobes collection featuring new colors, ergonomic upgrades, and the newest comfort essentials.',
+    metaTitle: 'New Heated Loungewear & Comfort Arrivals | CozyCorobes UK',
+    metaDescription: 'Check out the latest CozyCorobes collection featuring new colors, oversized wearable blankets, and modern cold-weather comfort essentials.',
   },
 ];
 
@@ -291,143 +301,211 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     category: 'Products',
     question: 'What is a heated robe?',
-    answer: 'A heated robe is a premium plush loungewear garment that incorporates flexible, low-voltage carbon fiber heating micro-elements safely embedded within the fabric. It provides gentle, even, radiant warmth directly to your body (back, chest, and pockets) so you stay comfortably warm without having to stay trapped under a traditional blanket.',
+    answer: 'A heated robe is a premium plush loungewear garment that incorporates flexible, low-voltage carbon-fiber heating micro-elements safely embedded within the fabric. It provides gentle, even, radiant warmth directly to your body (back, chest, and pockets) so you stay comfortably warm without having to stay trapped under a traditional blanket. Explore our flagship model: The Cozy Co. Robe.',
   },
   {
     category: 'Products',
     question: 'How does the heated robe work?',
-    answer: 'The robe is powered either by connecting to a standard UK wall outlet via our included 9-foot magnetic breakaway power cord (UK 3-pin fused plug) or by connecting to an optional 5V/12V USB power bank in the interior pocket. A soft-touch LED button on the lapel lets you choose between Low (40°C / 104°F), Medium (46°C / 115°F), or High (53°C / 128°F) heat settings with rapid warm-up in under 60 seconds.',
+    answer: 'The robe is powered by connecting to a standard UK wall outlet via our included 9.5-foot quick-breakaway magnetic power cord (UK 3-pin fused plug). A soft-touch backlit LED remote controller lets you easily cycle between 7 digital temperature settings ranging from 35°C (gentle ambient warmth) to 55°C (deep soothing heat), reaching target temperature in under 60 seconds.',
   },
   {
     category: 'Care Instructions',
     question: 'How do I wash the heated robe?',
-    answer: 'It is 100% machine washable! Simply unplug and remove the power adapter and cord from the inside zippered pocket, ensure the protective waterproof rubber cap is snapped over the garment cord connector, and wash on gentle/delicate cycle with cold water. Tumble dry on low heat for 15-20 minutes or lay flat to air dry completely before reconnecting power.',
+    answer: 'It is 100% machine washable! Simply unplug the quick-release magnetic cord, ensure the protective waterproof silicone cap is snapped securely over the garment socket, and wash on a gentle cold cycle (30°C) with mild detergent. Tumble dry on low delicate heat or line dry flat. For detailed instructions, read our complete Washing & Care Guide.',
   },
   {
     category: 'Shipping',
     question: 'How long does UK shipping take?',
-    answer: 'All orders are dispatched within 1 to 2 business days from our UK fulfillment center. Standard delivery via Royal Mail Tracked 48 typically arrives in 2 to 4 business days (free on orders over £100). Expedited DPD Next Day delivery is also available at checkout for £6.99.',
+    answer: 'All orders are dispatched within 24 hours from our UK fulfillment center. Standard delivery via Royal Mail Tracked 48 typically arrives in 2 to 3 business days and is FREE on all orders over £100. Expedited delivery is also available at checkout. Learn more on our Shipping Policy page.',
   },
   {
     category: 'Products',
     question: 'What sizes are available, and how do I choose the right size?',
-    answer: 'We offer Small/Medium (S/M), Large/X-Large (L/XL), and a Cloud Oversized unisex fit. Because robes are designed for relaxed loungewear, our sizing is generous. If you prefer a snug fit, select your normal shirt size; if you love wrapping up with plenty of extra fabric, choose one size up or the Cloud Oversized option.',
+    answer: 'Our signature The Cozy Co. Robe features an oversized 50" x 70" (127 cm x 178 cm) unisex wrap cut designed to generously fit heights from 5’0” to 6’4” (XS to 3XL). The spacious drape ensures complete ankle coverage when curled up on the sofa or working at a desk.',
   },
   {
     category: 'Products',
     question: 'What colors are available?',
-    answer: 'The Cozy Heated Robe comes in our signature calming palette: Oatmeal Cream, Slate Charcoal, Heather Rose, and Forest Sage. All colorways use non-toxic, gentle fiber dyes that maintain their rich tone wash after wash.',
+    answer: 'The Cozy Co. Robe is available in three elegant home-decor tones: Charcoal, Blush Pink, and Cardinal. All fabrics use non-toxic, gentle dyes that preserve their rich hue and soft texture wash after wash.',
   },
   {
     category: 'Returns',
     question: 'What is your return policy?',
-    answer: 'We offer a 30-Day Happiness Guarantee. If your CozyCorobes robe is not the coziest item you have ever worn, you may return it within 30 days of delivery for a full refund or free size/color exchange. Items must be unwashed, clean, and in original packaging with all included cords.',
+    answer: 'We provide a 30-Day Cozy Trial. If your CozyCorobes item is not the warmest, softest loungewear piece you have ever owned, return it within 30 days of delivery for a full refund or free exchange. Check our Returns & Guarantee page for simple steps.',
   },
   {
     category: 'Orders',
     question: 'How do I contact customer support?',
-    answer: 'Our customer care team is available Monday through Friday from 9:00 AM to 5:00 PM GMT. Email us directly at support@cozyrobe.co.uk or fill out the form on our Contact page. We answer all inquiries within 24 business hours.',
+    answer: 'Our customer support specialists are based in the UK and available Monday through Friday from 9:00 AM to 5:00 PM GMT. Reach us at support@cozyrobe.co.uk or through our Contact page. We respond to every inquiry within 24 hours.',
   },
   {
     category: 'Products',
     question: 'Is the heated robe safe to sleep in?',
-    answer: 'Our heated robes include an integrated 2-hour automatic shut-off safety timer to prevent overheating and conserve power. The robe uses safe low-voltage DC technology with zero EMF radiation risk. While safe for lounging and resting, we recommend unplugging before deep overnight sleep as standard best practice for all heated garments.',
+    answer: 'Our electric heated robes feature built-in overheat protection and selectable automatic shut-off safety timers (2, 4, or 8 hours) with low EMF DC voltage. While perfectly safe for resting and sofa naps, we advise disconnecting before deep overnight sleep as standard best practice for all electrical heating garments.',
   },
 ];
 
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'guide-to-choosing-a-heated-robe',
-    title: 'The Ultimate Guide to Choosing the Right Heated Robe for Winter',
-    seoTitle: 'How to Choose a Heated Robe: The Ultimate Buyer’s Guide | CozyCorobes',
-    metaDescription: 'Discover what to look for when buying a heated robe: heating zones, safety certifications, fabric weight, cord vs battery, and machine-washability.',
-    excerpt: 'With colder months arriving, a heated robe is the ultimate home comfort upgrade. Here is everything you need to evaluate before purchasing your first wearable blanket.',
+    title: 'The Ultimate Guide to Choosing the Right Heated Robe for Winter in the UK',
+    seoTitle: 'How to Choose a Heated Robe: The Ultimate UK Buyer’s Guide | CozyCorobes',
+    metaDescription: 'Discover what to look for when buying an electric heated robe: carbon-fiber micro-wires, safety certifications, fabric GSM weight, and zone heating benefits.',
+    excerpt: 'With colder months arriving, an electric heated robe is the ultimate home comfort upgrade. Here is everything you need to evaluate before choosing the perfect wearable heated blanket.',
     coverImage: '/images/hero_heated_robe.jpg',
     author: 'Elena Vance, Home Comfort Specialist',
     publishedDate: '2026-01-14',
     updatedDate: '2026-02-10',
-    readingTime: '5 min read',
+    readingTime: '6 min read',
     category: 'Buying Guides',
     content: `
 ### Why Wearable Warmth is Replacing Traditional Space Heaters
-As energy costs rise and remote work remains a fixture of everyday life, more homeowners and renters are seeking efficient, targeted personal comfort. Instead of raising the central thermostat to heat empty hallways and unoccupied rooms, a heated robe delivers soothing, consistent warmth directly to your body core.
+As energy prices fluctuate across the UK and remote work remains part of everyday life, homeowners and renters are rethinking home heating. Instead of turning up the central boiler to heat empty corridors and vacant rooms, personal zone heating focuses gentle radiant warmth directly on your body. 
 
-### 1. Heating Element Technology & Safety
-When evaluating heated garments, never compromise on safety. Look for:
-- **Carbon Fiber Micro-Wires:** Unlike stiff legacy copper wire heating blankets from decades past, modern carbon fiber elements are thin, pliable, and virtually imperceptible to the touch.
-- **Low-Voltage DC Operation:** Modern heated robes operate on safe low-voltage (typically 12V or 5V), eliminating high-voltage AC hazards near your body.
-- **Automatic Shutoff Timers:** Essential to ensure peace of mind, automatically powering down the heating zones after 2 or 4 hours.
+An [electric heated robe](/collections/heated-robes) like [The Cozy Co. Robe](/products/cozy-co-robes) consumes a fraction of the electricity required by a 2,000W portable fan heater while delivering far superior comfort.
 
-### 2. Fabric Weight and Touch
-Electric heating is only half the formula. A robe should feel wonderfully plush even before you tap the power button. Look for high GSM (grams per square meter) fabrics—ideally 300+ GSM fleece or sherpa lining that retains ambient warmth naturally.
+---
 
-### 3. Machine Washability
-A robe worn around coffee, morning breakfasts, and living rooms must be easy to clean. Genuine high-quality robes feature detachable cord harnesses with waterproof silicone caps that withstand standard washing machine delicate cycles.
+### 1. Heating Element Technology: Carbon-Fiber Micro-Wires vs Copper Coils
+When comparing heated garments and electric throws, the internal heating element makes all the difference:
+- **Carbon-Fiber Micro-Wires:** Modern garments use microscopic carbon-fiber conductors that are supple, lightweight, and completely undetectable through the fleece. They distribute warmth evenly without creating concentrated hot spots.
+- **Low-Voltage DC Safety:** Always look for models that convert household 240V mains power into safe, low-voltage 12V DC power. This eliminates high-voltage hazards and ensures near-zero EMF emissions.
+- **Auto Shut-Off Safety Timers:** Reliable heated robes come equipped with automatic safety shut-off options (such as 2, 4, or 8 hours) to prevent overheating if you drift off during a cozy evening unwind.
 
-### Summary
-If you prioritize maximum versatility, choose a robe with multiple heat levels, deep heated front pockets, and an oversized wrap cut.
+---
+
+### 2. Fabric Weight, GSM, and Lining Textures
+Electric heating is only half the equation. A premium robe should feel wonderfully comforting and draft-resistant even before you power it on:
+- **High-Density Velvet Fleece (300+ GSM):** Acts as an insulating thermal barrier that retains body heat and shields against cold drafts.
+- **Cloud Sherpa Lining:** Traps warm air pockets close to the skin, creating an ultra-soft cocoon.
+- **Oversized Silhouette:** A generous 50" x 70" wrap cut ensures complete knee and ankle coverage when sitting on the sofa or working at a desk.
+
+---
+
+### 3. Machine Washability & Easy Care
+A robe worn daily during morning coffee and family breakfast must be effortless to clean. Look for:
+- Detachable quick-release magnetic power cords.
+- Built-in waterproof silicone caps that seal the garment terminal during washing.
+- Safe cold delicate machine washing capability. For step-by-step instructions, see our [Guide on How to Wash Heated Robes & Blankets](/blog/how-to-wash-heated-robes-blankets).
+
+---
+
+### 4. Complete Your Winter Comfort Sanctuary
+Pairing your heated robe with targeted accessories provides comprehensive warmth:
+- Warm chilly toes under your desk with the [CozyCo Foot Warmer](/products/cozyco-foot-warmer).
+- Protect cold hands while typing with [Cozy Glove sherpa loungewear gloves](/products/cozy-glove).
+- Rest your neck with the ergonomic [CozyCo Cloud Pillow](/products/cozyco-pillow).
+- Explore our full range in the [Cozy Accessories collection](/collections/cozy-accessories).
+
+---
+
+### Summary Checklist for Buyers
+When selecting your heated robe, ensure it offers:
+1. Multi-zone heat coverage (chest, lumbar back, and deep front pockets).
+2. At least 5–7 customizable heat settings.
+3. UKCA/CE certified UK 3-pin fused plug with low-voltage operation.
+4. Generous customer trial terms like our [30-Day Cozy Guarantee](/returns) and [Free UK Tracked Delivery](/shipping).
     `,
-    relatedProductSlugs: ['cozy-co-robes', 'cozyco-pillow', 'cozy-glove', 'cozyco-foot-warmer'],
+    relatedProductSlugs: ['cozy-co-robes', 'cozyco-foot-warmer', 'cozyco-pillow', 'cozy-glove'],
   },
   {
     slug: 'how-to-wash-heated-robes-blankets',
     title: 'How to Safely Wash and Care for Wearable Heated Robes & Blankets',
-    seoTitle: 'How to Wash a Heated Robe Safely (Step-by-Step Guide) | CozyCorobes',
-    metaDescription: 'Step-by-step instructions for machine washing, spot-cleaning, and drying your electric heated robe without damaging heating coils or fabric.',
-    excerpt: 'Learn the proper technique for laundering electric heated loungewear to preserve plush sherpa fibers and keep internal heating elements functioning flawlessly.',
+    seoTitle: 'How to Wash a Heated Robe Safely (Step-by-Step UK Guide) | CozyCorobes',
+    metaDescription: 'Step-by-step instructions for machine washing, drying, and spot cleaning your electric heated robe without damaging heating elements or sherpa fleece.',
+    excerpt: 'Learn the proper technique for laundering electric heated loungewear to preserve plush sherpa fibers and keep internal carbon heating elements functioning flawlessly.',
     coverImage: '/images/featured_robe_studio.jpg',
     author: 'Markus Lindqvist, Textile Care Director',
     publishedDate: '2026-01-28',
     updatedDate: '2026-02-18',
-    readingTime: '4 min read',
+    readingTime: '5 min read',
     category: 'Care & Maintenance',
     content: `
-### Yes, You Can Wash Your Heated Robe!
-One of the most frequent questions we receive is: *"Can I really put an electric heated garment into my washing machine?"*
-The answer is an emphatic **yes**, provided you follow three simple precautions.
+### Can You Really Machine Wash an Electric Heated Robe?
+One of the most common questions our support team receives is: *"Can I safely put an electric heated robe into a washing machine?"*
 
-### Step 1: Disconnect All Power Cables
-Before anything else, unplug the main wall adapter from your robe. Open the zippered inner pocket, disconnect the cord from the robe's female terminal port, and store the power cord safely in a dry drawer. Seal the rubber safety cap over the robe’s terminal.
+The answer is an emphatic **yes**! Modern heated garments like [The Cozy Co. Robe](/products/cozy-co-robes) are engineered with waterproof-sealed carbon-fiber elements and detachable electrical cords, making regular machine laundering simple and safe.
 
-### Step 2: Use Cold Water and Gentle Cycle
-- Always select **Cold Water** (never warm or hot, which can weaken internal wire coatings).
-- Use a mild liquid detergent. Never use powdered detergents or fabric softeners, as softeners leave a waxy film on microfiber fleece that reduces breathability and plushness.
-- Do not use bleach or bleach alternatives.
+---
 
-### Step 3: Proper Drying
-- **Tumble Dry Low:** You may tumble dry on delicate low heat for 15 to 20 minutes to restore loft.
-- **Air Dry Flat:** Hang or lay flat across a clean drying rack to let any residual moisture evaporate thoroughly.
-- **Never Iron:** Ironing will damage both the micro-fleece fibers and internal elements.
+### Step 1: Disconnect and Store All Power Cords
+Before laundering:
+1. Locate the quick-disconnect magnetic port inside the robe's interior pocket.
+2. Unplug the 9.5-foot power cable and remote controller and store them safely in a dry drawer.
+3. Snap the integrated waterproof silicone safety cap securely over the robe's socket. This creates a watertight seal that protects internal contacts during the wash cycle.
 
-By adhering to these simple steps, your CozyCorobes robe will maintain its cloud-like softness and reliable warmth for years.
+---
+
+### Step 2: Use Cold Water and a Gentle Cycle
+- **Water Temperature:** Always wash in cold water (maximum 30°C / 86°F). Hot water can degrade internal wire insulation and weaken fleece fibers over time.
+- **Detergent:** Use a mild liquid laundry detergent. Avoid powdered detergents that may not fully dissolve.
+- **Never Use Fabric Softeners:** Fabric softeners deposit a silicone coating over microfiber fleece, flattening the high-pile sherpa and reducing breathability.
+- **No Bleach:** Chlorine bleach will weaken the textile fibers and compromise safety seals.
+
+---
+
+### Step 3: Proper Drying for Maximum Sherpa Loft
+- **Tumble Dry Low:** You may place the robe in a tumble dryer on the lowest, delicate heat setting for 15 to 20 minutes to fluff the sherpa fleece.
+- **Air Dry Flat:** Lay the garment flat across a clean drying rack or clothes horse until it is 100% dry.
+- **Crucial Rule:** Never reconnect the power cable until the garment socket is completely dry to the touch.
+- **Never Iron or Dry Clean:** Commercial dry cleaning chemicals and hot irons will melt microfiber velvet and damage internal micro-wires.
+
+---
+
+### Routine Maintenance and Spot Cleaning
+For small spills, spot cleaning with a damp microfiber cloth and gentle soap is often all that is needed. When winter ends, store your robe folded in a breathable cotton storage bag alongside your [CozyCo Foot Warmer](/products/cozyco-foot-warmer) and [Cozy Gloves](/products/cozy-glove).
+
+Have questions about warranty coverage or fabric longevity? Check our [Frequently Asked Questions](/faq) or review our [30-Day Happiness Guarantee](/returns).
     `,
-    relatedProductSlugs: ['cozy-co-robes', 'cozyco-pillow', 'cozy-glove', 'cozyco-foot-warmer'],
+    relatedProductSlugs: ['cozy-co-robes', 'cozyco-foot-warmer', 'cozy-glove', 'cozyco-pillow'],
   },
   {
     slug: 'cozy-work-from-home-routine',
-    title: 'Creating the Ultimate Cozy Work-From-Home Winter Routine',
-    seoTitle: 'How to Build a Warm & Productive WFH Winter Routine | CozyCorobes',
-    metaDescription: 'Tips for staying focused, warm, and comfortable while working from home during cold winter days without spiking your heating bill.',
-    excerpt: 'Cold drafts, chilly fingers, and sluggish energy can derail your remote work productivity. Here is our design-led guide to a comfortable home office routine.',
+    title: 'Creating the Ultimate Cozy Work-From-Home Winter Routine in the UK',
+    seoTitle: 'Cozy Work From Home Winter Routine: Stay Warm & Save on Energy Bills | CozyCorobes',
+    metaDescription: 'Learn how to stay warm, focused, and productive while working from home during cold winter days using personal zone heating and ergonomic comfort essentials.',
+    excerpt: 'Cold drafts, chilly fingers, and high heating bills can derail your remote work productivity. Here is our design-led guide to staying warm and energized all winter.',
     coverImage: '/images/blog_winter_warmth.jpg',
     author: 'Elena Vance, Home Comfort Specialist',
     publishedDate: '2026-02-04',
     updatedDate: '2026-02-22',
-    readingTime: '4 min read',
+    readingTime: '5 min read',
     category: 'Lifestyle',
     content: `
-### The Challenge of Winter Remote Work
-When sitting at a desk for six to eight hours, your body’s metabolic rate drops. Feet turn ice-cold against flooring, shoulders tense against drafts, and typing with stiff fingers is uncomfortable.
+### The Challenge of Winter Remote Working
+Working from home during British winter comes with a unique set of comfort challenges. When sitting at a desk for extended periods, your body's metabolic circulation slows down. Floors feel icy against feet, shoulders tighten against drafty windows, and stiff hands make typing cumbersome.
 
-### 1. Zone Heating Over House Heating
-Rather than paying hundreds of pounds on soaring energy bills to heat empty rooms to 22°C all afternoon, zone heating allows you to keep the central thermostat at an economical 18°C while warming yourself personally. Slip on a heated robe on Low (40°C) for continuous, gentle lumbar and shoulder comfort.
+Instead of running central heating all day to warm an entire house, adopting a targeted personal heating strategy keeps you comfortably productive while keeping utility bills in check.
 
-### 2. Protect Your Feet
-Blood circulation to your extremities is the first thing that slows down when seated. Pairing heated slippers or high-density sherpa lounge socks with a small wooden footstool elevates your legs and keeps your toes toasty.
+---
 
-### 3. Scheduled Hydration Breaks
-Pair your warm loungewear with herbal teas—chamomile, ginger, and peppermint promote circulation and provide a comforting sensory ritual every two hours.
+### 1. Master Personal Zone Heating
+Central heating warms air volume, which quickly dissipates through drafty windows and uninsulated ceilings. In contrast, radiant zone heating warms your body directly:
+- Slip into [The Cozy Co. Robe](/products/cozy-co-robes) and set it to Level 2 or 3 for consistent, gentle lumbar and shoulder warmth throughout morning video calls.
+- By keeping your personal body temperature regulated, you can keep the household thermostat at an economical 18°C without feeling cold.
+- Discover all wearable options in our [Heated Robes collection](/collections/heated-robes).
+
+---
+
+### 2. Protect Your Extremities: Feet and Hands First
+Physiologically, blood flow to hands and feet is the first thing reduced when ambient temperatures drop:
+- Place the [CozyCo Foot Warmer](/products/cozyco-foot-warmer) under your desk. Its dual-foot heated pouch keeps toes pleasantly toasty even on cold hardwood or tile floors.
+- Slip on lightweight [Cozy Glove sherpa lounge gloves](/products/cozy-glove) to warm stiff fingers without hindering keyboard typing speed.
+- Browse more warming essentials in our [Cozy Accessories catalog](/collections/cozy-accessories).
+
+---
+
+### 3. Ergonomic Posture & Restorative Breaks
+Cold muscles are more susceptible to strain. Support your cervical spine and posture during long work hours:
+- Use the [CozyCo Cloud Pillow](/products/cozyco-pillow) for lumbar support during the afternoon or for neck relief when taking a 15-minute screen rest.
+- Take scheduled hydration breaks: hot ginger tea, peppermint, or warm lemon water stimulate blood circulation.
+- Step away from your desk every 90 minutes to stretch your hamstrings and shoulders.
+
+---
+
+### Summary: Your Winter Home Office Toolkit
+A warm, well-supported home workspace transforms cold winter mornings into cozy, highly productive workdays. Explore our [Full Catalog](/shop), check [UK delivery times](/shipping), and see why hundreds of remote professionals trust CozyCorobes for winter comfort.
     `,
-    relatedProductSlugs: ['cozy-co-robes', 'cozyco-pillow', 'cozy-glove', 'cozyco-foot-warmer'],
+    relatedProductSlugs: ['cozyco-foot-warmer', 'cozy-co-robes', 'cozy-glove', 'cozyco-pillow'],
   },
 ];

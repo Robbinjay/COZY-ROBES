@@ -130,6 +130,107 @@ export default function BlogPage() {
           ))}
         </div>
 
+        {/* Categories & Product Cross-Linking Section */}
+        <div className="mt-16 bg-white p-8 sm:p-10 rounded-sm border border-[#EAE3D9] shadow-xs">
+          <div className="max-w-3xl space-y-4">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#8C6A54]">
+              Expert Warmth & Home Comfort
+            </span>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2B2623]">
+              Looking for Wearable Comfort in the UK?
+            </h2>
+            <p className="text-sm text-[#5C554F] leading-relaxed">
+              Whether you are looking for energy-saving tips during cold winter months, advice on machine-washing your electric heated garments, or building a comfortable home office routine, our editors regularly update this guide.
+            </p>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-[#F0EBE1]">
+            <div className="space-y-2">
+              <h3 className="font-serif text-sm font-bold text-[#2B2623]">
+                Popular Products
+              </h3>
+              <ul className="text-xs space-y-2 text-[#5C554F]">
+                <li>
+                  <Link href="/products/cozy-co-robes" className="hover:text-[#8C6A54] underline">
+                    The Cozy Co. Robe (7 Heat Levels)
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/products/cozyco-foot-warmer" className="hover:text-[#8C6A54] underline">
+                    CozyCo Heated Foot Warmer
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/products/cozyco-pillow" className="hover:text-[#8C6A54] underline">
+                    CozyCo Cooling Memory Foam Pillow
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/products/cozy-glove" className="hover:text-[#8C6A54] underline">
+                    Cozy Glove Sherpa Mittens
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="font-serif text-sm font-bold text-[#2B2623]">
+                Collections
+              </h3>
+              <ul className="text-xs space-y-2 text-[#5C554F]">
+                <li>
+                  <Link href="/collections/heated-robes" className="hover:text-[#8C6A54] underline">
+                    Heated Robes & Wearable Blankets
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/collections/cozy-accessories" className="hover:text-[#8C6A54] underline">
+                    Cozy Home Accessories & Slippers
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/collections/new-arrivals" className="hover:text-[#8C6A54] underline">
+                    New Arrivals & Winter Editions
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/shop" className="hover:text-[#8C6A54] underline">
+                    Shop All Products
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="font-serif text-sm font-bold text-[#2B2623]">
+                Customer Help & Policies
+              </h3>
+              <ul className="text-xs space-y-2 text-[#5C554F]">
+                <li>
+                  <Link href="/faq" className="hover:text-[#8C6A54] underline">
+                    Frequently Asked Questions
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/shipping" className="hover:text-[#8C6A54] underline">
+                    UK Tracked 48 Delivery Times
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/returns" className="hover:text-[#8C6A54] underline">
+                    30-Day Cozy Trial & Returns
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about" className="hover:text-[#8C6A54] underline">
+                    About CozyCorobes
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
