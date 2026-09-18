@@ -188,6 +188,13 @@ export default function CartPageClient() {
           </span>
         </div>
 
+        {cartSubtotal < 89 && (
+          <div className="bg-[#FAF5EE] border border-[#E0D7C9] text-[#5C554F] p-3 rounded-sm text-[11px] text-center space-y-0.5">
+            <p className="font-semibold text-[#8C6A54]">Minimum Order: £89.00 (The Cozy Co. Robe price)</p>
+            <p>Add £{(89 - cartSubtotal).toFixed(2)} more to place your order</p>
+          </div>
+        )}
+
         <Link
           href="/checkout"
           className="w-full bg-[#2B2623] hover:bg-[#47403C] text-white py-3.5 px-4 rounded-sm font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"

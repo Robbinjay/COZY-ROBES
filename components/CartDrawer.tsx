@@ -190,6 +190,13 @@ export default function CartDrawer() {
                 </p>
               </div>
 
+              {cartSubtotal < 89 && (
+                <div className="bg-[#FAF5EE] border border-[#E0D7C9] text-[#5C554F] p-2.5 rounded-sm text-[11px] text-center space-y-0.5">
+                  <p className="font-semibold text-[#8C6A54]">Minimum Order: £89.00 (The Cozy Co. Robe price)</p>
+                  <p>Add £{(89 - cartSubtotal).toFixed(2)} more to checkout</p>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Link
                   href="/checkout"

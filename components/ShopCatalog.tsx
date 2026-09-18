@@ -114,7 +114,7 @@ export default function ShopCatalog({ initialProducts }: ShopCatalogProps) {
         <span>
           Showing <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'item' : 'items'}
         </span>
-        <span>Free UK delivery on all orders over £100</span>
+        <span>Free UK delivery on all orders over £150</span>
       </div>
 
       {/* Product Grid */}

@@ -83,7 +83,7 @@ export function getProductSchema(product: Product) {
         '@type': 'OfferShippingDetails',
         shippingRate: {
           '@type': 'MonetaryAmount',
-          value: product.price >= 100 ? '0.00' : '3.99',
+          value: product.price >= 150 ? '0.00' : '3.99',
           currency: 'GBP',
         },
         shippingDestination: {

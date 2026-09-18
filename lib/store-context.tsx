@@ -83,7 +83,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         }
         const savedConfig = localStorage.getItem(CONFIG_STORAGE_KEY);
         if (savedConfig) {
-          setConfig({ ...DEFAULT_STORE_CONFIG, ...JSON.parse(savedConfig) });
+          const parsed = JSON.parse(savedConfig);
+          // Migrate legacy £100 threshold to new £150 threshold
+          if (parsed?.shipping?.freeShippingThreshold === 100) {
+            parsed.shipping.freeShippingThreshold = 150;
+          }
+          if (parsed?.announcementBar?.text?.includes('100')) {
+            parsed.announcementBar.text = DEFAULT_STORE_CONFIG.announcementBar.text;
+          }
+          setConfig({ ...DEFAULT_STORE_CONFIG, ...parsed });
         }
         const savedOrders = localStorage.getItem(ORDERS_STORAGE_KEY);
         if (savedOrders) {

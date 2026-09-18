@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ShieldCheck, Lock, CreditCard, Wallet, Landmark, Bitcoin, Info } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
+import { PRODUCTS } from '@/lib/store-data';
 import { formatPrice } from '@/lib/utils';
 
 export default function CheckoutForm() {
@@ -31,12 +32,14 @@ export default function CheckoutForm() {
   const [paymentMethod, setPaymentMethod] = useState<'credit_card' | 'bank_transfer' | 'crypto' | 'revolut'>('credit_card');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Minimum Order Logic
-  const minimumOrderLimit = 100;
+  // Minimum Order Logic: strictly equal to the price of The Cozy Co. Robe (£89.00)
+  const cozyCoRobeProduct = PRODUCTS.find((p) => p.slug === 'cozy-co-robes');
+  const minimumOrderLimit = cozyCoRobeProduct ? cozyCoRobeProduct.price : 89.00;
   const isBelowMinimum = cartSubtotal < minimumOrderLimit;
 
-  // Free shipping over £100
-  const isFreeShipping = cartSubtotal >= 100;
+  // Free shipping over £150
+  const freeShippingThreshold = 150;
+  const isFreeShipping = cartSubtotal >= freeShippingThreshold;
 
   let shippingCost = 0;
   if (shippingMethod === 'standard') {
@@ -202,7 +205,7 @@ export default function CheckoutForm() {
                 <input type="radio" checked={shippingMethod === 'standard'} onChange={() => setShippingMethod('standard')} className="accent-[#2B2623]" />
                 <div>
                   <p className="text-xs font-bold text-[#2B2623]">Standard Delivery (2–4 Working Days)</p>
-                  <p className="text-[11px] text-[#736B63]">{isFreeShipping ? 'Free on orders over £100' : 'Standard flat rate'}</p>
+                  <p className="text-[11px] text-[#736B63]">{isFreeShipping ? 'Free on orders over £150' : 'Standard flat rate'}</p>
                 </div>
               </div>
               <span className="text-xs font-bold text-[#2B2623]">{isFreeShipping ? 'FREE' : '£3.99'}</span>
@@ -350,9 +353,24 @@ export default function CheckoutForm() {
         </div>
 
         {isBelowMinimum && (
-          <div className="bg-[#FFF4E5] border border-[#F5D0A9] text-[#A84A42] p-3 rounded-sm text-xs font-medium text-center">
-            Your subtotal is £{cartSubtotal.toFixed(2)}.<br/>
-            <strong>£100 minimum order required.</strong> Please add £{(minimumOrderLimit - cartSubtotal).toFixed(2)} to checkout.
+          <div className="bg-[#FAF5EE] border border-[#E0D7C9] text-[#2B2623] p-4 rounded-sm text-xs space-y-1.5 text-center shadow-xs">
+            <p className="font-bold text-[#8C6A54] uppercase tracking-wider text-[11px]">
+              Minimum Order Requirement
+            </p>
+            <p className="text-[#5C554F]">
+              Minimum order is <strong>{formatPrice(minimumOrderLimit)}</strong> (the price of The Cozy Co. Robe).
+            </p>
+            <p className="text-[#736B63]">
+              Your subtotal is <strong>{formatPrice(cartSubtotal)}</strong>. Please add <strong>{formatPrice(minimumOrderLimit - cartSubtotal)}</strong> to proceed.
+            </p>
+            <div className="pt-1">
+              <Link
+                href="/shop"
+                className="inline-block text-xs font-semibold text-[#8C6A54] hover:text-[#2B2623] underline underline-offset-4"
+              >
+                Browse Shop to Add Items &rarr;
+              </Link>
+            </div>
           </div>
         )}
 
@@ -360,10 +378,24 @@ export default function CheckoutForm() {
           id="checkout-place-order-btn"
           type="submit"
           disabled={isProcessing || isBelowMinimum}
-          className={`w-full text-white text-xs font-bold uppercase tracking-wider py-4 rounded-sm transition-colors flex items-center justify-center gap-2 shadow-xs \${isProcessing || isBelowMinimum ? 'bg-[#D9D0C3] text-[#FAF8F5] cursor-not-allowed' : 'bg-[#2B2623] hover:bg-[#47403C] cursor-pointer'}`}
+          style={{
+            backgroundColor: isProcessing || isBelowMinimum ? '#EAE3D9' : '#2B2623',
+            color: isProcessing || isBelowMinimum ? '#5C554F' : '#FFFFFF',
+          }}
+          className={`w-full appearance-none text-xs font-bold uppercase tracking-wider py-4 px-6 rounded-sm transition-all duration-200 flex items-center justify-center gap-2.5 shadow-sm select-none ${
+            isProcessing || isBelowMinimum
+              ? 'cursor-not-allowed border border-[#D9D0C3]'
+              : 'hover:!bg-[#47403C] hover:shadow-md active:scale-[0.99] cursor-pointer border border-[#2B2623]'
+          }`}
         >
-          <Lock className="w-3.5 h-3.5" />
-          <span>{isProcessing ? 'Processing Order...' : isBelowMinimum ? 'Minimum £100 Required' : `Place Order • \${formatPrice(grandTotal)}`}</span>
+          <Lock className="w-3.5 h-3.5 shrink-0" />
+          <span className="font-bold">
+            {isProcessing
+              ? 'Processing Order...'
+              : isBelowMinimum
+              ? `Minimum Order ${formatPrice(minimumOrderLimit)} Required`
+              : `Place Order • ${formatPrice(grandTotal)}`}
+          </span>
         </button>
 
         <div className="pt-2 text-center text-[11px] text-[#736B63] space-y-1">
