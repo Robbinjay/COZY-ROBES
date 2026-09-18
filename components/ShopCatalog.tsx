@@ -20,7 +20,6 @@ export default function ShopCatalog({ initialProducts }: ShopCatalogProps) {
     { label: 'All Items', value: 'all' },
     { label: 'Heated Robes', value: 'heated-robes' },
     { label: 'Cozy Accessories', value: 'cozy-accessories' },
-    { label: 'Comfort Wear', value: 'comfort-wear' },
   ];
 
   const filteredProducts = useMemo(() => {

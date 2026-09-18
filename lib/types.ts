@@ -33,7 +33,7 @@ export interface Product {
   compareAtPrice?: number;
   rating: number;
   reviewCount: number;
-  category: 'heated-robes' | 'cozy-accessories' | 'comfort-wear';
+  category: 'heated-robes' | 'cozy-accessories';
   featured: boolean;
   isNewArrival?: boolean;
   isBestSeller?: boolean;

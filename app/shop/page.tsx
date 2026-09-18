@@ -8,14 +8,14 @@ import { getCatalogSchema } from '@/lib/seo';
 import { ShieldCheck, Truck, RotateCcw, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Shop All Heated Robes & Comfort Wear UK | CozyCorobes',
+  title: 'Shop All Heated Robes & Cozy Accessories UK | CozyCorobes',
   description:
     'Explore the complete CozyCorobes collection of premium electric heated robes, wearable heated blankets, heated foot warmers, and cozy loungewear. Free UK delivery over £150.',
   alternates: {
     canonical: '/shop',
   },
   openGraph: {
-    title: 'Shop All Heated Robes & Comfort Wear UK | CozyCorobes',
+    title: 'Shop All Heated Robes & Cozy Accessories UK | CozyCorobes',
     description:
       'Explore the complete CozyCorobes collection of premium electric heated robes, wearable heated blankets, and accessories.',
     type: 'website',
