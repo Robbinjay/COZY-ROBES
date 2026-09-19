@@ -181,10 +181,13 @@ function CheckoutFormContent({ customer }: { customer: ReturnType<typeof useStor
         label: paymentLabels[paymentMethod]
       };
 
+      const orderId = `CCR-${Math.floor(100000 + Math.random() * 900000)}`;
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          orderId,
           customerInfo: {
             ...formData,
             postcode: formData.postalCode // Map for API
@@ -254,7 +257,7 @@ function CheckoutFormContent({ customer }: { customer: ReturnType<typeof useStor
           shippingCost,
           tax: estimatedTax,
           total: grandTotal,
-        });
+        }, orderId);
         clearCart();
         router.push('/order-confirmation?orderId=' + created.id);
       } else {

@@ -5,6 +5,7 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
     const { 
+      orderId,
       customerInfo, 
       shippingMethod, 
       paymentMethod, 
@@ -31,6 +32,7 @@ export async function POST(req: Request) {
 
     const customerHtml = `
       <h3>Order Details</h3>
+      <p><strong>Order Number:</strong> ${orderId || 'N/A'}</p>
       <p><strong>Name:</strong> ${customerInfo.firstName} ${customerInfo.lastName}</p>
       <p><strong>Email:</strong> ${customerInfo.email}</p>
       <p><strong>Phone:</strong> ${customerInfo.phone}</p>
@@ -53,7 +55,7 @@ export async function POST(req: Request) {
       await transporter.sendMail({
         from: `"CozyCorobes Store" <${process.env.ZOHO_EMAIL}>`,
         to: adminEmail,
-        subject: `New Order Received - ${customerInfo.firstName} ${customerInfo.lastName}`,
+        subject: `New Order Received #${orderId || ''} - ${customerInfo.firstName} ${customerInfo.lastName}`,
         html: `<h2>New Order Received!</h2>${customerHtml}`,
       });
 
@@ -61,9 +63,9 @@ export async function POST(req: Request) {
       await transporter.sendMail({
         from: `"CozyCorobes" <${process.env.ZOHO_EMAIL}>`,
         to: customerInfo.email,
-        subject: 'Your CozyCorobes Order Confirmation',
+        subject: `Order Confirmation #${orderId || ''} - CozyCorobes`,
         html: `<h2>Thank you for your order!</h2>
-               <p>Hi ${customerInfo.firstName}, we have received your order and are getting it ready for shipment.</p>
+               <p>Hi ${customerInfo.firstName}, we have received your order <strong>#${orderId || ''}</strong> and are getting it ready for shipment.</p>
                ${customerHtml}
                <p>Our team will contact you shortly with instructions to complete your payment via ${paymentMethod.label}.</p>`,
       });

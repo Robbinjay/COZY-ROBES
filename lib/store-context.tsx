@@ -27,7 +27,7 @@ interface StoreContextType {
   resetConfig: () => void;
 
   orders: Order[];
-  createOrder: (orderData: Omit<Order, 'id' | 'date' | 'status'>) => Order;
+  createOrder: (orderData: Omit<Order, 'id' | 'date' | 'status'>, orderId?: string) => Order;
   findOrder: (orderId: string, email: string) => Order | undefined;
   lookupOrder: (orderId: string, email?: string) => Order | undefined;
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
@@ -337,10 +337,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const createOrder = (orderData: Omit<Order, 'id' | 'date' | 'status'>): Order => {
+  const createOrder = (orderData: Omit<Order, 'id' | 'date' | 'status'>, orderId?: string): Order => {
     const newOrder: Order = {
       ...orderData,
-      id: `CCR-${Math.floor(100000 + Math.random() * 900000)}`,
+      id: orderId || `CCR-${Math.floor(100000 + Math.random() * 900000)}`,
       date: new Date().toISOString().split('T')[0],
       status: 'Order Placed',
       carrier: 'Royal Mail',

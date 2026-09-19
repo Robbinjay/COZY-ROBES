@@ -156,9 +156,9 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
     if (colorName.toLowerCase().includes('charcoal')) {
       setSelectedImage(0);
     } else if (colorName.toLowerCase().includes('pink') || colorName.toLowerCase().includes('blush')) {
-      if (product.images.length > 2) setSelectedImage(2);
-    } else if (colorName.toLowerCase().includes('cardinal') || colorName.toLowerCase().includes('red')) {
       if (product.images.length > 1) setSelectedImage(1);
+    } else if (colorName.toLowerCase().includes('cardinal') || colorName.toLowerCase().includes('red')) {
+      if (product.images.length > 2) setSelectedImage(2);
     }
   };
 
