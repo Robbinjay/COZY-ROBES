@@ -29,13 +29,13 @@ export default function CheckoutForm() {
   const [paymentMethod, setPaymentMethod] = useState<'credit_card' | 'bank_transfer' | 'crypto' | 'revolut'>('credit_card');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Minimum Order Logic: strictly equal to the price of The Cozy Co. Robe (£89.00)
+  // Minimum Order Logic: strictly equal to the price of The Cozy Co. Robe (£69.99)
   const cozyCoRobeProduct = PRODUCTS.find((p) => p.slug === 'cozy-co-robes');
-  const minimumOrderLimit = cozyCoRobeProduct ? cozyCoRobeProduct.price : 89.00;
+  const minimumOrderLimit = cozyCoRobeProduct ? cozyCoRobeProduct.price : 69.99;
   const isBelowMinimum = cartSubtotal < minimumOrderLimit;
 
-  // Free shipping over £150
-  const freeShippingThreshold = 150;
+  // Free shipping over £100
+  const freeShippingThreshold = 100;
   const isFreeShipping = cartSubtotal >= freeShippingThreshold;
 
   let shippingCost = 0;
@@ -202,7 +202,7 @@ export default function CheckoutForm() {
                 <input type="radio" checked={shippingMethod === 'standard'} onChange={() => setShippingMethod('standard')} className="accent-[#2B2623]" />
                 <div>
                   <p className="text-xs font-bold text-[#2B2623]">Standard Delivery (2–4 Working Days)</p>
-                  <p className="text-[11px] text-[#736B63]">{isFreeShipping ? 'Free on orders over £150' : 'Standard flat rate'}</p>
+                  <p className="text-[11px] text-[#736B63]">{isFreeShipping ? 'Free on orders over £100' : 'Standard flat rate'}</p>
                 </div>
               </div>
               <span className="text-xs font-bold text-[#2B2623]">{isFreeShipping ? 'FREE' : '£3.99'}</span>

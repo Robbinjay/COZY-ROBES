@@ -181,7 +181,7 @@ export default async function CollectionPage({ params }: Props) {
               </li>
               <li className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#3C6E47]" />
-                <span>Free UK Tracked 48 over £150</span>
+                <span>Free UK Tracked 48 over £100</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#3C6E47]" />

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Trash2, Plus, Minus, ArrowRight, ShieldCheck, ShoppingBag, Truck } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
+import { MINIMUM_ORDER_AMOUNT } from '@/lib/store-data';
 import { formatPrice } from '@/lib/utils';
 
 export default function CartPageClient() {
@@ -188,10 +189,10 @@ export default function CartPageClient() {
           </span>
         </div>
 
-        {cartSubtotal < 89 && (
+        {cartSubtotal < MINIMUM_ORDER_AMOUNT && (
           <div className="bg-[#FAF5EE] border border-[#E0D7C9] text-[#5C554F] p-3 rounded-sm text-[11px] text-center space-y-0.5">
-            <p className="font-semibold text-[#8C6A54]">Minimum Order: £89.00 (The Cozy Co. Robe price)</p>
-            <p>Add £{(89 - cartSubtotal).toFixed(2)} more to place your order</p>
+            <p className="font-semibold text-[#8C6A54]">Minimum Order: {formatPrice(MINIMUM_ORDER_AMOUNT)} (The Cozy Co. Robe price)</p>
+            <p>Add {formatPrice(MINIMUM_ORDER_AMOUNT - cartSubtotal)} more to place your order</p>
           </div>
         )}
 

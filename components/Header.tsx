@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, ShoppingBag, Menu, X, User, ArrowRight } from 'lucide-react';
+import { Search, ShoppingBag, Menu, X, User, ArrowRight, ChevronDown } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 
 export default function Header() {
   const pathname = usePathname();
   const { cartCount, openCart, openSearch, config } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileShopOpen, setMobileShopOpen] = useState(true);
+  const [isShopHovered, setIsShopHovered] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -24,17 +26,44 @@ export default function Header() {
   if (prevPathname !== pathname) {
     setPrevPathname(pathname);
     setMobileMenuOpen(false);
+    setIsShopHovered(false);
   }
 
-  const navLinks = [
+  const productCategories = [
+    {
+      name: 'All Products',
+      href: '/shop',
+      description: 'Explore our complete winter warmth catalog',
+      badge: null,
+    },
+    {
+      name: 'Heated Robes',
+      href: '/collections/heated-robes',
+      description: 'Flagship electric wearable blankets & plush heating robes',
+      badge: 'Best Seller',
+    },
+    {
+      name: 'Cozy Accessories',
+      href: '/collections/cozy-accessories',
+      description: 'Electric foot warmers, memory foam pillows & mittens',
+      badge: null,
+    },
+    {
+      name: 'New Arrivals',
+      href: '/collections/new-arrivals',
+      description: 'Newly released winter essentials & colorways',
+      badge: 'New',
+    },
+  ];
+
+  const otherNavLinks = [
     { label: 'Home', href: '/' },
-    { label: 'Shop', href: '/shop' },
-    { label: 'Heated Robes', href: '/collections/heated-robes' },
-    { label: 'Accessories', href: '/collections/cozy-accessories' },
     { label: 'About Us', href: '/about' },
     { label: 'FAQ', href: '/faq' },
     { label: 'Blog', href: '/blog' },
   ];
+
+  const isShopActive = pathname === '/shop' || pathname.startsWith('/collections/');
 
   return (
     <header
@@ -82,7 +111,120 @@ export default function Header() {
             aria-label="Main Navigation"
             className="hidden lg:flex items-center space-x-7 ml-8"
           >
-            {navLinks.map((link) => {
+            {/* Home Link */}
+            <Link
+              id="nav-link-home"
+              href="/"
+              className={`text-sm tracking-wide font-medium transition-colors py-1 relative ${
+                pathname === '/'
+                  ? 'text-[#2B2623] font-semibold'
+                  : 'text-[#5C554F] hover:text-[#2B2623]'
+              }`}
+            >
+              Home
+              {pathname === '/' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#8C6A54] rounded-full" />
+              )}
+            </Link>
+
+            {/* Shop with Hover Dropdown */}
+            <div
+              className="relative py-3 group"
+              onMouseEnter={() => setIsShopHovered(true)}
+              onMouseLeave={() => setIsShopHovered(false)}
+            >
+              <div className="flex items-center gap-1 cursor-pointer">
+                <Link
+                  id="nav-link-shop"
+                  href="/shop"
+                  className={`text-sm tracking-wide font-medium transition-colors py-1 relative flex items-center gap-1 ${
+                    isShopActive
+                      ? 'text-[#2B2623] font-semibold'
+                      : 'text-[#5C554F] hover:text-[#2B2623]'
+                  }`}
+                >
+                  <span>Shop</span>
+                  {isShopActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#8C6A54] rounded-full" />
+                  )}
+                </Link>
+                <button
+                  type="button"
+                  aria-expanded={isShopHovered}
+                  aria-haspopup="true"
+                  className="text-[#8C6A54] hover:text-[#2B2623] transition-colors p-0.5"
+                  onClick={() => setIsShopHovered(!isShopHovered)}
+                  aria-label="Toggle Shop categories dropdown"
+                >
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      isShopHovered ? 'rotate-180' : 'group-hover:rotate-180'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* Hover Dropdown Menu */}
+              <div
+                id="shop-category-dropdown"
+                className={`absolute top-full left-0 pt-1.5 w-76 z-50 transition-all duration-200 ${
+                  isShopHovered
+                    ? 'opacity-100 visible translate-y-0'
+                    : 'opacity-0 invisible -translate-y-1 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:pointer-events-auto'
+                }`}
+              >
+                <div className="bg-white rounded-sm border border-[#EAE3D9] shadow-[0_14px_35px_-8px_rgba(43,38,35,0.14)] p-2">
+                  <div className="px-3 py-1.5 border-b border-[#F5EFE6] mb-1">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A54]">
+                      Product Categories
+                    </p>
+                  </div>
+                  <div className="space-y-0.5">
+                    {productCategories.map((cat) => {
+                      const isCatActive = pathname === cat.href;
+                      return (
+                        <Link
+                          key={cat.href}
+                          id={`dropdown-cat-${cat.name.toLowerCase().replace(/\s+/g, '-')}`}
+                          href={cat.href}
+                          onClick={() => setIsShopHovered(false)}
+                          className={`group/item block px-3 py-2 rounded-xs transition-colors ${
+                            isCatActive ? 'bg-[#FAF5EE]' : 'hover:bg-[#FAF5EE]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-[#2B2623] group-hover/item:text-[#8C6A54] transition-colors">
+                              {cat.name}
+                            </span>
+                            {cat.badge && (
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-[#FAF0E6] text-[#8C6A54] border border-[#E8DCCB]">
+                                {cat.badge}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-[#736B63] mt-0.5 leading-snug">
+                            {cat.description}
+                          </p>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                  <div className="pt-2 mt-1.5 border-t border-[#F5EFE6] px-3 pb-1">
+                    <Link
+                      href="/shipping"
+                      onClick={() => setIsShopHovered(false)}
+                      className="text-[11px] text-[#8C6A54] hover:text-[#2B2623] font-medium flex items-center justify-between transition-colors"
+                    >
+                      <span>Free UK Delivery over £100</span>
+                      <span>&rarr;</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Other Navigation Links: About Us, FAQ, Blog */}
+            {otherNavLinks.slice(1).map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
@@ -152,15 +294,77 @@ export default function Header() {
       {mobileMenuOpen && (
         <div
           id="mobile-navigation-drawer"
-          className="lg:hidden fixed inset-x-0 top-16 sm:top-18 bg-[#FAF8F5] border-b border-[#EAE3D9] shadow-xl px-6 py-6 transition-all animate-fadeIn"
+          className="lg:hidden fixed inset-x-0 top-16 sm:top-18 bg-[#FAF8F5] border-b border-[#EAE3D9] shadow-xl px-6 py-6 transition-all animate-fadeIn max-h-[calc(100vh-4.5rem)] overflow-y-auto"
         >
-          <nav className="flex flex-col space-y-4">
-            {navLinks.map((link) => (
+          <nav className="flex flex-col space-y-3">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`text-base font-medium py-1.5 transition-colors flex items-center justify-between ${
+                pathname === '/' ? 'text-[#2B2623] font-semibold' : 'text-[#5C554F]'
+              }`}
+            >
+              <span>Home</span>
+              <ArrowRight className="w-4 h-4 text-[#A89F95]" />
+            </Link>
+
+            {/* Mobile Shop with Collapsible Categories */}
+            <div className="py-1">
+              <div className="flex items-center justify-between py-1">
+                <Link
+                  href="/shop"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`text-base font-medium transition-colors ${
+                    isShopActive ? 'text-[#2B2623] font-semibold' : 'text-[#5C554F]'
+                  }`}
+                >
+                  <span>Shop</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setMobileShopOpen(!mobileShopOpen)}
+                  className="p-1 text-[#736B63] hover:text-[#2B2623]"
+                  aria-label="Toggle shop categories"
+                >
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      mobileShopOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {mobileShopOpen && (
+                <div className="mt-1 pl-3 space-y-2 border-l-2 border-[#EAE3D9] ml-1 animate-fadeIn">
+                  {productCategories.map((cat) => (
+                    <Link
+                      key={cat.href}
+                      href={cat.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`text-xs py-1 flex items-center justify-between transition-colors ${
+                        pathname === cat.href
+                          ? 'text-[#8C6A54] font-semibold'
+                          : 'text-[#736B63] hover:text-[#2B2623]'
+                      }`}
+                    >
+                      <span>{cat.name}</span>
+                      {cat.badge && (
+                        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-[#FAF0E6] text-[#8C6A54] border border-[#E8DCCB]">
+                          {cat.badge}
+                        </span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {otherNavLinks.slice(1).map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`text-lg font-medium py-1 transition-colors flex items-center justify-between ${
+                className={`text-base font-medium py-1.5 transition-colors flex items-center justify-between ${
                   pathname === link.href
                     ? 'text-[#2B2623] font-semibold'
                     : 'text-[#5C554F]'

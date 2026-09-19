@@ -275,7 +275,7 @@ export default function FeaturedProductSection({ product }: FeaturedProductSecti
             <div className="grid grid-cols-2 gap-3 pt-2 text-[11px] text-[#736B63] border-t border-[#F0EBE1]">
               <div className="flex items-center gap-1.5">
                 <Truck className="w-3.5 h-3.5 text-[#8C6A54]" />
-                <span>Free UK Delivery Over £150</span>
+                <span>Free UK Delivery Over £100</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <RotateCcw className="w-3.5 h-3.5 text-[#8C6A54]" />

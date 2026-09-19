@@ -599,7 +599,7 @@ export default function HomePage() {
             Stay Cozy. Stay Comfortable.
           </h2>
           <p className="text-sm sm:text-base text-[#BDB2A7] max-w-xl mx-auto leading-relaxed">
-            Find your new favorite way to relax. Covered by our 30-Day Cozy Trial and free UK delivery on orders over £150.
+            Find your new favorite way to relax. Covered by our 30-Day Cozy Trial and free UK delivery on orders over £100.
           </p>
           <div className="pt-2">
             <Link

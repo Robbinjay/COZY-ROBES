@@ -1,9 +1,11 @@
 import { Product, Collection, StoreConfig, FAQItem, BlogPost } from './types';
 
+export const MINIMUM_ORDER_AMOUNT = 69.99;
+
 export const DEFAULT_STORE_CONFIG: StoreConfig = {
   announcementBar: {
     enabled: true,
-    text: 'FREE UK DELIVERY ON ORDERS OVER £150 • 30-DAY COZY GUARANTEE',
+    text: 'FREE UK DELIVERY ON ORDERS OVER £100 • 30-DAY COZY GUARANTEE',
     linkText: 'Shop Now',
     linkUrl: '/shop',
   },
@@ -16,7 +18,7 @@ export const DEFAULT_STORE_CONFIG: StoreConfig = {
     address: 'CozyCorobes UK, 71–75 Shelton Street, Covent Garden, London, WC2H 9JQ, United Kingdom',
   },
   shipping: {
-    freeShippingThreshold: 150,
+    freeShippingThreshold: 100,
     standardShippingRate: 3.99,
     expressShippingRate: 6.99,
     processingTime: '1 to 2 business days',
@@ -91,7 +93,7 @@ export const PRODUCTS: Product[] = [
     name: 'The Cozy Co. Robe',
     subtitle: 'Oversized 50" x 70" Heated Wearable Blanket with 7 Heat Settings',
     tagline: 'The UK’s premier electric heated robe and oversized wearable blanket with 7 heat levels and deep cloud sherpa warmth.',
-    price: 89.00,
+    price: 69.99,
     compareAtPrice: 119.00,
     rating: 4.9,
     reviewCount: 50,
@@ -316,7 +318,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     category: 'Shipping',
     question: 'How long does UK shipping take?',
-    answer: 'All orders are dispatched within 24 hours from our UK fulfillment center. Standard delivery via Royal Mail Tracked 48 typically arrives in 2 to 3 business days and is FREE on all orders over £150. Expedited delivery is also available at checkout. Learn more on our Shipping Policy page.',
+    answer: 'All orders are dispatched within 24 hours from our UK fulfillment center. Standard delivery via Royal Mail Tracked 48 typically arrives in 2 to 3 business days and is FREE on all orders over £100. Expedited delivery is also available at checkout. Learn more on our Shipping Policy page.',
   },
   {
     category: 'Products',

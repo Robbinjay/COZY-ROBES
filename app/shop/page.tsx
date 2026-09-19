@@ -10,7 +10,7 @@ import { ShieldCheck, Truck, RotateCcw, ArrowRight } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Shop All Heated Robes & Cozy Accessories UK | CozyCorobes',
   description:
-    'Explore the complete CozyCorobes collection of premium electric heated robes, wearable heated blankets, heated foot warmers, and cozy loungewear. Free UK delivery over £150.',
+    'Explore the complete CozyCorobes collection of premium electric heated robes, wearable heated blankets, heated foot warmers, and cozy loungewear. Free UK delivery over £100.',
   alternates: {
     canonical: '/shop',
   },
@@ -119,7 +119,7 @@ export default function ShopPage() {
                   </div>
                   <div>
                     <h4 className="font-bold text-[#2B2623]">Fast UK Delivery</h4>
-                    <p className="text-[#736B63] mt-0.5">Royal Mail Tracked 48 delivery. Free shipping on all orders over £150.</p>
+                    <p className="text-[#736B63] mt-0.5">Royal Mail Tracked 48 delivery. Free shipping on all orders over £100.</p>
                   </div>
                 </div>
 

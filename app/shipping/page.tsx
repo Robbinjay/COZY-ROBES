@@ -55,7 +55,7 @@ export default function ShippingPage() {
                     Royal Mail Tracked 48
                   </td>
                   <td className="py-4 px-6">2–3 Working Days</td>
-                  <td className="py-4 px-6">Orders £150.00 and above</td>
+                  <td className="py-4 px-6">Orders £100.00 and above</td>
                   <td className="py-4 px-6 text-right font-bold text-[#3C6E47]">
                     FREE
                   </td>
@@ -65,7 +65,7 @@ export default function ShippingPage() {
                     Royal Mail Tracked 48
                   </td>
                   <td className="py-4 px-6">2–3 Working Days</td>
-                  <td className="py-4 px-6">Orders under £150.00</td>
+                  <td className="py-4 px-6">Orders under £100.00</td>
                   <td className="py-4 px-6 text-right font-semibold text-[#2B2623]">
                     £3.99
                   </td>
