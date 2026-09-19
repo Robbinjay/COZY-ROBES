@@ -20,10 +20,12 @@ import {
   X,
   Send,
   Plug,
+  Plus,
 } from 'lucide-react';
 import { Product, ProductReview } from '@/lib/types';
 import { useStore } from '@/lib/store-context';
 import { formatPrice } from '@/lib/utils';
+import { PRODUCTS } from '@/lib/store-data';
 import ProductCard from './ProductCard';
 
 interface ProductDetailClientProps {
@@ -132,6 +134,20 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
   const handleBuyNow = () => {
     addToCart(product, selectedColor, selectedSize, quantity);
     router.push('/checkout');
+  };
+
+  const isRobe = product.slug === 'cozy-co-robes';
+  const accessoryProducts = PRODUCTS.filter((p) => p.category === 'cozy-accessories');
+  const { cart } = useStore();
+
+  const handleAddAccessory = (accessory: Product) => {
+    const defaultColor = accessory.colors[0]?.name || 'Standard';
+    const defaultSize = accessory.sizes[0] || 'One Size';
+    addToCart(accessory, defaultColor, defaultSize, 1);
+  };
+
+  const isProductInCart = (productId: string) => {
+    return cart.some((item) => item.productId === productId);
   };
 
   const handleColorSelect = (colorName: string) => {
@@ -488,6 +504,83 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
             >
               <span>Buy It Now &rarr;</span>
             </button>
+
+            {/* Cross-sell Accessories (Only for the Robe) */}
+            {isRobe && (
+              <div id="robe-cross-sell" className="mt-6 pt-6 border-t border-[#EAE3D9] space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#2B2623] flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-[#8C6A54]" />
+                    Complete Your Cozy Set
+                  </h3>
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-xs uppercase tracking-tighter">
+                    Bundle & Save
+                  </span>
+                </div>
+                
+                <div className="space-y-3">
+                  {accessoryProducts.map((accessory) => {
+                    const inCart = isProductInCart(accessory.id);
+                    return (
+                      <div 
+                        key={accessory.id}
+                        className={`group flex items-center gap-3 p-3 rounded-sm border transition-all duration-200 ${
+                          inCart 
+                            ? 'bg-[#EBF7EE] border-[#CDE9D2]' 
+                            : 'bg-white border-[#EAE3D9] hover:border-[#8C6A54] hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="relative w-14 h-14 bg-[#FAF8F5] rounded-xs overflow-hidden border border-[#F0EBE1] shrink-0">
+                          <Image
+                            src={accessory.images[0]}
+                            alt={accessory.name}
+                            fill
+                            sizes="56px"
+                            className="object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-[11px] font-bold text-[#2B2623] truncate leading-tight">
+                            {accessory.name}
+                          </h4>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-xs font-bold text-[#2B2623]">
+                              {formatPrice(accessory.price)}
+                            </span>
+                            {accessory.compareAtPrice && (
+                              <span className="text-[10px] text-[#8C8278] line-through">
+                                {formatPrice(accessory.compareAtPrice)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleAddAccessory(accessory)}
+                          disabled={inCart}
+                          className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+                            inCart
+                              ? 'bg-emerald-500 text-white cursor-default'
+                              : 'bg-[#FAF8F5] text-[#2B2623] border border-[#D9D0C3] hover:bg-[#2B2623] hover:text-white hover:border-[#2B2623]'
+                          }`}
+                          aria-label={inCart ? 'Added to bag' : `Add ${accessory.name} to bag`}
+                        >
+                          {inCart ? (
+                            <Check className="w-4 h-4" />
+                          ) : (
+                            <Plus className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-[10px] text-[#736B63] italic leading-tight">
+                  Adding accessories helps you reach the <strong>£100 Free UK Delivery</strong> threshold instantly.
+                </p>
+              </div>
+            )}
 
             {/* Threshold Notification */}
             <div className="text-center pt-1 text-[11px] text-[#736B63]">
