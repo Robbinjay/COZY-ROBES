@@ -21,6 +21,8 @@ export interface ProductReview {
   title: string;
   comment: string;
   verifiedPurchase: boolean;
+  location?: string;
+  colorPurchased?: string;
 }
 
 export interface Product {
@@ -48,6 +50,7 @@ export interface Product {
   variants: ProductVariant[];
   inStock: boolean;
   shippingNote: string;
+  reviews?: ProductReview[];
 }
 
 export interface Collection {

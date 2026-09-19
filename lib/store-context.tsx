@@ -9,7 +9,7 @@ interface StoreContextType {
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
-  addToCart: (product: Product, color: string, size: string, quantity?: number) => void;
+  addToCart: (product: Product, color: string, size: string, quantity?: number, openDrawer?: boolean) => void;
   removeFromCart: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
@@ -139,7 +139,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   }, [orders, isInitialized]);
 
-  const addToCart = (product: Product, color: string, size: string, quantity = 1) => {
+  const addToCart = (product: Product, color: string, size: string, quantity = 1, openDrawer = true) => {
     const itemId = `${product.id}-${color.toLowerCase().replace(/\s+/g, '-')}-${size.toLowerCase().replace(/\s+/g, '-')}`;
     
     setCart((prev) => {
@@ -164,7 +164,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         },
       ];
     });
-    setIsCartOpen(true);
+    if (openDrawer) {
+      setIsCartOpen(true);
+    }
   };
 
   const removeFromCart = (itemId: string) => {

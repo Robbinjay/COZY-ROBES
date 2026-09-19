@@ -4,14 +4,39 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShieldCheck, Lock, CreditCard, Wallet, Landmark, Bitcoin, Info } from 'lucide-react';
+import {
+  ShieldCheck,
+  Lock,
+  CreditCard,
+  Wallet,
+  Landmark,
+  Bitcoin,
+  Info,
+  Plus,
+  Minus,
+  Trash2,
+  Check,
+  Sparkles,
+  Truck,
+} from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 import { PRODUCTS } from '@/lib/store-data';
+import { Product } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 
 export default function CheckoutForm() {
   const router = useRouter();
-  const { cart, cartSubtotal, clearCart } = useStore();
+  const {
+    cart,
+    cartSubtotal,
+    clearCart,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    closeCart,
+  } = useStore();
+
+  const [recentlyAddedId, setRecentlyAddedId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -28,6 +53,36 @@ export default function CheckoutForm() {
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'express' | 'international'>('standard');
   const [paymentMethod, setPaymentMethod] = useState<'credit_card' | 'bank_transfer' | 'crypto' | 'revolut'>('credit_card');
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Accessories for cross-selling
+  const accessoryProducts = PRODUCTS.filter((p) => p.category === 'cozy-accessories');
+
+  const getCartItemForProduct = (productId: string) => {
+    return cart.find((item) => item.productId === productId);
+  };
+
+  const handleAddAccessory = (accessory: Product) => {
+    const defaultColor = accessory.colors[0]?.name || 'Standard';
+    const defaultSize = accessory.sizes[0] || 'One Size';
+    addToCart(accessory, defaultColor, defaultSize, 1, false);
+    closeCart();
+    setRecentlyAddedId(accessory.id);
+    setTimeout(() => {
+      setRecentlyAddedId(null);
+    }, 2500);
+  };
+
+  const handleRemoveAccessory = (itemId: string) => {
+    removeFromCart(itemId);
+  };
+
+  const handleUpdateAccessoryQuantity = (itemId: string, newQty: number) => {
+    if (newQty <= 0) {
+      removeFromCart(itemId);
+    } else {
+      updateQuantity(itemId, newQty);
+    }
+  };
 
   // Minimum Order Logic: strictly equal to the price of The Cozy Co. Robe (£69.99)
   const cozyCoRobeProduct = PRODUCTS.find((p) => p.slug === 'cozy-co-robes');
@@ -109,19 +164,62 @@ export default function CheckoutForm() {
 
   if (cart.length === 0) {
     return (
-      <div className="bg-white p-8 rounded-sm border border-[#EAE3D9] text-center max-w-md mx-auto shadow-xs">
-        <h2 className="font-serif text-xl font-bold text-[#2B2623] mb-2">
-          Your Bag is Empty
-        </h2>
-        <p className="text-xs text-[#736B63] mb-4">
-          Please add a heated robe or accessory to your bag before checking out.
-        </p>
-        <Link
-          href="/shop"
-          className="inline-block bg-[#2B2623] text-white text-xs font-semibold px-6 py-2.5 rounded-sm"
-        >
-          Browse Products
-        </Link>
+      <div className="bg-white p-8 rounded-sm border border-[#EAE3D9] text-center max-w-xl mx-auto shadow-xs space-y-6">
+        <div>
+          <h2 className="font-serif text-2xl font-bold text-[#2B2623] mb-2">
+            Your Bag is Empty
+          </h2>
+          <p className="text-xs text-[#736B63] max-w-md mx-auto">
+            Choose your heated robe or add one of our winter accessories below to begin checkout.
+          </p>
+        </div>
+
+        {/* Quick Add Grid for Empty Bag */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+          {PRODUCTS.map((prod) => (
+            <div
+              key={prod.id}
+              className="p-3 border border-[#EAE3D9] rounded-xs bg-[#FAF8F5] flex items-center gap-3 hover:border-[#D9D0C3] transition-colors"
+            >
+              <div className="relative w-12 h-12 bg-white rounded-xs overflow-hidden shrink-0 border border-[#EAE3D9]">
+                <Image
+                  src={prod.images[0] || '/images/featured_robe_studio.jpg'}
+                  alt={prod.name}
+                  fill
+                  sizes="48px"
+                  className="object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold text-[#2B2623] truncate">{prod.name}</p>
+                <p className="text-[11px] font-semibold text-[#8C6A54]">{formatPrice(prod.price)}</p>
+              </div>
+              <button
+                type="button"
+                id={`empty-add-${prod.slug}`}
+                onClick={() => {
+                  const defaultColor = prod.colors[0]?.name || 'Standard';
+                  const defaultSize = prod.sizes[0] || 'One Size';
+                  addToCart(prod, defaultColor, defaultSize, 1, false);
+                  closeCart();
+                }}
+                className="text-xs font-bold bg-[#2B2623] hover:bg-[#47403C] text-white px-2.5 py-1.5 rounded-xs transition-colors shrink-0 cursor-pointer"
+              >
+                + Add
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="pt-2 border-t border-[#EAE3D9]">
+          <Link
+            href="/shop"
+            className="inline-block bg-[#FAF5EE] border border-[#D9D0C3] text-[#2B2623] hover:bg-[#EAE3D9] text-xs font-bold px-6 py-2.5 rounded-sm transition-colors"
+          >
+            Browse All Products &rarr;
+          </Link>
+        </div>
       </div>
     );
   }
@@ -296,19 +394,230 @@ export default function CheckoutForm() {
         <div className="divide-y divide-[#EAE3D9] max-h-60 overflow-y-auto">
           {cart.map((item) => (
             <div key={item.id} className="py-3 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="relative w-12 h-14 bg-[#F2ECE4] rounded-xs overflow-hidden shrink-0">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative w-12 h-14 bg-[#F2ECE4] rounded-xs overflow-hidden shrink-0 border border-[#EAE3D9]">
                   <Image src={item.image} alt={item.name} fill sizes="48px" className="object-cover" referrerPolicy="no-referrer" />
                   <span className="absolute top-0 right-0 bg-[#2B2623] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">{item.quantity}</span>
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-[#2B2623] line-clamp-1">{item.name}</p>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-[#2B2623] truncate">{item.name}</p>
                   <p className="text-[11px] text-[#736B63]">{item.color} • {item.size}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center border border-[#D9D0C3] rounded-2xs bg-[#FAF8F5]">
+                      <button
+                        type="button"
+                        id={`cart-item-dec-${item.id}`}
+                        onClick={() => {
+                          if (item.quantity > 1) {
+                            updateQuantity(item.id, item.quantity - 1);
+                          } else {
+                            removeFromCart(item.id);
+                          }
+                        }}
+                        className="w-4 h-4 flex items-center justify-center text-[#5C554F] hover:text-[#2B2623] cursor-pointer"
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus className="w-2.5 h-2.5" />
+                      </button>
+                      <span className="text-[10px] font-bold text-[#2B2623] px-1">{item.quantity}</span>
+                      <button
+                        type="button"
+                        id={`cart-item-inc-${item.id}`}
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="w-4 h-4 flex items-center justify-center text-[#5C554F] hover:text-[#2B2623] cursor-pointer"
+                        aria-label="Increase quantity"
+                      >
+                        <Plus className="w-2.5 h-2.5" />
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      id={`cart-item-del-${item.id}`}
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-[#8C8278] hover:text-[#B86246] transition-colors cursor-pointer"
+                      title="Remove from bag"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
               </div>
-              <span className="text-xs font-semibold text-[#2B2623]">{formatPrice(item.price * item.quantity)}</span>
+              <span className="text-xs font-semibold text-[#2B2623] shrink-0">{formatPrice(item.price * item.quantity)}</span>
             </div>
           ))}
+        </div>
+
+        {/* Free Shipping Progress Indicator */}
+        <div className="p-3 bg-[#FAF5EE] rounded-xs border border-[#EAE3D9] space-y-1.5">
+          <div className="flex items-center justify-between text-[11px]">
+            <span className="flex items-center gap-1.5 font-bold text-[#2B2623]">
+              <Truck className="w-3.5 h-3.5 text-[#8C6A54]" />
+              <span>
+                {isFreeShipping ? 'Free UK Delivery Unlocked!' : `Add ${formatPrice(100 - cartSubtotal)} for FREE UK Delivery`}
+              </span>
+            </span>
+            <span className="font-semibold text-[#736B63]">
+              {Math.min(100, Math.round((cartSubtotal / 100) * 100))}%
+            </span>
+          </div>
+          <div className="w-full bg-[#EAE3D9] h-1.5 rounded-full overflow-hidden">
+            <div
+              className={`h-full transition-all duration-300 ${isFreeShipping ? 'bg-emerald-600' : 'bg-[#8C6A54]'}`}
+              style={{ width: `${Math.min(100, Math.round((cartSubtotal / 100) * 100))}%` }}
+            />
+          </div>
+          {!isFreeShipping && (
+            <p className="text-[10px] text-[#736B63]">
+              Tip: Add any accessory below to reach £100 and get free standard delivery!
+            </p>
+          )}
+        </div>
+
+        {/* Cross-Sell Accessories */}
+        <div className="pt-3 border-t border-[#EAE3D9] space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#8C6A54]" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#2B2623]">
+                Frequently Added Accessories
+              </h3>
+            </div>
+            <span className="text-[10px] font-semibold text-[#8C6A54] bg-[#FAF5EE] px-2 py-0.5 rounded-2xs border border-[#EAE3D9]">
+              Special Add-On
+            </span>
+          </div>
+          
+          <p className="text-[11px] text-[#736B63] leading-relaxed">
+            Add matching accessories directly to your cart — ships together with zero extra delivery delay.
+          </p>
+
+          {/* Accessories List */}
+          <div className="space-y-2.5">
+            {accessoryProducts.map((acc) => {
+              const cartItem = getCartItemForProduct(acc.id);
+              const isInCart = !!cartItem;
+              const isRecentlyAdded = recentlyAddedId === acc.id;
+              const savingsPct = acc.compareAtPrice ? Math.round(((acc.compareAtPrice - acc.price) / acc.compareAtPrice) * 100) : 0;
+
+              return (
+                <div
+                  key={acc.id}
+                  id={`cross-sell-item-${acc.slug}`}
+                  className={`p-3 rounded-xs border transition-all duration-200 ${
+                    isInCart
+                      ? 'border-[#8C6A54]/40 bg-[#FAF5EE]/80'
+                      : 'border-[#EAE3D9] bg-[#FAF8F5]/60 hover:bg-white hover:border-[#D9D0C3]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="relative w-13 h-13 bg-[#F2ECE4] rounded-xs overflow-hidden shrink-0 border border-[#EAE3D9]">
+                      <Image
+                        src={acc.images[0] || '/images/featured_robe_studio.jpg'}
+                        alt={acc.name}
+                        fill
+                        sizes="52px"
+                        className="object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <h4 className="text-xs font-bold text-[#2B2623] truncate">
+                          {acc.name}
+                        </h4>
+                        {savingsPct > 0 && (
+                          <span className="text-[9px] font-bold text-[#B86246] bg-[#B86246]/10 px-1 py-0.2 rounded-2xs shrink-0">
+                            Save {savingsPct}%
+                          </span>
+                        )}
+                      </div>
+                      
+                      <p className="text-[10px] text-[#736B63] truncate">
+                        {acc.slug === 'cozyco-foot-warmer'
+                          ? 'Electric Heated Pouch • 60s Fast Heat'
+                          : acc.slug === 'cozyco-pillow'
+                          ? 'Cooling Cervical Spine Contour'
+                          : 'Plush Sherpa Typing Gloves'}
+                      </p>
+
+                      <div className="flex items-baseline gap-1.5 mt-0.5">
+                        <span className="text-xs font-bold text-[#2B2623]">
+                          {formatPrice(acc.price)}
+                        </span>
+                        {acc.compareAtPrice && (
+                          <span className="text-[10px] text-[#8C8278] line-through">
+                            {formatPrice(acc.compareAtPrice)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="shrink-0">
+                      {isInCart && cartItem ? (
+                        <div className="flex items-center gap-1 bg-white border border-[#D9D0C3] rounded-xs p-0.5 shadow-2xs">
+                          <button
+                            type="button"
+                            id={`cross-sell-dec-${acc.slug}`}
+                            onClick={() => handleUpdateAccessoryQuantity(cartItem.id, cartItem.quantity - 1)}
+                            className="w-5 h-5 flex items-center justify-center text-[#5C554F] hover:text-[#2B2623] cursor-pointer"
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus className="w-2.5 h-2.5" />
+                          </button>
+                          <span className="text-xs font-bold text-[#2B2623] px-1 text-center min-w-3.5">
+                            {cartItem.quantity}
+                          </span>
+                          <button
+                            type="button"
+                            id={`cross-sell-inc-${acc.slug}`}
+                            onClick={() => handleUpdateAccessoryQuantity(cartItem.id, cartItem.quantity + 1)}
+                            className="w-5 h-5 flex items-center justify-center text-[#5C554F] hover:text-[#2B2623] cursor-pointer"
+                            aria-label="Increase quantity"
+                          >
+                            <Plus className="w-2.5 h-2.5" />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          id={`cross-sell-add-btn-${acc.slug}`}
+                          onClick={() => handleAddAccessory(acc)}
+                          className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider bg-[#2B2623] hover:bg-[#47403C] text-white px-2.5 py-1.5 rounded-xs transition-all cursor-pointer whitespace-nowrap active:scale-95 shadow-2xs"
+                        >
+                          <Plus className="w-3 h-3" />
+                          <span>Add</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Added Feedback Banner */}
+                  {isRecentlyAdded && (
+                    <div className="mt-2 text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-2xs flex items-center gap-1 animate-fadeIn">
+                      <Check className="w-3 h-3 text-emerald-600 shrink-0" />
+                      <span>Added to your cart! Order summary updated.</span>
+                    </div>
+                  )}
+                  {isInCart && !isRecentlyAdded && (
+                    <div className="mt-1.5 flex items-center justify-between text-[10px] text-[#736B63] px-0.5">
+                      <span className="flex items-center gap-1 text-emerald-700 font-semibold text-[10px]">
+                        <Check className="w-2.5 h-2.5" /> In Cart ({cartItem.quantity})
+                      </span>
+                      <button
+                        type="button"
+                        id={`cross-sell-remove-btn-${acc.slug}`}
+                        onClick={() => handleRemoveAccessory(cartItem.id)}
+                        className="text-[#8C8278] hover:text-[#B86246] transition-colors cursor-pointer text-[10px]"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Pricing calculations */}

@@ -285,10 +285,12 @@ export default function FeaturedProductSection({ product }: FeaturedProductSecti
 
             <div className="pt-1 text-center">
               <Link
-                href={`/products/${product.slug}`}
-                className="text-xs text-[#8C6A54] hover:text-[#2B2623] underline underline-offset-4 font-semibold"
+                id="featured-view-specs-link"
+                href={`/products/${product.slug}#specs`}
+                className="text-xs text-[#8C6A54] hover:text-[#2B2623] underline underline-offset-4 font-semibold inline-flex items-center gap-1.5"
               >
-                View Full Specifications, Sizing & Reviews &rarr;
+                <span>View Full Specifications, Sizing & Reviews</span>
+                <span>&rarr;</span>
               </Link>
             </div>
 
