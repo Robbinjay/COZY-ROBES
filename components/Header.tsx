@@ -8,7 +8,7 @@ import { useStore } from '@/lib/store-context';
 
 export default function Header() {
   const pathname = usePathname();
-  const { cartCount, openCart, openSearch, config } = useStore();
+  const { cartCount, openCart, openSearch, config, customer } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileShopOpen, setMobileShopOpen] = useState(true);
   const [isShopHovered, setIsShopHovered] = useState(false);
@@ -61,6 +61,7 @@ export default function Header() {
     { label: 'About Us', href: '/about' },
     { label: 'FAQ', href: '/faq' },
     { label: 'Blog', href: '/blog' },
+    { label: 'Contact', href: '/contact' },
   ];
 
   const isShopActive = pathname === '/shop' || pathname.startsWith('/collections/');
@@ -260,13 +261,15 @@ export default function Header() {
 
             <Link
               id="header-account-link"
-              href="/track-order"
+              href="/account"
               className="hidden sm:flex items-center gap-1.5 p-2 text-[#4A453F] hover:text-[#2B2623] hover:bg-[#F2ECE4] rounded-full transition-colors text-sm font-medium"
-              title="Track Your Order"
-              aria-label="Track Order & Customer Account"
+              title="My Account"
+              aria-label="My Account & Orders"
             >
               <User className="w-5 h-5" />
-              <span className="hidden xl:inline text-xs font-normal text-[#736B63]">Track Order</span>
+              <span className="hidden xl:inline text-xs font-normal text-[#736B63]">
+                {customer?.displayName || customer?.firstName || 'My Account'}
+              </span>
             </Link>
 
             <button
@@ -377,12 +380,12 @@ export default function Header() {
 
             <div className="pt-4 border-t border-[#EAE3D9] flex flex-col space-y-3 text-sm text-[#5C554F]">
               <Link
-                href="/track-order"
+                href="/account"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-2 hover:text-[#2B2623]"
               >
                 <User className="w-4 h-4" />
-                <span>Track Your Order</span>
+                <span>{customer ? `My Account (${customer.displayName || customer.firstName})` : 'My Account'}</span>
               </Link>
               <Link
                 href="/admin"

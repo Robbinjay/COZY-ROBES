@@ -18,6 +18,11 @@ import {
   Check,
   Sparkles,
   Truck,
+  User,
+  UserCheck,
+  ChevronDown,
+  ChevronUp,
+  AlertCircle,
 } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 import { PRODUCTS } from '@/lib/store-data';
@@ -25,6 +30,11 @@ import { Product } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 
 export default function CheckoutForm() {
+  const { customer } = useStore();
+  return <CheckoutFormContent key={customer?.id || 'guest'} customer={customer} />;
+}
+
+function CheckoutFormContent({ customer }: { customer: ReturnType<typeof useStore>['customer'] }) {
   const router = useRouter();
   const {
     cart,
@@ -34,20 +44,35 @@ export default function CheckoutForm() {
     removeFromCart,
     updateQuantity,
     closeCart,
+    createOrder,
+    registerCustomer,
+    loginCustomer,
+    logoutCustomer,
   } = useStore();
 
   const [recentlyAddedId, setRecentlyAddedId] = useState<string | null>(null);
 
+  // Optional account creation state (default unchecked so guest checkout is seamless)
+  const [createAccountChecked, setCreateAccountChecked] = useState(false);
+  const [accountPassword, setAccountPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [accountError, setAccountError] = useState('');
+
+  // Returning customer inline login state
+  const [showInlineLogin, setShowInlineLogin] = useState(false);
+  const [loginEmailInput, setLoginEmailInput] = useState('');
+  const [loginErrorMsg, setLoginErrorMsg] = useState('');
+
   const [formData, setFormData] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-    address: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: 'United Kingdom',
-    phone: '',
+    email: customer?.email || '',
+    firstName: customer?.shippingAddress?.firstName || customer?.firstName || '',
+    lastName: customer?.shippingAddress?.lastName || customer?.lastName || '',
+    address: customer?.shippingAddress?.address1 || '',
+    city: customer?.shippingAddress?.city || '',
+    state: customer?.shippingAddress?.county || '',
+    postalCode: customer?.shippingAddress?.postcode || '',
+    country: customer?.shippingAddress?.country || 'United Kingdom',
+    phone: customer?.shippingAddress?.phone || '',
   });
 
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'express' | 'international'>('standard');
@@ -105,9 +130,35 @@ export default function CheckoutForm() {
   const estimatedTax = 0; // Included in prices
   const grandTotal = cartSubtotal + shippingCost + estimatedTax;
 
+  const handleInlineLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginErrorMsg('');
+    if (!loginEmailInput.trim()) {
+      setLoginErrorMsg('Please enter your email address to log in.');
+      return;
+    }
+    const res = loginCustomer(loginEmailInput.trim());
+    if (!res.success) {
+      setLoginErrorMsg(res.message || 'Unable to log in. Please check your email.');
+    } else {
+      setShowInlineLogin(false);
+    }
+  };
+
+  const handleQuickDemoLogin = () => {
+    loginCustomer('customer@example.com');
+    setShowInlineLogin(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isBelowMinimum || cart.length === 0) return;
+
+    // Optional account creation validation
+    if (!customer && createAccountChecked && accountPassword.trim().length < 6) {
+      setAccountError('Please enter a password of at least 6 characters to create your account.');
+      return;
+    }
 
     setIsProcessing(true);
 
@@ -148,10 +199,64 @@ export default function CheckoutForm() {
       });
 
       if (response.ok) {
+        // If guest customer explicitly selected optional account creation
+        if (!customer && createAccountChecked) {
+          registerCustomer({
+            email: formData.email,
+            password: accountPassword.trim() || undefined,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            shippingAddress: {
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              address1: formData.address,
+              city: formData.city,
+              county: formData.state,
+              postcode: formData.postalCode,
+              country: formData.country,
+              phone: formData.phone,
+            },
+            billingAddress: {
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              address1: formData.address,
+              city: formData.city,
+              county: formData.state,
+              postcode: formData.postalCode,
+              country: formData.country,
+              phone: formData.phone,
+            },
+          });
+        }
+
+        const created = createOrder({
+          email: formData.email,
+          customerName: `${formData.firstName} ${formData.lastName}`.trim() || 'Valued Customer',
+          shippingAddress: {
+            address1: formData.address,
+            city: formData.city,
+            state: formData.state,
+            postalCode: formData.postalCode,
+            country: formData.country,
+          },
+          shippingMethod: activeShipping.label,
+          items: cart.map((i) => ({
+            productId: i.productId,
+            name: i.name,
+            color: i.color,
+            size: i.size,
+            quantity: i.quantity,
+            price: i.price,
+            image: i.image,
+          })),
+          subtotal: cartSubtotal,
+          discount: 0,
+          shippingCost,
+          tax: estimatedTax,
+          total: grandTotal,
+        });
         clearCart();
-        // eslint-disable-next-line react-hooks/purity
-        const generatedOrderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-        router.push('/order-confirmation?orderId=' + generatedOrderId);
+        router.push('/order-confirmation?orderId=' + created.id);
       } else {
         alert('Something went wrong processing your order. Please try again.');
         setIsProcessing(false);
@@ -229,6 +334,103 @@ export default function CheckoutForm() {
       {/* Left: Form inputs */}
       <div className="lg:col-span-7 space-y-8">
         
+        {/* Returning Customer / Active Account Banner */}
+        {customer ? (
+          <div id="checkout-active-account-banner" className="bg-[#FAF8F5] border border-[#EAE3D9] p-4 rounded-sm flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2.5">
+              <UserCheck className="w-4 h-4 text-[#3C6E47] shrink-0" />
+              <span className="text-[#2B2623]">
+                Logged in as <strong>{customer.displayName || customer.firstName || customer.email}</strong>
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link href="/account" className="text-[#8C6A54] hover:underline font-semibold">
+                My Account
+              </Link>
+              <button
+                type="button"
+                id="checkout-logout-btn"
+                onClick={() => logoutCustomer()}
+                className="text-[#736B63] hover:text-[#2B2623] underline cursor-pointer"
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div id="checkout-guest-login-banner" className="bg-[#FAF8F5] border border-[#EAE3D9] rounded-sm text-xs overflow-hidden">
+            <div className="p-3.5 flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2 text-[#5C554F]">
+                <User className="w-3.5 h-3.5 text-[#8C6A54] shrink-0" />
+                <span>
+                  Returning customer?{' '}
+                  <button
+                    type="button"
+                    id="checkout-login-toggle-btn"
+                    onClick={() => setShowInlineLogin(!showInlineLogin)}
+                    className="text-[#8C6A54] hover:underline font-bold cursor-pointer inline-flex items-center gap-1"
+                  >
+                    <span>{showInlineLogin ? 'Close login form' : 'Click here to log in'}</span>
+                  </button>{' '}
+                  <span className="text-[#736B63]">(or continue as guest below)</span>
+                </span>
+              </div>
+              <button
+                type="button"
+                id="checkout-toggle-arrow-btn"
+                onClick={() => setShowInlineLogin(!showInlineLogin)}
+                className="text-[#8C6A54] p-1 cursor-pointer"
+              >
+                {showInlineLogin ? (
+                  <ChevronUp className="w-4 h-4" />
+                ) : (
+                  <ChevronDown className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+
+            {showInlineLogin && (
+              <div id="checkout-inline-login-form" className="p-4 bg-white border-t border-[#EAE3D9] space-y-3">
+                <p className="text-[11px] text-[#736B63]">
+                  Have an account with us? Enter your email address to log in and automatically pre-fill your saved shipping addresses.
+                </p>
+                {loginErrorMsg && (
+                  <p className="text-xs text-red-600 flex items-center gap-1.5">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{loginErrorMsg}</span>
+                  </p>
+                )}
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="email"
+                    id="checkout-inline-login-email-input"
+                    value={loginEmailInput}
+                    onChange={(e) => setLoginEmailInput(e.target.value)}
+                    placeholder="Enter your registered email address"
+                    className="flex-1 bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-2 text-xs text-[#2B2623] focus:outline-none focus:border-[#8C6A54]"
+                  />
+                  <button
+                    type="button"
+                    id="checkout-inline-login-submit-btn"
+                    onClick={handleInlineLogin}
+                    className="bg-[#2B2623] hover:bg-[#47403C] text-white text-xs font-bold px-4 py-2 rounded-sm transition-colors cursor-pointer"
+                  >
+                    Log In
+                  </button>
+                  <button
+                    type="button"
+                    id="checkout-inline-demo-login-btn"
+                    onClick={handleQuickDemoLogin}
+                    className="bg-[#FAF5EE] border border-[#D9D0C3] hover:bg-[#EAE3D9] text-[#2B2623] text-xs font-semibold px-3 py-2 rounded-sm transition-colors whitespace-nowrap cursor-pointer"
+                  >
+                    Demo Account
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Contact info */}
         <div className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-xs space-y-4">
           <div className="flex items-center justify-between">
@@ -289,6 +491,72 @@ export default function CheckoutForm() {
             </select>
           </div>
         </div>
+
+        {/* Optional Account Creation Card (Guests Only) */}
+        {!customer && (
+          <div id="checkout-account-creation-card" className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-xs space-y-4">
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="checkout-create-account-checkbox"
+                checked={createAccountChecked}
+                onChange={(e) => {
+                  setCreateAccountChecked(e.target.checked);
+                  if (!e.target.checked) setAccountError('');
+                }}
+                className="mt-1 w-4 h-4 rounded border-[#D9D0C3] text-[#2B2623] focus:ring-[#8C6A54] accent-[#2B2623] cursor-pointer"
+              />
+              <label htmlFor="checkout-create-account-checkbox" className="cursor-pointer select-none">
+                <span className="text-xs font-bold text-[#2B2623] block">
+                  Create an account? (Optional)
+                </span>
+                <span className="text-[11px] text-[#736B63] block mt-0.5 leading-relaxed">
+                  Save your details to track orders, print receipts, and manage addresses in My Account. Leave this unchecked to check out as a guest.
+                </span>
+              </label>
+            </div>
+
+            {createAccountChecked && (
+              <div id="checkout-account-creation-fields" className="pt-4 border-t border-[#EAE3D9] space-y-3">
+                <div>
+                  <label htmlFor="checkout-account-password-input" className="block text-xs font-bold uppercase tracking-wider text-[#2B2623] mb-1">
+                    Create Account Password <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="checkout-account-password-input"
+                      value={accountPassword}
+                      onChange={(e) => {
+                        setAccountPassword(e.target.value);
+                        if (accountError) setAccountError('');
+                      }}
+                      placeholder="At least 6 characters"
+                      className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-2.5 pr-12 text-xs text-[#2B2623] focus:outline-none focus:border-[#8C6A54]"
+                    />
+                    <button
+                      type="button"
+                      id="checkout-toggle-password-visibility-btn"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#736B63] hover:text-[#2B2623] px-1 py-0.5 font-semibold cursor-pointer"
+                    >
+                      {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
+                  {accountError && (
+                    <p className="text-xs text-red-600 mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{accountError}</span>
+                    </p>
+                  )}
+                </div>
+                <p className="text-[11px] text-[#736B63] leading-relaxed">
+                  Your new account will be registered with <strong className="text-[#2B2623]">{formData.email || 'your email'}</strong> and you can log in at any time from the account page.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Shipping Method */}
         <div className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-xs space-y-3">

@@ -50,21 +50,21 @@ export default function FaqPage() {
             Still have questions?
           </h2>
           <p className="text-xs sm:text-sm text-[#5C554F] max-w-md mx-auto">
-            Our customer care specialists are available Monday through Saturday to assist with sizing advice, care questions, or order lookups.
+            Our customer care specialists are active right now. Send us a message via our contact form and <strong>we reply within minutes</strong>.
           </p>
           <div className="pt-2 flex items-center justify-center gap-4">
             <Link
               href="/contact"
               className="bg-[#2B2623] hover:bg-[#47403C] text-white text-xs font-semibold px-6 py-3 rounded-sm transition-colors flex items-center gap-2"
             >
-              <Mail className="w-3.5 h-3.5" />
-              <span>Contact Support</span>
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>Send Us a Message</span>
             </Link>
             <Link
-              href="/track-order"
+              href="/account"
               className="border border-[#D9D0C3] hover:bg-white text-[#2B2623] text-xs font-semibold px-6 py-3 rounded-sm transition-colors"
             >
-              Track an Order
+              My Account & Orders
             </Link>
           </div>
         </div>

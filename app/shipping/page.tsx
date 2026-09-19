@@ -104,17 +104,20 @@ export default function ShippingPage() {
           <div className="bg-white p-6 rounded-sm border border-[#EAE3D9] space-y-3">
             <div className="flex items-center gap-2.5 text-[#2B2623] font-bold font-serif text-base">
               <PackageCheck className="w-5 h-5 text-[#8C6A54]" />
-              <span>Real-Time Shipment Tracking</span>
+              <span>Courier Shipment Tracking & Delivery Updates</span>
             </div>
             <p>
-              You can check on the progress of your shipment at any point using our direct tracking page. Simply provide your CozyCorobes Order ID (found in your confirmation email) and billing email address.
+              Once your order has been packaged and dispatched from our UK fulfillment center, an official parcel tracking code will be issued directly by the courier service (Royal Mail). We will promptly send this tracking code and carrier link directly to your email address so you can track your package every step of the way on the courier&apos;s live tracking portal.
+            </p>
+            <p className="text-xs text-[#736B63] leading-relaxed">
+              To review your full order details, items purchased, fulfillment status, and delivery addresses at any time, simply log into your customer account.
             </p>
             <div className="pt-2">
               <Link
-                href="/track-order"
+                href="/account"
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8C6A54] hover:text-[#2B2623] underline"
               >
-                <span>Go to Order Tracking Page &rarr;</span>
+                <span>Visit My Account & Orders &rarr;</span>
               </Link>
             </div>
           </div>

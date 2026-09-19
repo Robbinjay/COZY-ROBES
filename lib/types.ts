@@ -85,6 +85,30 @@ export interface OrderItem {
   image: string;
 }
 
+export interface CustomerAddress {
+  firstName: string;
+  lastName: string;
+  company?: string;
+  address1: string;
+  address2?: string;
+  city: string;
+  county?: string;
+  postcode: string;
+  country: string;
+  phone?: string;
+}
+
+export interface CustomerUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  billingAddress?: CustomerAddress;
+  shippingAddress?: CustomerAddress;
+  createdAt: string;
+}
+
 export interface Order {
   id: string; // e.g. CCR-89421
   date: string;

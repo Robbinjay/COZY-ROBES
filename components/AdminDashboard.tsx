@@ -239,7 +239,7 @@ export default function AdminDashboard() {
                 <div className="text-[11px] text-[#5C554F]">
                   <p><strong>Customer:</strong> {ord.customerName} ({ord.email})</p>
                   <p><strong>Items:</strong> {ord.items.map((i) => `${i.name} (x${i.quantity})`).join(', ')}</p>
-                  <p><strong>Carrier:</strong> {ord.carrier} • Tracking: {ord.trackingNumber}</p>
+                  <p><strong>Carrier:</strong> {ord.carrier} • Tracking: Courier code emailed to customer upon dispatch</p>
                 </div>
 
                 {/* Status selector */}

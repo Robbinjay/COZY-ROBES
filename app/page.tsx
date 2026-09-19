@@ -580,10 +580,10 @@ export default function HomePage() {
             <Link href="/faq" className="text-[#8C6A54] underline font-semibold">
               Complete FAQ Page
             </Link>{' '}
-            or contact our customer care team at{' '}
-            <a href="mailto:support@cozyrobe.co.uk" className="text-[#8C6A54] underline font-semibold">
-              support@cozyrobe.co.uk
-            </a>.
+            or send us a message via our{' '}
+            <Link href="/contact" className="text-[#8C6A54] underline font-semibold">
+              Contact Form
+            </Link>. We reply within minutes.
           </div>
 
         </div>

@@ -451,7 +451,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     category: 'Orders',
     question: 'How do I contact customer support?',
-    answer: 'Our customer support specialists are based in the UK and available Monday through Friday from 9:00 AM to 5:00 PM GMT. Reach us at support@cozyrobe.co.uk or through our Contact page. We respond to every inquiry within 24 hours.',
+    answer: 'Please send us a message on our [Contact Form](/contact) — we reply within minutes! Our customer support specialists monitor inquiries continuously during operational hours. You can also reach our administrative email directly at support@cozyrobe.co.uk.',
   },
   {
     category: 'Products',

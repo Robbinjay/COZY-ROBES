@@ -4,7 +4,7 @@ import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { CheckCircle2, Truck } from 'lucide-react';
+import { CheckCircle2, User, Package } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 import { formatPrice } from '@/lib/utils';
 
@@ -33,17 +33,21 @@ function ConfirmationContent() {
         </h1>
 
         <p className="text-xs sm:text-sm text-[#5C554F] max-w-md mx-auto">
-          Your order number is <strong className="text-[#2B2623] font-mono">{order?.id || orderId}</strong>. We have sent a receipt and tracking confirmation to{' '}
+          Your order number is <strong className="text-[#2B2623] font-mono">{order?.id || orderId}</strong>. We have sent an order confirmation and receipt to{' '}
           <strong className="text-[#2B2623]">{order?.email || 'your email address'}</strong>.
+        </p>
+
+        <p className="text-xs text-[#736B63] max-w-lg mx-auto leading-relaxed">
+          Once your package is dispatched by our UK warehouse, an official tracking code will be issued directly by the courier service (Royal Mail) and sent directly to your email address.
         </p>
 
         <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
           <Link
-            href={`/track-order`}
+            href="/account"
             className="bg-[#2B2623] hover:bg-[#47403C] text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-sm transition-colors flex items-center gap-2"
           >
-            <Truck className="w-4 h-4" />
-            <span>Track This Shipment</span>
+            <User className="w-4 h-4" />
+            <span>View In My Account</span>
           </Link>
 
           <Link
@@ -87,8 +91,8 @@ function ConfirmationContent() {
                 <p className="text-[11px] text-[#736B63] mt-2">
                   Carrier: <span className="font-semibold text-[#2B2623]">{order.carrier}</span>
                 </p>
-                <p className="text-[11px] text-[#736B63]">
-                  Tracking Number: <span className="font-mono font-bold text-[#2B2623]">{order.trackingNumber}</span>
+                <p className="text-[11px] text-[#736B63] mt-1 leading-relaxed">
+                  Courier Tracking: <span className="text-[#5C554F]">An official carrier tracking code will be issued upon dispatch and emailed to {order.email}.</span>
                 </p>
               </div>
             </div>

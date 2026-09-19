@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
-import { CartItem, Product, StoreConfig, Order } from './types';
+import { CartItem, Product, StoreConfig, Order, CustomerUser, CustomerAddress } from './types';
 import { DEFAULT_STORE_CONFIG, PRODUCTS } from './store-data';
 
 interface StoreContextType {
@@ -31,6 +31,22 @@ interface StoreContextType {
   findOrder: (orderId: string, email: string) => Order | undefined;
   lookupOrder: (orderId: string, email?: string) => Order | undefined;
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
+
+  // Customer Account management (WordPress/WooCommerce style)
+  customer: CustomerUser | null;
+  loginCustomer: (email: string, password?: string) => { success: boolean; message?: string };
+  registerCustomer: (data: {
+    email: string;
+    password?: string;
+    firstName: string;
+    lastName: string;
+    shippingAddress?: CustomerAddress;
+    billingAddress?: CustomerAddress;
+  }) => { success: boolean; message?: string };
+  logoutCustomer: () => void;
+  updateCustomerProfile: (data: Partial<CustomerUser>) => void;
+  updateCustomerAddresses: (billing?: CustomerAddress, shipping?: CustomerAddress) => void;
+  getCustomerOrders: () => Order[];
 }
 
 const StoreContext = createContext<StoreContextType | null>(null);
@@ -38,39 +54,129 @@ const StoreContext = createContext<StoreContextType | null>(null);
 const CART_STORAGE_KEY = 'cozyrobe_cart_v2';
 const CONFIG_STORAGE_KEY = 'cozyrobe_config_v2';
 const ORDERS_STORAGE_KEY = 'cozyrobe_orders_v2';
+const CUSTOMER_STORAGE_KEY = 'cozyrobe_customer_v2';
+const USERS_LIST_STORAGE_KEY = 'cozyrobe_registered_users_v2';
 
-// Seed a realistic sample order for quick testing in Track Order
-const INITIAL_DEMO_ORDER: Order = {
-  id: 'CCR-782194',
-  date: '2026-09-14',
+export const DEMO_CUSTOMER: CustomerUser = {
+  id: 'cust-sarah-jenkins',
   email: 'customer@example.com',
-  customerName: 'Sarah Jenkins',
-  shippingAddress: {
+  firstName: 'Sarah',
+  lastName: 'Jenkins',
+  displayName: 'Sarah',
+  createdAt: '2026-08-15',
+  billingAddress: {
+    firstName: 'Sarah',
+    lastName: 'Jenkins',
     address1: '14 Kensington Church Street',
+    address2: 'Flat 3B',
     city: 'London',
-    state: 'Greater London',
-    postalCode: 'W8 4EP',
+    county: 'Greater London',
+    postcode: 'W8 4EP',
     country: 'United Kingdom',
+    phone: '07700 900142',
   },
-  shippingMethod: 'Royal Mail Tracked 48 (Free UK Delivery)',
-  items: [],
-  subtotal: 0,
-  discount: 0,
-  shippingCost: 0,
-  tax: 0.00,
-  total: 0,
-  status: 'Shipped',
-  trackingNumber: 'GB940011189922UK',
-  carrier: 'Royal Mail',
-  estimatedDelivery: 'September 18, 2026',
+  shippingAddress: {
+    firstName: 'Sarah',
+    lastName: 'Jenkins',
+    address1: '14 Kensington Church Street',
+    address2: 'Flat 3B',
+    city: 'London',
+    county: 'Greater London',
+    postcode: 'W8 4EP',
+    country: 'United Kingdom',
+    phone: '07700 900142',
+  },
 };
+
+// Seed realistic sample orders for WooCommerce-style order tracking
+const INITIAL_DEMO_ORDERS: Order[] = [
+  {
+    id: 'CCR-782194',
+    date: '2026-09-14',
+    email: 'customer@example.com',
+    customerName: 'Sarah Jenkins',
+    shippingAddress: {
+      address1: '14 Kensington Church Street',
+      address2: 'Flat 3B',
+      city: 'London',
+      state: 'Greater London',
+      postalCode: 'W8 4EP',
+      country: 'United Kingdom',
+    },
+    shippingMethod: 'Royal Mail Tracked 48 (Free UK Delivery)',
+    items: [
+      {
+        productId: 'prod-cozy-co-robe',
+        name: 'The Cozy Co. Robe',
+        color: 'Charcoal',
+        size: 'One Size (Unisex)',
+        quantity: 1,
+        price: 69.99,
+        image: '/images/featured_robe_studio.jpg',
+      },
+      {
+        productId: 'prod-cozyco-foot-warmer',
+        name: 'CozyCo Foot Warmer',
+        color: 'Standard',
+        size: 'One Size',
+        quantity: 1,
+        price: 12.99,
+        image: '/images/cozyco_foot_warmer.avif',
+      },
+    ],
+    subtotal: 82.98,
+    discount: 0,
+    shippingCost: 0,
+    tax: 0.00,
+    total: 82.98,
+    status: 'Processing',
+    carrier: 'Royal Mail Tracked 48',
+    estimatedDelivery: 'September 22, 2026',
+  },
+  {
+    id: 'CCR-651902',
+    date: '2026-08-20',
+    email: 'customer@example.com',
+    customerName: 'Sarah Jenkins',
+    shippingAddress: {
+      address1: '14 Kensington Church Street',
+      address2: 'Flat 3B',
+      city: 'London',
+      state: 'Greater London',
+      postalCode: 'W8 4EP',
+      country: 'United Kingdom',
+    },
+    shippingMethod: 'Royal Mail Tracked 24',
+    items: [
+      {
+        productId: 'prod-cozyco-pillow',
+        name: 'CozyCo Cloud Pillow',
+        color: 'Standard',
+        size: 'Standard Ergonomic (60x40cm)',
+        quantity: 1,
+        price: 19.99,
+        image: '/images/cozyco_cloud_pillow.png',
+      },
+    ],
+    subtotal: 19.99,
+    discount: 0,
+    shippingCost: 6.99,
+    tax: 0.00,
+    total: 26.98,
+    status: 'Delivered',
+    carrier: 'Royal Mail Tracked 24',
+    estimatedDelivery: 'August 22, 2026',
+  },
+];
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [config, setConfig] = useState<StoreConfig>(DEFAULT_STORE_CONFIG);
-  const [orders, setOrders] = useState<Order[]>([INITIAL_DEMO_ORDER]);
+  const [orders, setOrders] = useState<Order[]>(INITIAL_DEMO_ORDERS);
+  const [customer, setCustomer] = useState<CustomerUser | null>(null);
+  const [registeredUsers, setRegisteredUsers] = useState<CustomerUser[]>([DEMO_CUSTOMER]);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Load persisted state on mount
@@ -99,6 +205,22 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           if (Array.isArray(parsed) && parsed.length > 0) {
             setOrders(parsed);
           }
+        }
+        const savedUsers = localStorage.getItem(USERS_LIST_STORAGE_KEY);
+        let currentUsers = [DEMO_CUSTOMER];
+        if (savedUsers) {
+          const parsed = JSON.parse(savedUsers);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            currentUsers = parsed;
+            setRegisteredUsers(parsed);
+          }
+        }
+        const savedCustomer = localStorage.getItem(CUSTOMER_STORAGE_KEY);
+        if (savedCustomer) {
+          setCustomer(JSON.parse(savedCustomer));
+        } else {
+          // Default to demo customer logged in so customer can immediately explore the account page
+          setCustomer(DEMO_CUSTOMER);
         }
       } catch {
         // Fallback silently if localStorage blocked
@@ -138,6 +260,21 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       // ignore
     }
   }, [orders, isInitialized]);
+
+  // Save customer and users
+  useEffect(() => {
+    if (!isInitialized) return;
+    try {
+      if (customer) {
+        localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(customer));
+      } else {
+        localStorage.removeItem(CUSTOMER_STORAGE_KEY);
+      }
+      localStorage.setItem(USERS_LIST_STORAGE_KEY, JSON.stringify(registeredUsers));
+    } catch {
+      // ignore
+    }
+  }, [customer, registeredUsers, isInitialized]);
 
   const addToCart = (product: Product, color: string, size: string, quantity = 1, openDrawer = true) => {
     const itemId = `${product.id}-${color.toLowerCase().replace(/\s+/g, '-')}-${size.toLowerCase().replace(/\s+/g, '-')}`;
@@ -206,8 +343,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       id: `CCR-${Math.floor(100000 + Math.random() * 900000)}`,
       date: new Date().toISOString().split('T')[0],
       status: 'Order Placed',
-      carrier: 'Royal Mail Tracked 48',
-      trackingNumber: `GB${Math.floor(100000000 + Math.random() * 900000000)}GB`,
+      carrier: 'Royal Mail',
       estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', {
         day: 'numeric',
         month: 'long',
@@ -248,6 +384,102 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const loginCustomer = (email: string): { success: boolean; message?: string } => {
+    const cleanEmail = email.trim().toLowerCase();
+    const existing = registeredUsers.find((u) => u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      setCustomer(existing);
+      return { success: true };
+    }
+    const newCust: CustomerUser = {
+      id: `cust-${Date.now()}`,
+      email: cleanEmail,
+      firstName: cleanEmail.split('@')[0],
+      lastName: '',
+      displayName: cleanEmail.split('@')[0],
+      createdAt: new Date().toISOString().split('T')[0],
+    };
+    setRegisteredUsers((prev) => [...prev, newCust]);
+    setCustomer(newCust);
+    return { success: true };
+  };
+
+  const registerCustomer = (data: {
+    email: string;
+    password?: string;
+    firstName: string;
+    lastName: string;
+    shippingAddress?: CustomerAddress;
+    billingAddress?: CustomerAddress;
+  }): { success: boolean; message?: string } => {
+    const cleanEmail = data.email.trim().toLowerCase();
+    const existing = registeredUsers.find((u) => u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      return { success: false, message: 'An account is already registered with this email address. Please log in.' };
+    }
+    const newCust: CustomerUser = {
+      id: `cust-${Date.now()}`,
+      email: cleanEmail,
+      firstName: data.firstName.trim() || cleanEmail.split('@')[0],
+      lastName: data.lastName.trim(),
+      displayName: data.firstName.trim() || cleanEmail.split('@')[0],
+      createdAt: new Date().toISOString().split('T')[0],
+      billingAddress: data.billingAddress || {
+        firstName: data.firstName.trim(),
+        lastName: data.lastName.trim(),
+        address1: '',
+        city: '',
+        postcode: '',
+        country: 'United Kingdom',
+      },
+      shippingAddress: data.shippingAddress || {
+        firstName: data.firstName.trim(),
+        lastName: data.lastName.trim(),
+        address1: '',
+        city: '',
+        postcode: '',
+        country: 'United Kingdom',
+      },
+    };
+    setRegisteredUsers((prev) => [...prev, newCust]);
+    setCustomer(newCust);
+    return { success: true };
+  };
+
+  const logoutCustomer = () => {
+    setCustomer(null);
+  };
+
+  const updateCustomerProfile = (data: Partial<CustomerUser>) => {
+    if (!customer) return;
+    const updated = { ...customer, ...data };
+    setCustomer(updated);
+    setRegisteredUsers((prev) =>
+      prev.map((u) => (u.id === customer.id ? updated : u))
+    );
+  };
+
+  const updateCustomerAddresses = (billing?: CustomerAddress, shipping?: CustomerAddress) => {
+    if (!customer) return;
+    const updated: CustomerUser = {
+      ...customer,
+      billingAddress: billing !== undefined ? billing : customer.billingAddress,
+      shippingAddress: shipping !== undefined ? shipping : customer.shippingAddress,
+    };
+    setCustomer(updated);
+    setRegisteredUsers((prev) =>
+      prev.map((u) => (u.id === customer.id ? updated : u))
+    );
+  };
+
+  const getCustomerOrders = (): Order[] => {
+    if (!customer) return [];
+    const custEmail = customer.email.toLowerCase();
+    const matching = orders.filter((o) => o.email.toLowerCase() === custEmail);
+    if (matching.length > 0) return matching;
+    return orders;
+  };
+
   const cartCount = useMemo(() => cart.reduce((acc, item) => acc + item.quantity, 0), [cart]);
   const cartSubtotal = useMemo(() => cart.reduce((acc, item) => acc + item.price * item.quantity, 0), [cart]);
   const freeShippingThreshold = config.shipping.freeShippingThreshold;
@@ -280,6 +512,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         findOrder,
         lookupOrder,
         updateOrderStatus,
+        customer,
+        loginCustomer,
+        registerCustomer,
+        logoutCustomer,
+        updateCustomerProfile,
+        updateCustomerAddresses,
+        getCustomerOrders,
       }}
     >
       {children}
