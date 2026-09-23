@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
     const zohoUser = process.env.ZOHO_EMAIL;
     const zohoPass = process.env.ZOHO_PASSWORD;
-    const adminEmail = process.env.ADMIN_EMAIL || zohoUser || 'support@cozyrobe.co.uk';
+    const adminEmail = process.env.ADMIN_EMAIL || zohoUser || 'sales@cozyrobe.co.uk';
     const smtpHost = process.env.ZOHO_SMTP_HOST || 'smtp.zoho.com';
     const smtpPort = Number(process.env.ZOHO_SMTP_PORT) || 465;
 
@@ -152,7 +152,7 @@ export async function POST(req: Request) {
       <p>Warmest regards,<br><strong>The CozyCorobes Team</strong></p>
     </div>
     <div class="footer">
-      CozyCorobes &bull; 71–75 Shelton Street, Covent Garden, London, WC2H 9JQ &bull; support@cozyrobe.co.uk
+      CozyCorobes &bull; 71–75 Shelton Street, Covent Garden, London, WC2H 9JQ &bull; sales@cozyrobe.co.uk
     </div>
   </div>
 </body>

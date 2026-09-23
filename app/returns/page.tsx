@@ -73,8 +73,8 @@ export default function ReturnsPage() {
             <ol className="list-decimal pl-5 space-y-2 text-[#736B63]">
               <li>
                 <strong>Contact Customer Care:</strong> Email us at{' '}
-                <a href="mailto:support@cozyrobe.co.uk" className="text-[#8C6A54] underline">
-                  support@cozyrobe.co.uk
+                <a href="mailto:sales@cozyrobe.co.uk" className="text-[#8C6A54] underline">
+                  sales@cozyrobe.co.uk
                 </a>{' '}
                 with your CozyCorobes Order ID and the reason for return/exchange.
               </li>

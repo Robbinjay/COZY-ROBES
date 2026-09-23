@@ -29,6 +29,8 @@ import { PRODUCTS } from '@/lib/store-data';
 import { Product } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 
+const generateOrderId = () => `CCR-${Math.floor(100000 + Math.random() * 900000)}`;
+
 export default function CheckoutForm() {
   const { customer } = useStore();
   return <CheckoutFormContent key={customer?.id || 'guest'} customer={customer} />;
@@ -181,7 +183,7 @@ function CheckoutFormContent({ customer }: { customer: ReturnType<typeof useStor
         label: paymentLabels[paymentMethod]
       };
 
-      const orderId = `CCR-${Math.floor(100000 + Math.random() * 900000)}`;
+      const orderId = generateOrderId();
 
       const response = await fetch('/api/checkout', {
         method: 'POST',

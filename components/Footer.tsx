@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, ShieldCheck, Truck, RotateCcw, Check, Instagram, Phone } from 'lucide-react';
+import { Mail, ShieldCheck, Truck, RotateCcw, Check, Instagram, Phone, Music2 } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 
 export default function Footer() {
@@ -67,6 +67,27 @@ export default function Footer() {
             <p className="text-sm text-[#BDB2A7] leading-relaxed max-w-sm">
               Wearable warmth designed for slow mornings, chilly evenings, and everyday relaxation at home. Uncompromising softness meets intelligent personal heating.
             </p>
+
+            <div className="flex items-center gap-3 pt-2">
+              <a 
+                href="https://www.instagram.com/cozyrobes_?stkn=NGNhd2hvZmtoNWVr&utm_source=qr" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-sm bg-[#2E2927] border border-[#47403C] flex items-center justify-center text-[#BDB2A7] hover:text-[#C89B7B] hover:border-[#C89B7B] transition-all"
+                aria-label="Follow us on Instagram"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a 
+                href="https://www.tiktok.com/@cozyrobes_?_r=1&_t=ZN-99xyUM5S0al" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-sm bg-[#2E2927] border border-[#47403C] flex items-center justify-center text-[#BDB2A7] hover:text-[#C89B7B] hover:border-[#C89B7B] transition-all"
+                aria-label="Follow us on TikTok"
+              >
+                <Music2 className="w-4 h-4" />
+              </a>
+            </div>
 
             <div className="pt-2">
               <p className="text-xs font-semibold uppercase tracking-wider text-[#D9CFC4] mb-2">

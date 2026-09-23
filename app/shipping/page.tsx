@@ -146,7 +146,7 @@ export default function ShippingPage() {
             <ul className="list-disc pl-5 space-y-1 text-[#736B63]">
               <li>Check safe places, porches, package lockers, or with household neighbors.</li>
               <li>Wait 24 hours, as Royal Mail occasionally marks parcels prior to final drop-off.</li>
-              <li>Contact our support team at <a href="mailto:support@cozyrobe.co.uk" className="text-[#8C6A54] underline">support@cozyrobe.co.uk</a> with your order number. We will initiate a trace with Royal Mail immediately.</li>
+              <li>Contact our support team at <a href="mailto:sales@cozyrobe.co.uk" className="text-[#8C6A54] underline">sales@cozyrobe.co.uk</a> with your order number. We will initiate a trace with Royal Mail immediately.</li>
             </ul>
           </div>
 
