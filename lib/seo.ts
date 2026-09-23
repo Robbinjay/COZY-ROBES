@@ -10,10 +10,10 @@ export function getOrganizationSchema() {
     url: SITE_URL,
     logo: `${SITE_URL}/images/featured_robe_studio.jpg`,
     description: 'Specialists in premium electric heated robes and personal home comfort loungewear in the United Kingdom.',
-    email: 'sales@cozyrobe.co.uk',
+    email: 'support@cozyrobe.co.uk',
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'sales@cozyrobe.co.uk',
+      email: 'support@cozyrobe.co.uk',
       contactType: 'customer service',
       availableLanguage: 'English',
     },

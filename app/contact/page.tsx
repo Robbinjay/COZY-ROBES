@@ -64,10 +64,10 @@ export default function ContactPage() {
                   <h3 className="font-serif text-sm font-bold">Admin Email Desk</h3>
                   <a
                     id="support-email-link"
-                    href="mailto:sales@cozyrobe.co.uk"
+                    href="mailto:support@cozyrobe.co.uk"
                     className="text-xs text-[#8C6A54] hover:underline"
                   >
-                    sales@cozyrobe.co.uk
+                    support@cozyrobe.co.uk
                   </a>
                 </div>
               </div>

@@ -13,7 +13,7 @@ export const DEFAULT_STORE_CONFIG: StoreConfig = {
     name: 'CozyCorobes',
     domain: 'https://cozyrobe.co.uk',
     tagline: 'Warmth You Can Wear.',
-    supportEmail: 'sales@cozyrobe.co.uk',
+    supportEmail: 'support@cozyrobe.co.uk',
     supportHours: 'Monday – Friday, 9:00 AM – 5:00 PM GMT',
     address: 'CozyCorobes UK, 71–75 Shelton Street, Covent Garden, London, WC2H 9JQ, United Kingdom',
   },
@@ -451,7 +451,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     category: 'Orders',
     question: 'How do I contact customer support?',
-    answer: 'Please send us a message on our [Contact Form](/contact) — we reply within minutes! Our customer support specialists monitor inquiries continuously during operational hours. You can also reach our administrative email directly at sales@cozyrobe.co.uk.',
+    answer: 'Please send us a message on our [Contact Form](/contact) — we reply within minutes! Our customer support specialists monitor inquiries continuously during operational hours. You can also reach our administrative email directly at support@cozyrobe.co.uk.',
   },
   {
     category: 'Products',
