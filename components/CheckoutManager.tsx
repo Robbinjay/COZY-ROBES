@@ -13,23 +13,50 @@ import {
   CreditCard, 
   ShoppingBag, 
   ShieldCheck,
-  Info
+  Info,
+  Loader2
 } from 'lucide-react';
 
 export default function CheckoutManager() {
   const { cart, cartSubtotal, cartCount, isFreeShippingEligible, config, customer } = useStore();
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
+  const [isMounted, setIsMounted] = useState(false);
   
   const [formData, setFormData] = useState({
-    email: customer?.email || '',
-    firstName: customer?.firstName || '',
-    lastName: customer?.lastName || '',
-    address1: customer?.shippingAddress?.address1 || '',
-    address2: customer?.shippingAddress?.address2 || '',
-    city: customer?.shippingAddress?.city || '',
-    postalCode: customer?.shippingAddress?.postcode || '',
-    country: customer?.shippingAddress?.country || 'United Kingdom',
+    email: '',
+    firstName: '',
+    lastName: '',
+    address1: '',
+    address2: '',
+    city: '',
+    postalCode: '',
+    country: 'United Kingdom',
   });
+
+  // Handle hydration and initial data loading
+  useEffect(() => {
+    setIsMounted(true);
+    if (customer) {
+      setFormData({
+        email: customer.email || '',
+        firstName: customer.firstName || '',
+        lastName: customer.lastName || '',
+        address1: customer.shippingAddress?.address1 || '',
+        address2: customer.shippingAddress?.address2 || '',
+        city: customer.shippingAddress?.city || '',
+        postalCode: customer.shippingAddress?.postcode || '',
+        country: customer.shippingAddress?.country || 'United Kingdom',
+      });
+    }
+  }, [customer]);
+
+  if (!isMounted) {
+    return (
+      <div className="h-96 flex items-center justify-center bg-white border border-[#EAE3D9] rounded-sm">
+        <Loader2 className="w-8 h-8 animate-spin text-[#D9D0C3]" />
+      </div>
+    );
+  }
 
   const shippingCost = isFreeShippingEligible ? 0 : config.shipping.standardShippingRate;
   const total = cartSubtotal + shippingCost;

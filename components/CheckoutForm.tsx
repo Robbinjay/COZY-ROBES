@@ -45,12 +45,12 @@ export default function CheckoutForm({ amount, customerInfo, onSuccess }: Checko
         }
       }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.clientSecret) {
+      .then(async (res) => {
+        const data = await res.json();
+        if (res.ok && data.clientSecret) {
           setClientSecret(data.clientSecret);
         } else {
-          setMessage('Could not initialize payment. Please try again.');
+          setMessage(data.error || 'Payment setup failed. Please check your Stripe configuration.');
         }
       })
       .catch((err) => {
@@ -63,8 +63,6 @@ export default function CheckoutForm({ amount, customerInfo, onSuccess }: Checko
     e.preventDefault();
 
     if (!stripe || !elements || !clientSecret) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
@@ -73,7 +71,6 @@ export default function CheckoutForm({ amount, customerInfo, onSuccess }: Checko
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Return URL for redirection (not used if payment is confirmed immediately)
         return_url: `${window.location.origin}/order-confirmation`,
         payment_method_data: {
           billing_details: {
@@ -86,11 +83,6 @@ export default function CheckoutForm({ amount, customerInfo, onSuccess }: Checko
     });
 
     if (error) {
-      // This point will only be reached if there is an immediate error when
-      // confirming the payment. Otherwise, your customer will be redirected to
-      // your `return_url`. For some payment methods like iDEAL, your customer will
-      // be redirected to an intermediate site first to authorize the payment, then
-      // redirected to the `return_url`.
       if (error.type === "card_error" || error.type === "validation_error") {
         setMessage(error.message || "An unexpected error occurred.");
       } else {
@@ -99,12 +91,11 @@ export default function CheckoutForm({ amount, customerInfo, onSuccess }: Checko
       setIsLoading(false);
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       // Payment succeeded!
-      // Create the order in our local store
       const order = createOrder({
         email: customerInfo.email,
         customerName: `${customerInfo.firstName} ${customerInfo.lastName}`,
         shippingAddress: customerInfo.shippingAddress,
-        shippingMethod: 'Stripe Credit Card', // Example
+        shippingMethod: 'Stripe Credit Card',
         items: cart.map(item => ({
           productId: item.productId,
           name: item.name,
@@ -114,7 +105,7 @@ export default function CheckoutForm({ amount, customerInfo, onSuccess }: Checko
           price: item.price,
           image: item.image,
         })),
-        subtotal: amount, // For simplicity
+        subtotal: amount,
         discount: 0,
         shippingCost: 0,
         tax: 0,
@@ -129,11 +120,22 @@ export default function CheckoutForm({ amount, customerInfo, onSuccess }: Checko
     }
   };
 
-  if (!clientSecret) {
+  if (!clientSecret && !message) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 space-y-4">
+      <div className="flex flex-col items-center justify-center p-12 space-y-4 border border-[#EAE3D9] rounded-sm bg-[#FAF8F5]">
         <Loader2 className="w-8 h-8 animate-spin text-[#8C6A54]" />
         <p className="text-sm text-[#736B63] font-medium">Securing payment connection...</p>
+      </div>
+    );
+  }
+
+  if (message && !clientSecret) {
+    return (
+      <div className="p-8 border border-red-100 bg-red-50 rounded-sm text-center">
+        <p className="text-sm text-red-700 font-medium mb-4">{message}</p>
+        <p className="text-[10px] text-red-600 uppercase tracking-widest font-bold">
+          Developer Note: Ensure STRIPE_SECRET_KEY is set in your environment.
+        </p>
       </div>
     );
   }
