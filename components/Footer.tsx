@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, ShieldCheck, Truck, RotateCcw, Check, Instagram, Phone, Music2 } from 'lucide-react';
+import { Mail, ShieldCheck, Truck, RotateCcw, Check, Instagram, Phone, Music2, MessageCircle } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 
 export default function Footer() {
@@ -16,6 +16,8 @@ export default function Footer() {
     setSubscribed(true);
     setNewsletterEmail('');
   };
+
+  const { instagram, tiktok, whatsapp } = config.socialLinks;
 
   return (
     <footer id="main-footer" className="bg-[#231F1D] text-[#ECE6DF] pt-16 pb-12 border-t border-[#383330]">
@@ -69,24 +71,39 @@ export default function Footer() {
             </p>
 
             <div className="flex items-center gap-3 pt-2">
-              <a 
-                href="https://www.instagram.com/cozyrobes_?stkn=NGNhd2hvZmtoNWVr&utm_source=qr" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-sm bg-[#2E2927] border border-[#47403C] flex items-center justify-center text-[#BDB2A7] hover:text-[#C89B7B] hover:border-[#C89B7B] transition-all"
-                aria-label="Follow us on Instagram"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a 
-                href="https://www.tiktok.com/@cozyrobes_?_r=1&_t=ZN-99xyUM5S0al" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-sm bg-[#2E2927] border border-[#47403C] flex items-center justify-center text-[#BDB2A7] hover:text-[#C89B7B] hover:border-[#C89B7B] transition-all"
-                aria-label="Follow us on TikTok"
-              >
-                <Music2 className="w-4 h-4" />
-              </a>
+              {instagram && (
+                <a 
+                  href={instagram} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-sm bg-[#2E2927] border border-[#47403C] flex items-center justify-center text-[#BDB2A7] hover:text-[#C89B7B] hover:border-[#C89B7B] transition-all"
+                  aria-label="Follow us on Instagram"
+                >
+                  <Instagram className="w-4 h-4" />
+                </a>
+              )}
+              {tiktok && (
+                <a 
+                  href={tiktok} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-sm bg-[#2E2927] border border-[#47403C] flex items-center justify-center text-[#BDB2A7] hover:text-[#C89B7B] hover:border-[#C89B7B] transition-all"
+                  aria-label="Follow us on TikTok"
+                >
+                  <Music2 className="w-4 h-4" />
+                </a>
+              )}
+              {whatsapp && (
+                <a 
+                  href={whatsapp} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-sm bg-[#2E2927] border border-[#47403C] flex items-center justify-center text-[#BDB2A7] hover:text-[#25D366] hover:border-[#25D366] transition-all"
+                  aria-label="Contact us on WhatsApp"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                </a>
+              )}
             </div>
 
             <div className="pt-2">

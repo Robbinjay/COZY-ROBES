@@ -167,6 +167,7 @@ export interface StoreConfig {
     pinterest?: string;
     facebook?: string;
     tiktok?: string;
+    whatsapp?: string;
   };
 }
 

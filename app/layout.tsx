@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import SearchModal from '@/components/SearchModal';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import { getOrganizationSchema, getWebsiteSchema } from '@/lib/seo';
 
 const APP_URL = process.env.APP_URL || 'https://cozyrobe.co.uk';
@@ -106,6 +107,7 @@ export default function RootLayout({
           <Footer />
           <CartDrawer />
           <SearchModal />
+          <FloatingWhatsApp />
         </StoreProvider>
       </body>
     </html>

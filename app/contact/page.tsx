@@ -1,20 +1,16 @@
+'use client';
+
 import React from 'react';
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import ContactForm from '@/components/ContactForm';
-import { Mail, Clock, HelpCircle, Package, MapPin, Zap, MessageSquare } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Contact Us | CozyCorobes Customer Support',
-  description:
-    'Send our team a message on our contact form — we reply within minutes. Connected directly to our admin desk for order help, heating advice, and returns.',
-  alternates: {
-    canonical: '/contact',
-  },
-};
+import OrderLookupForm from '@/components/OrderLookupForm';
+import { Mail, Clock, HelpCircle, Package, MapPin, Zap, MessageCircle } from 'lucide-react';
+import { useStore } from '@/lib/store-context';
 
 export default function ContactPage() {
+  const { config } = useStore();
+
   return (
     <div id="contact-page-container" className="bg-[#FAF8F5] min-h-screen py-8 sm:py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -64,13 +60,33 @@ export default function ContactPage() {
                   <h3 className="font-serif text-sm font-bold">Admin Email Desk</h3>
                   <a
                     id="support-email-link"
-                    href="mailto:support@cozyrobe.co.uk"
+                    href={`mailto:${config.brand.supportEmail}`}
                     className="text-xs text-[#8C6A54] hover:underline"
                   >
-                    support@cozyrobe.co.uk
+                    {config.brand.supportEmail}
                   </a>
                 </div>
               </div>
+
+              {config.socialLinks.whatsapp && (
+                <div className="flex items-center gap-3 text-[#2B2623]">
+                  <div className="w-9 h-9 rounded-sm bg-[#EBF7EE] border border-[#CDE9D2] flex items-center justify-center text-[#25D366]">
+                    <MessageCircle className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-sm font-bold">WhatsApp Support</h3>
+                    <a
+                      id="whatsapp-support-link"
+                      href={config.socialLinks.whatsapp}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-[#25D366] font-bold hover:underline"
+                    >
+                      Chat with us now &rarr;
+                    </a>
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center gap-3 text-[#2B2623]">
                 <div className="w-9 h-9 rounded-sm bg-[#FAF8F5] border border-[#EAE3D9] flex items-center justify-center text-[#8C6A54]">
@@ -79,8 +95,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-serif text-sm font-bold">Customer Care Hours</h3>
                   <p className="text-xs text-[#736B63]">
-                    Mon &ndash; Fri: 9:00 AM &ndash; 6:00 PM GMT<br />
-                    Sat: 10:00 AM &ndash; 4:00 PM GMT
+                    {config.brand.supportHours}
                   </p>
                 </div>
               </div>
@@ -92,30 +107,14 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-serif text-sm font-bold">Operations &amp; Fulfillment</h3>
                   <p className="text-xs text-[#736B63]">
-                    71&ndash;75 Shelton Street, Covent Garden<br />
-                    London, WC2H 9JQ, United Kingdom
+                    {config.brand.address}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Quick Order Support Notice */}
-            <div id="account-orders-card" className="bg-[#FAF5EE] p-6 rounded-sm border border-[#EAE3D9] space-y-3">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#2B2623] uppercase tracking-wider">
-                <Package className="w-4 h-4 text-[#8C6A54]" />
-                <span>Checking on an Order?</span>
-              </div>
-              <p className="text-xs text-[#5C554F] leading-relaxed">
-                Log into your customer account to view order history, courier dispatch details, receipts, and saved delivery addresses.
-              </p>
-              <Link
-                id="contact-account-link"
-                href="/account"
-                className="inline-block text-xs text-[#8C6A54] hover:text-[#2B2623] underline font-semibold"
-              >
-                Go to My Account &amp; Orders &rarr;
-              </Link>
-            </div>
+            {/* Track My Order Lookup Form */}
+            <OrderLookupForm />
 
             {/* FAQ quick link */}
             <div id="faq-help-card" className="bg-white p-6 rounded-sm border border-[#EAE3D9] space-y-3">

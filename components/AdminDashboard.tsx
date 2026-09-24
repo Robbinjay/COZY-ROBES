@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const [returnWindowDays, setReturnWindowDays] = useState(config.returns.returnWindowDays);
   const [supportEmail, setSupportEmail] = useState(config.brand.supportEmail);
   const [supportPhone, setSupportPhone] = useState(config.brand.phone || '+44 20 7946 0912');
+  const [whatsappLink, setWhatsappLink] = useState(config.socialLinks.whatsapp || '');
 
   const [saved, setSaved] = useState(false);
 
@@ -42,6 +43,10 @@ export default function AdminDashboard() {
         ...config.brand,
         supportEmail,
         phone: supportPhone,
+      },
+      socialLinks: {
+        ...config.socialLinks,
+        whatsapp: whatsappLink,
       },
     });
     setSaved(true);
@@ -213,6 +218,20 @@ export default function AdminDashboard() {
                   className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-2.5 text-xs text-[#2B2623] focus:outline-none focus:border-[#8C6A54]"
                 />
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="admin-whatsapp-link" className="block text-xs font-bold uppercase tracking-wider text-[#2B2623] mb-1">
+                WhatsApp Support Link (wa.me)
+              </label>
+              <input
+                id="admin-whatsapp-link"
+                type="text"
+                value={whatsappLink}
+                onChange={(e) => setWhatsappLink(e.target.value)}
+                placeholder="https://wa.me/447000000000"
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-2.5 text-xs text-[#2B2623] focus:outline-none focus:border-[#8C6A54]"
+              />
             </div>
           </div>
 

@@ -29,8 +29,9 @@ export const DEFAULT_STORE_CONFIG: StoreConfig = {
     policySummary: 'Enjoy 30 days to try your CozyCorobes item at home across the UK. Clean, unwashed items in original condition qualify for a full refund or free exchange.',
   },
   socialLinks: {
-    instagram: 'https://instagram.com/cozycorobes',
-    pinterest: 'https://pinterest.com/cozycorobes',
+    instagram: 'https://www.instagram.com/cozyrobes_?stkn=NGNhd2hvZmtoNWVr&utm_source=qr',
+    tiktok: 'https://www.tiktok.com/@cozyrobes_?_r=1&_t=ZN-99xyUM5S0al',
+    whatsapp: 'https://wa.me/447000000000',
   },
 };
 
