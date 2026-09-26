@@ -24,39 +24,61 @@ export async function POST(req: NextRequest) {
 
     console.log('Using base URL for checkout:', baseUrl);
 
-    // Create a Bachs Checkout Session
-    const session = await (bachs.checkoutSessions.create as any)({
+    // Determine API endpoint
+    const isSandbox = process.env.BACHS_API_KEY.startsWith('sk_sandbox_');
+    const apiUrl = isSandbox ? 'https://sandbox-api.bachs.io/v1/checkout/sessions' : 'https://api.bachs.io/v1/checkout/sessions';
+
+    const payload = {
       success_url: `${baseUrl}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/checkout`,
-      customer: {
-        email: customerEmail,
-        name: customerName,
-      },
+      customer_email: customerEmail,
+      customer_name: customerName,
       line_items: items.map((item: any) => ({
         price_data: {
           currency: 'gbp',
           product_data: {
             name: item.name,
-            images: [item.image.startsWith('http') ? item.image : `${process.env.APP_URL || ''}${item.image}`],
+            images: [item.image.startsWith('http') ? item.image : `${baseUrl}${item.image}`],
             metadata: {
               color: item.color,
               size: item.size,
             }
           },
-          unit_amount: Math.round(item.price * 100), // in cents/pence
+          unit_amount: Math.round(item.price * 100),
         },
         quantity: item.quantity,
       })),
       metadata: {
         shipping_address: JSON.stringify(shippingAddress),
+      }
+    };
+
+    console.log('Sending payload to Bachs:', JSON.stringify(payload, null, 2));
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.BACHS_API_KEY}`,
       },
+      body: JSON.stringify(payload),
     });
 
-    return NextResponse.json({ url: session.url });
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Bachs API Error Details:', data);
+      return NextResponse.json(
+        { error: data.error?.message || data.message || 'Payment gateway returned an error' },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json({ url: data.url || data.checkout_url });
   } catch (error: any) {
-    console.error('Bachs Checkout Error:', error);
+    console.error('Bachs Checkout Exception:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to create checkout session' },
+      { error: error.message || 'An unexpected connection error occurred' },
       { status: 500 }
     );
   }
