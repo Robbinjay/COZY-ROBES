@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import CheckoutManager from '@/components/CheckoutManager';
+import CheckoutForm from '@/components/CheckoutForm';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default function CheckoutPage() {
           </h1>
         </div>
 
-        <CheckoutManager />
+        <CheckoutForm />
 
       </div>
     </div>

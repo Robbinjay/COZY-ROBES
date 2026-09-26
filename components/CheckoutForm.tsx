@@ -1,178 +1,202 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import {
-  PaymentElement,
-  useStripe,
-  useElements
-} from '@stripe/react-stripe-js';
+import React, { useState } from 'react';
 import { useStore } from '@/lib/store-context';
 import { useRouter } from 'next/navigation';
-import { Loader2, ShieldCheck, Lock } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
+import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Loader2 } from 'lucide-react';
 
-interface CheckoutFormProps {
-  amount: number;
-  customerInfo: {
-    email: string;
-    firstName: string;
-    lastName: string;
-    shippingAddress: any;
-  };
-  onSuccess?: (orderId: string) => void;
-}
-
-export default function CheckoutForm({ amount, customerInfo, onSuccess }: CheckoutFormProps) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const { cart, createOrder, clearCart } = useStore();
-  const router = useRouter();
-
-  const [message, setMessage] = useState<string | null>(null);
+export default function CheckoutForm() {
+  const { cart, cartSubtotal, isFreeShippingEligible, config } = useStore();
   const [isLoading, setIsLoading] = useState(false);
-  const [clientSecret, setClientSecret] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  
+  const [formData, setFormData] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    address: '',
+    city: '',
+    postcode: '',
+  });
 
-  useEffect(() => {
-    // Create PaymentIntent as soon as the component mounts
-    fetch('/api/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        amount,
-        items: cart,
-        metadata: {
-          customer_email: customerInfo.email,
-          customer_name: `${customerInfo.firstName} ${customerInfo.lastName}`,
-        }
-      }),
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        if (res.ok && data.clientSecret) {
-          setClientSecret(data.clientSecret);
-        } else {
-          setMessage(data.error || 'Payment setup failed. Please check your Stripe configuration.');
-        }
-      })
-      .catch((err) => {
-        console.error('Error initializing payment:', err);
-        setMessage('Network error. Please check your connection.');
-      });
-  }, [amount, cart, customerInfo]);
+  const shippingCost = isFreeShippingEligible ? 0 : config.shipping.standardShippingRate;
+  const total = cartSubtotal + shippingCost;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!stripe || !elements || !clientSecret) {
-      return;
-    }
-
     setIsLoading(true);
-
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/order-confirmation`,
-        payment_method_data: {
-          billing_details: {
-            email: customerInfo.email,
-            name: `${customerInfo.firstName} ${customerInfo.lastName}`,
+    setError(null);
+    
+    try {
+      const response = await fetch('/api/checkout/bachs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: total,
+          items: cart,
+          customerEmail: formData.email,
+          customerName: `${formData.firstName} ${formData.lastName}`,
+          shippingAddress: {
+            address1: formData.address,
+            city: formData.city,
+            postalCode: formData.postcode,
+            country: 'United Kingdom',
           }
-        }
-      },
-      redirect: 'if_required',
-    });
-
-    if (error) {
-      if (error.type === "card_error" || error.type === "validation_error") {
-        setMessage(error.message || "An unexpected error occurred.");
-      } else {
-        setMessage("An unexpected error occurred.");
-      }
-      setIsLoading(false);
-    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-      // Payment succeeded!
-      const order = createOrder({
-        email: customerInfo.email,
-        customerName: `${customerInfo.firstName} ${customerInfo.lastName}`,
-        shippingAddress: customerInfo.shippingAddress,
-        shippingMethod: 'Stripe Credit Card',
-        items: cart.map(item => ({
-          productId: item.productId,
-          name: item.name,
-          color: item.color,
-          size: item.size,
-          quantity: item.quantity,
-          price: item.price,
-          image: item.image,
-        })),
-        subtotal: amount,
-        discount: 0,
-        shippingCost: 0,
-        tax: 0,
-        total: amount,
+        }),
       });
 
-      if (onSuccess) {
-        onSuccess(order.id);
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
       } else {
-        router.push(`/order-confirmation?orderId=${order.id}`);
+        throw new Error(data.error || 'Failed to initialize checkout');
       }
+    } catch (err: any) {
+      console.error('Checkout error:', err);
+      setError(err.message || 'An unexpected error occurred. Please try again.');
+      setIsLoading(false);
     }
   };
 
-  if (!clientSecret && !message) {
+  if (cart.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 space-y-4 border border-[#EAE3D9] rounded-sm bg-[#FAF8F5]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#8C6A54]" />
-        <p className="text-sm text-[#736B63] font-medium">Securing payment connection...</p>
-      </div>
-    );
-  }
-
-  if (message && !clientSecret) {
-    return (
-      <div className="p-8 border border-red-100 bg-red-50 rounded-sm text-center">
-        <p className="text-sm text-red-700 font-medium mb-4">{message}</p>
-        <p className="text-[10px] text-red-600 uppercase tracking-widest font-bold">
-          Developer Note: Ensure STRIPE_SECRET_KEY is set in your environment.
-        </p>
+      <div className="text-center py-20 bg-white border border-[#EAE3D9] rounded-sm">
+        <ShoppingBag className="w-12 h-12 text-[#D9D0C3] mx-auto mb-4" />
+        <p className="text-sm text-[#736B63]">Your bag is empty.</p>
       </div>
     );
   }
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
-      <div className="flex items-center gap-2 mb-4 p-3 bg-green-50 border border-green-100 rounded-sm">
-        <ShieldCheck className="w-4 h-4 text-green-600" />
-        <span className="text-[11px] font-bold text-green-800 uppercase tracking-wider">Secure Encrypted Payment</span>
-      </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <section className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-sm">
+          <h2 className="text-sm font-serif font-bold text-[#2B2623] mb-6 flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-[#8C6A54]" />
+            Shipping Details
+          </h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">Email</label>
+              <input 
+                type="email" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.email}
+                onChange={e => setFormData({...formData, email: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">First Name</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.firstName}
+                onChange={e => setFormData({...formData, firstName: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">Last Name</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.lastName}
+                onChange={e => setFormData({...formData, lastName: e.target.value})}
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">Address</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.address}
+                onChange={e => setFormData({...formData, address: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">City</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.city}
+                onChange={e => setFormData({...formData, city: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">Postcode</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.postcode}
+                onChange={e => setFormData({...formData, postcode: e.target.value})}
+              />
+            </div>
+          </div>
+        </section>
 
-      <PaymentElement id="payment-element" options={{ layout: 'tabs' }} />
+        <section className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-sm">
+          <h2 className="text-sm font-serif font-bold text-[#2B2623] mb-6 flex items-center gap-2">
+            <CreditCard className="w-4 h-4 text-[#8C6A54]" />
+            Secure Payment via Bachs
+          </h2>
+          
+          {error && (
+            <div className="p-3 mb-4 bg-red-50 border border-red-100 text-red-700 text-xs rounded-sm">
+              {error}
+            </div>
+          )}
 
-      {message && (
-        <div id="payment-message" className="p-3 bg-red-50 border border-red-100 text-red-700 text-xs rounded-sm">
-          {message}
+          <p className="text-xs text-[#736B63] mb-6 leading-relaxed">
+            You will be redirected to Bachs&rsquo; secure payment page to complete your purchase. We never store your card details.
+          </p>
+          
+          <button 
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-[#2B2623] text-white text-xs font-bold uppercase tracking-widest py-4 rounded-sm hover:bg-[#47403C] transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+          >
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                <Lock className="w-3.5 h-3.5" />
+                <span>Pay {formatPrice(total)} Now</span>
+              </>
+            )}
+          </button>
+        </section>
+      </form>
+
+      <div className="space-y-6">
+        <div className="bg-[#FAF8F5] p-6 rounded-sm border border-[#EAE3D9]">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-[#2B2623] mb-4">Order Summary</h3>
+          <div className="space-y-3 pt-4 border-t border-[#EAE3D9]">
+            <div className="flex justify-between text-xs text-[#5C554F]">
+              <span>Subtotal</span>
+              <span>{formatPrice(cartSubtotal)}</span>
+            </div>
+            <div className="flex justify-between text-xs text-[#5C554F]">
+              <span>Shipping</span>
+              <span>{shippingCost === 0 ? 'FREE' : formatPrice(shippingCost)}</span>
+            </div>
+            <div className="flex justify-between text-sm font-bold text-[#2B2623] pt-3 border-t border-[#EAE3D9]">
+              <span>Total</span>
+              <span>{formatPrice(total)}</span>
+            </div>
+          </div>
         </div>
-      )}
-
-      <button
-        disabled={isLoading || !stripe || !elements}
-        id="submit"
-        className="w-full bg-[#2B2623] hover:bg-[#47403C] text-white text-xs font-bold uppercase tracking-widest py-4 rounded-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-      >
-        {isLoading ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
-        ) : (
-          <>
-            <Lock className="w-3.5 h-3.5" />
-            <span>Pay {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount)} Now</span>
-          </>
-        )}
-      </button>
-
-      <p className="text-[10px] text-[#A3998F] text-center leading-relaxed">
-        Your payment is processed securely by Stripe. We never store your card details on our servers.
-      </p>
-    </form>
+        <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-[#3C6E47] uppercase tracking-wider">
+          <ShieldCheck className="w-4 h-4" />
+          <span>Secure Bachs Checkout</span>
+        </div>
+      </div>
+    </div>
   );
 }

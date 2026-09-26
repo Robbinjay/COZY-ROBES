@@ -4,16 +4,112 @@ import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { CheckCircle2, User, Package } from 'lucide-react';
+import { CheckCircle2, User, Package, Loader2 } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 import { formatPrice } from '@/lib/utils';
 
 function ConfirmationContent() {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get('orderId') || 'CCR-782194';
-  const { lookupOrder } = useStore();
+  const sessionId = searchParams.get('session_id');
+  const urlOrderId = searchParams.get('orderId');
+  const { lookupOrder, createOrder, cart, clearCart } = useStore();
+  const [isVerifying, setIsVerifying] = React.useState(!!sessionId);
+  const [verifiedOrder, setVerifiedOrder] = React.useState<any>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
-  const order = lookupOrder(orderId);
+  React.useEffect(() => {
+    if (sessionId && !verifiedOrder) {
+      fetch('/api/checkout/bachs/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            setError(data.error);
+          } else {
+            // Check if order already exists to avoid duplication
+            const existing = lookupOrder(data.id);
+            if (existing) {
+              setVerifiedOrder(existing);
+            } else {
+              // Extract metadata
+              const shippingAddress = data.metadata.shipping_address ? JSON.parse(data.metadata.shipping_address) : {};
+              
+              // Create the order locally
+              const newOrder = createOrder({
+                email: data.customer_details.email,
+                customerName: data.metadata.customer_name || data.customer_details.name,
+                shippingAddress: {
+                  address1: shippingAddress.address1 || '',
+                  address2: '',
+                  city: shippingAddress.city || '',
+                  state: '',
+                  postalCode: shippingAddress.postalCode || '',
+                  country: shippingAddress.country || 'United Kingdom',
+                },
+                shippingMethod: 'Bachs Secure Checkout',
+                items: cart.length > 0 ? cart.map(item => ({
+                  productId: item.productId,
+                  name: item.name,
+                  color: item.color,
+                  size: item.size,
+                  quantity: item.quantity,
+                  price: item.price,
+                  image: item.image,
+                })) : [], // Fallback if cart was cleared prematurely
+                subtotal: (data.amount_total / 100),
+                discount: 0,
+                shippingCost: 0,
+                tax: 0,
+                total: (data.amount_total / 100),
+              }, data.id);
+              
+              setVerifiedOrder(newOrder);
+              clearCart();
+            }
+          }
+          setIsVerifying(false);
+        })
+        .catch(err => {
+          console.error('Verification error:', err);
+          setError('Could not verify payment status.');
+          setIsVerifying(false);
+        });
+    }
+  }, [sessionId, verifiedOrder, createOrder, lookupOrder, cart, clearCart]);
+
+  const orderId = verifiedOrder?.id || urlOrderId || 'CCR-782194';
+  const order = verifiedOrder || lookupOrder(orderId);
+
+  if (isVerifying) {
+    return (
+      <div className="max-w-3xl mx-auto py-20 text-center space-y-4">
+        <Loader2 className="w-12 h-12 animate-spin text-[#8C6A54] mx-auto" />
+        <h2 className="text-xl font-serif font-bold text-[#2B2623]">Verifying your payment...</h2>
+        <p className="text-sm text-[#736B63]">Please wait while we secure your order details.</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-3xl mx-auto py-20 text-center space-y-4">
+        <div className="w-16 h-16 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto">
+          <Package className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-serif font-bold text-[#2B2623]">Something went wrong</h2>
+        <p className="text-sm text-red-600 font-medium">{error}</p>
+        <Link 
+          href="/checkout"
+          className="inline-block bg-[#2B2623] text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-sm"
+        >
+          Return to Checkout
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
@@ -100,10 +196,10 @@ function ConfirmationContent() {
             {/* Items */}
             <div className="pt-6 border-t border-[#EAE3D9]">
               <h3 className="font-serif text-sm font-bold text-[#2B2623] mb-4">
-                Items ({order.items.reduce((a, b) => a + b.quantity, 0)})
+                Items ({order.items.reduce((a: number, b: any) => a + b.quantity, 0)})
               </h3>
               <div className="divide-y divide-[#EAE3D9]">
-                {order.items.map((item, idx) => (
+                {order.items.map((item: any, idx: number) => (
                   <div key={`${item.productId}-${idx}`} className="py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="relative w-12 h-14 bg-[#F2ECE4] rounded-xs overflow-hidden shrink-0">
