@@ -35,6 +35,9 @@ export default function CheckoutForm() {
 
   useEffect(() => {
     setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (customer) {
       setFormData({
         email: customer.email || '',
