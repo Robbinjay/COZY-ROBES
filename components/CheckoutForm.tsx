@@ -238,15 +238,7 @@ export default function CheckoutForm() {
               </div>
             )}
 
-            {!error && !process.env.NEXT_PUBLIC_BACHS_API_KEY && (
-               /* This is a helpful note for the dev if they see the screen but the key isn't set */
-               <div className="mb-8 p-4 bg-amber-50 border border-amber-100 text-amber-800 text-[10px] rounded-sm flex items-start gap-3">
-                 <Info className="w-4 h-4 shrink-0 mt-0.5" />
-                 <p className="leading-relaxed">
-                   <strong>Developer Note:</strong> To enable live payments, ensure the <code>BACHS_API_KEY</code> is correctly configured in your AI Studio secrets panel.
-                 </p>
-               </div>
-            )}
+
 
             <p className="text-[11px] text-[#736B63] mb-8 leading-relaxed italic text-center">
               &ldquo;You will be securely redirected to Bachs to complete your payment. We never store or see your credit card details.&rdquo;

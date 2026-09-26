@@ -5,9 +5,12 @@ export async function POST(req: NextRequest) {
   try {
     const { amount, items, customerEmail, customerName, shippingAddress } = await req.json();
 
+    console.log('Bachs API Key present:', !!process.env.BACHS_API_KEY);
+
     if (!process.env.BACHS_API_KEY) {
+      console.error('BACHS_API_KEY is missing from environment variables');
       return NextResponse.json(
-        { error: 'Bachs API key not configured' },
+        { error: 'Bachs API key not found. Please ensure BACHS_API_KEY is set in your Secrets and restart the dev server.' },
         { status: 500 }
       );
     }
