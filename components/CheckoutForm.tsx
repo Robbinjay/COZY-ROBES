@@ -66,7 +66,7 @@ export default function CheckoutForm() {
 
       // 2. Send email notifications via internal API
       const paymentMethodLabel = {
-        bank_transfer: 'Bank Transfer (UK Only)',
+        bank_transfer: 'Bank Transfer',
         crypto: 'Crypto (BTC / USDT)'
       }[paymentMethod];
 
@@ -211,7 +211,7 @@ export default function CheckoutForm() {
                   onChange={() => setPaymentMethod('bank_transfer')}
                 />
                 <div>
-                  <p className="text-xs font-bold text-[#2B2623]">Bank Transfer (UK Only)</p>
+                  <p className="text-xs font-bold text-[#2B2623]">Bank Transfer</p>
                   <p className="text-[10px] text-[#736B63]">Instructions sent after order placement</p>
                 </div>
               </div>
