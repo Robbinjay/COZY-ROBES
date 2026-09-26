@@ -17,10 +17,17 @@ export async function POST(req: NextRequest) {
 
     const bachs = new Bachs({ apiKey: process.env.BACHS_API_KEY });
 
+    // Determine the base URL dynamically from the request headers
+    const protocol = req.headers.get('x-forwarded-proto') || 'https';
+    const host = req.headers.get('host');
+    const baseUrl = process.env.APP_URL || `${protocol}://${host}`;
+
+    console.log('Using base URL for checkout:', baseUrl);
+
     // Create a Bachs Checkout Session
     const session = await (bachs.checkoutSessions.create as any)({
-      success_url: `${process.env.APP_URL || 'http://localhost:3000'}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.APP_URL || 'http://localhost:3000'}/checkout`,
+      success_url: `${baseUrl}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/checkout`,
       customer: {
         email: customerEmail,
         name: customerName,
