@@ -1,350 +1,315 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useStore } from '@/lib/store-context';
 import { useRouter } from 'next/navigation';
 import { formatPrice } from '@/lib/utils';
-import { 
-  ShoppingBag, 
-  MapPin, 
-  CreditCard, 
-  Lock, 
-  ShieldCheck, 
-  Loader2,
-  ChevronRight,
-  Info,
-  AlertCircle
-} from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins, Globe } from 'lucide-react';
+
+type PaymentMethod = 'bank_transfer' | 'crypto' | 'wise';
 
 export default function CheckoutForm() {
-  const { cart, cartSubtotal, isFreeShippingEligible, config, customer } = useStore();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const { cart, cartSubtotal, createOrder, isFreeShippingEligible, config } = useStore();
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
     lastName: '',
+    phone: '',
     address: '',
     city: '',
     postcode: '',
   });
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (customer) {
-      setFormData({
-        email: customer.email || '',
-        firstName: customer.firstName || '',
-        lastName: customer.lastName || '',
-        address: customer.shippingAddress?.address1 || '',
-        city: customer.shippingAddress?.city || '',
-        postcode: customer.shippingAddress?.postcode || '',
-      });
-    }
-  }, [customer]);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('bank_transfer');
 
   const shippingCost = isFreeShippingEligible ? 0 : config.shipping.standardShippingRate;
   const total = cartSubtotal + shippingCost;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-    
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     try {
-      const response = await fetch('/api/checkout/bachs', {
+      const orderId = `CCR-${Math.floor(100000 + Math.random() * 900000)}`;
+      
+      // 1. Create order in local store
+      const order = createOrder({
+        email: formData.email,
+        customerName: `${formData.firstName} ${formData.lastName}`,
+        shippingAddress: {
+          address1: formData.address,
+          city: formData.city,
+          state: '',
+          postalCode: formData.postcode,
+          country: 'United Kingdom',
+        },
+        shippingMethod: isFreeShippingEligible ? 'Free UK Shipping' : 'Standard Shipping',
+        items: cart.map(item => ({
+          productId: item.productId,
+          name: item.name,
+          color: item.color,
+          size: item.size,
+          quantity: item.quantity,
+          price: item.price,
+          image: item.image,
+        })),
+        subtotal: cartSubtotal,
+        discount: 0,
+        shippingCost: shippingCost,
+        tax: 0,
+        total: total,
+      }, orderId);
+
+      // 2. Send email notifications via internal API
+      const paymentMethodLabel = {
+        bank_transfer: 'Bank Transfer (UK Only)',
+        crypto: 'Crypto (BTC / USDT)',
+        wise: 'Wise Transfer'
+      }[paymentMethod];
+
+      await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: total,
-          items: cart,
-          customerEmail: formData.email,
-          customerName: `${formData.firstName} ${formData.lastName}`,
-          shippingAddress: {
-            address1: formData.address,
-            city: formData.city,
-            postalCode: formData.postcode,
-            country: 'United Kingdom',
-          }
+          orderId: order.id,
+          customerInfo: {
+            ...formData,
+            country: 'United Kingdom'
+          },
+          shippingMethod: { label: order.shippingMethod },
+          paymentMethod: { label: paymentMethodLabel },
+          cart: order.items,
+          cartSubtotal: order.subtotal,
+          shippingCost: order.shippingCost,
+          orderTotal: order.total
         }),
       });
 
-      const data = await response.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error(data.error || 'Failed to initialize checkout');
-      }
-    } catch (err: any) {
-      console.error('Checkout error:', err);
-      setError(err.message || 'An unexpected error occurred. Please try again.');
-      setIsLoading(false);
+      router.push(`/order-confirmation?orderId=${order.id}`);
+    } catch (err) {
+      console.error('Order Submission Error:', err);
+      alert('There was an issue processing your order. Please try again or contact support.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  if (!isMounted) return null;
-
   if (cart.length === 0) {
     return (
-      <div className="text-center py-24 bg-white border border-[#EAE3D9] rounded-sm shadow-sm">
-        <ShoppingBag className="w-16 h-16 text-[#D9D0C3] mx-auto mb-6" />
-        <h2 className="text-xl font-serif font-bold text-[#2B2623] mb-3">Your bag is empty</h2>
-        <p className="text-sm text-[#736B63] mb-8 max-w-xs mx-auto">Looks like you haven&rsquo;t added any cozy items to your bag yet.</p>
-        <Link 
-          href="/shop"
-          className="inline-block bg-[#2B2623] text-white text-xs font-bold uppercase tracking-widest px-10 py-4 rounded-sm hover:bg-[#47403C] transition-all"
+      <div className="text-center py-20 bg-white border border-[#EAE3D9] rounded-sm">
+        <ShoppingBag className="w-12 h-12 text-[#D9D0C3] mx-auto mb-4" />
+        <p className="text-sm text-[#736B63]">Your bag is empty.</p>
+        <button 
+          onClick={() => router.push('/shop')}
+          className="mt-4 text-xs font-bold uppercase tracking-widest text-[#8C6A54] hover:underline"
         >
-          Start Shopping
-        </Link>
+          Browse Shop
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-      {/* Left Column: Forms */}
-      <div className="lg:col-span-7 space-y-8">
-        <form onSubmit={handleSubmit} className="space-y-8">
-          
-          {/* Section 1: Shipping */}
-          <div className="bg-white p-6 sm:p-10 rounded-sm border border-[#EAE3D9] shadow-sm transition-all hover:shadow-md">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-8 h-8 rounded-full bg-[#FAF8F5] border border-[#EAE3D9] flex items-center justify-center text-[11px] font-bold text-[#2B2623]">1</div>
-              <h2 className="text-base font-serif font-bold text-[#2B2623] tracking-tight">Shipping Information</h2>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <section className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-sm">
+          <h2 className="text-sm font-serif font-bold text-[#2B2623] mb-6 flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-[#8C6A54]" />
+            Shipping Details
+          </h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2 sm:col-span-1">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">First Name</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.firstName}
+                onChange={e => setFormData({...formData, firstName: e.target.value})}
+              />
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-              <div className="sm:col-span-2">
-                <label htmlFor="email" className="block text-[10px] font-bold uppercase tracking-widest text-[#A3998F] mb-2">Email Address</label>
-                <input 
-                  id="email"
-                  type="email" 
-                  required 
-                  autoComplete="email"
-                  className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3.5 text-sm focus:outline-none focus:border-[#8C6A54] focus:ring-1 focus:ring-[#8C6A54]/10 transition-all"
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={e => setFormData({...formData, email: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="firstName" className="block text-[10px] font-bold uppercase tracking-widest text-[#A3998F] mb-2">First Name</label>
-                <input 
-                  id="firstName"
-                  type="text" 
-                  required 
-                  autoComplete="given-name"
-                  className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3.5 text-sm focus:outline-none focus:border-[#8C6A54] focus:ring-1 focus:ring-[#8C6A54]/10 transition-all"
-                  value={formData.firstName}
-                  onChange={e => setFormData({...formData, firstName: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="lastName" className="block text-[10px] font-bold uppercase tracking-widest text-[#A3998F] mb-2">Last Name</label>
-                <input 
-                  id="lastName"
-                  type="text" 
-                  required 
-                  autoComplete="family-name"
-                  className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3.5 text-sm focus:outline-none focus:border-[#8C6A54] focus:ring-1 focus:ring-[#8C6A54]/10 transition-all"
-                  value={formData.lastName}
-                  onChange={e => setFormData({...formData, lastName: e.target.value})}
-                />
-              </div>
-              
-              <div className="sm:col-span-2">
-                <label htmlFor="address" className="block text-[10px] font-bold uppercase tracking-widest text-[#A3998F] mb-2">Delivery Address</label>
-                <input 
-                  id="address"
-                  type="text" 
-                  required 
-                  autoComplete="shipping address-line1"
-                  className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3.5 text-sm focus:outline-none focus:border-[#8C6A54] focus:ring-1 focus:ring-[#8C6A54]/10 transition-all"
-                  placeholder="House number and street name"
-                  value={formData.address}
-                  onChange={e => setFormData({...formData, address: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="city" className="block text-[10px] font-bold uppercase tracking-widest text-[#A3998F] mb-2">City</label>
-                <input 
-                  id="city"
-                  type="text" 
-                  required 
-                  autoComplete="shipping address-level2"
-                  className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3.5 text-sm focus:outline-none focus:border-[#8C6A54] focus:ring-1 focus:ring-[#8C6A54]/10 transition-all"
-                  value={formData.city}
-                  onChange={e => setFormData({...formData, city: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="postcode" className="block text-[10px] font-bold uppercase tracking-widest text-[#A3998F] mb-2">Postcode</label>
-                <input 
-                  id="postcode"
-                  type="text" 
-                  required 
-                  autoComplete="shipping postal-code"
-                  className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3.5 text-sm focus:outline-none focus:border-[#8C6A54] focus:ring-1 focus:ring-[#8C6A54]/10 transition-all"
-                  placeholder="e.g. SW1A 1AA"
-                  value={formData.postcode}
-                  onChange={e => setFormData({...formData, postcode: e.target.value})}
-                />
-              </div>
+            <div className="col-span-2 sm:col-span-1">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">Last Name</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.lastName}
+                onChange={e => setFormData({...formData, lastName: e.target.value})}
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">Email Address</label>
+              <input 
+                type="email" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.email}
+                onChange={e => setFormData({...formData, email: e.target.value})}
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">Phone Number</label>
+              <input 
+                type="tel" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.phone}
+                onChange={e => setFormData({...formData, phone: e.target.value})}
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">Address</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.address}
+                onChange={e => setFormData({...formData, address: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">City</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.city}
+                onChange={e => setFormData({...formData, city: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-[#736B63] mb-1">Postcode</label>
+              <input 
+                type="text" 
+                required 
+                className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-3 text-sm focus:outline-none focus:border-[#8C6A54]"
+                value={formData.postcode}
+                onChange={e => setFormData({...formData, postcode: e.target.value})}
+              />
             </div>
           </div>
+        </section>
 
-          {/* Section 2: Payment */}
-          <div className="bg-white p-6 sm:p-10 rounded-sm border border-[#EAE3D9] shadow-sm transition-all hover:shadow-md">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-8 h-8 rounded-full bg-[#FAF8F5] border border-[#EAE3D9] flex items-center justify-center text-[11px] font-bold text-[#2B2623]">2</div>
-              <h2 className="text-base font-serif font-bold text-[#2B2623] tracking-tight">Payment Method</h2>
-            </div>
-            
-            <div className="mb-8 p-4 bg-[#FAF8F5] border border-[#EAE3D9] rounded-sm flex items-center justify-between">
+        <section className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-sm">
+          <h2 className="text-sm font-serif font-bold text-[#2B2623] mb-6 flex items-center gap-2">
+            <CreditCard className="w-4 h-4 text-[#8C6A54]" />
+            Payment Method
+          </h2>
+          
+          <div className="space-y-4 mb-8">
+            <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${paymentMethod === 'bank_transfer' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
               <div className="flex items-center gap-3">
-                <CreditCard className="w-5 h-5 text-[#8C6A54]" />
+                <input 
+                  type="radio" 
+                  className="accent-[#2B2623]" 
+                  name="paymentMethod" 
+                  checked={paymentMethod === 'bank_transfer'}
+                  onChange={() => setPaymentMethod('bank_transfer')}
+                />
                 <div>
-                  <p className="text-[11px] font-bold text-[#2B2623] uppercase tracking-wider">Secure Credit Card</p>
-                  <p className="text-[10px] text-[#736B63]">Processed by Bachs Payments</p>
+                  <p className="text-xs font-bold text-[#2B2623]">Bank Transfer (UK Only)</p>
+                  <p className="text-[10px] text-[#736B63]">Instructions sent after order placement</p>
                 </div>
               </div>
-              <div className="flex gap-1.5 grayscale opacity-60">
-                {/* Visual indicators for card types */}
-                <div className="w-8 h-5 bg-white border border-[#D9D0C3] rounded-xs"></div>
-                <div className="w-8 h-5 bg-white border border-[#D9D0C3] rounded-xs"></div>
-                <div className="w-8 h-5 bg-white border border-[#D9D0C3] rounded-xs"></div>
-              </div>
-            </div>
+              <Landmark className="w-4 h-4 text-[#8C6A54]" />
+            </label>
 
-            {error && (
-              <div className="mb-8 p-4 bg-red-50 border border-red-100 text-red-700 text-xs rounded-sm flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                <div className="space-y-1">
-                  <p className="font-bold">Payment Error</p>
-                  <p className="opacity-90">{error}</p>
+            <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${paymentMethod === 'crypto' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="radio" 
+                  className="accent-[#2B2623]" 
+                  name="paymentMethod" 
+                  checked={paymentMethod === 'crypto'}
+                  onChange={() => setPaymentMethod('crypto')}
+                />
+                <div>
+                  <p className="text-xs font-bold text-[#2B2623]">Crypto (BTC / USDT)</p>
+                  <p className="text-[10px] text-[#736B63]">Secure peer-to-peer payment</p>
                 </div>
               </div>
-            )}
+              <Coins className="w-4 h-4 text-[#8C6A54]" />
+            </label>
 
+            <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${paymentMethod === 'wise' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="radio" 
+                  className="accent-[#2B2623]" 
+                  name="paymentMethod" 
+                  checked={paymentMethod === 'wise'}
+                  onChange={() => setPaymentMethod('wise')}
+                />
+                <div>
+                  <p className="text-xs font-bold text-[#2B2623]">Wise Transfer</p>
+                  <p className="text-[10px] text-[#736B63]">Fast international bank transfer</p>
+                </div>
+              </div>
+              <Globe className="w-4 h-4 text-[#8C6A54]" />
+            </label>
+          </div>
 
-
-            <p className="text-[11px] text-[#736B63] mb-8 leading-relaxed italic text-center">
-              &ldquo;You will be securely redirected to Bachs to complete your payment. We never store or see your credit card details.&rdquo;
+          <div className="bg-[#FAF5EE] p-4 rounded-sm border border-[#EAE3D9] mb-6">
+            <p className="text-[11px] text-[#5C554F] leading-relaxed">
+              <strong>Note:</strong> To complete your purchase, place the order first. You will receive an email with the specific payment details for your chosen method. Your order will be processed as soon as the transfer is verified.
             </p>
-            
-            <button 
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-[#2B2623] text-white text-xs font-bold uppercase tracking-widest py-5 rounded-sm hover:bg-[#47403C] transition-all flex items-center justify-center gap-3 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed group"
-            >
-              {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  <Lock className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>Securely Pay {formatPrice(total)} Now</span>
-                </>
-              )}
-            </button>
-            
-            <div className="mt-6 flex items-center justify-center gap-4 text-[9px] font-bold text-[#A3998F] uppercase tracking-widest">
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#3C6E47]" />
-                <span>SSL Encrypted</span>
-              </div>
-              <div className="w-1 h-1 bg-[#D9D0C3] rounded-full"></div>
-              <span>PCI Compliant</span>
-            </div>
           </div>
-        </form>
-      </div>
 
-      {/* Right Column: Order Summary */}
-      <div className="lg:col-span-5 lg:sticky lg:top-8">
-        <div className="bg-white rounded-sm border border-[#EAE3D9] shadow-sm overflow-hidden">
-          <div className="bg-[#FAF8F5] px-6 py-4 border-b border-[#EAE3D9]">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-[#2B2623]">Order Summary</h3>
-          </div>
-          
-          <div className="p-6">
-            <div className="max-h-[360px] overflow-y-auto pr-2 custom-scrollbar divide-y divide-[#FAF8F5]">
-              {cart.map((item) => (
-                <div key={item.id} className="py-4 first:pt-0 flex gap-4">
-                  <div className="relative w-16 h-20 bg-[#FAF8F5] border border-[#EAE3D9] rounded-xs overflow-hidden shrink-0">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-[#8C6A54] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white">
-                      {item.quantity}
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-[11px] font-bold text-[#2B2623] truncate mb-0.5">{item.name}</h4>
-                    <p className="text-[10px] text-[#A3998F] uppercase tracking-tighter mb-1">
-                      {item.color} • {item.size}
-                    </p>
-                    <p className="text-[11px] font-bold text-[#2B2623]">{formatPrice(item.price)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-[#EAE3D9] space-y-3">
-              <div className="flex justify-between text-xs text-[#736B63]">
-                <span>Subtotal</span>
-                <span className="font-medium text-[#2B2623]">{formatPrice(cartSubtotal)}</span>
-              </div>
-              <div className="flex justify-between text-xs text-[#736B63]">
-                <div className="flex items-center gap-1.5">
-                  <span>Shipping</span>
-                  {isFreeShippingEligible && <span className="text-[9px] font-bold text-[#3C6E47] bg-green-50 px-1.5 py-0.5 rounded-full uppercase tracking-tighter">Eligible</span>}
-                </div>
-                <span className="font-medium text-[#2B2623]">{shippingCost === 0 ? 'FREE' : formatPrice(shippingCost)}</span>
-              </div>
-              
-              <div className="pt-4 border-t border-[#EAE3D9] flex justify-between items-end">
-                <div>
-                  <p className="text-[10px] font-bold text-[#A3998F] uppercase tracking-widest mb-1">Grand Total</p>
-                  <p className="text-2xl font-serif font-bold text-[#2B2623]">{formatPrice(total)}</p>
-                </div>
-                <div className="text-right pb-1">
-                  <p className="text-[9px] text-[#A3998F] uppercase tracking-tighter">Including VAT</p>
-                </div>
-              </div>
-            </div>
-            
-            {!isFreeShippingEligible && (
-              <div className="mt-6 p-4 bg-[#FAF8F5] border border-[#EAE3D9] rounded-sm">
-                <div className="flex items-start gap-3">
-                  <Info className="w-4 h-4 text-[#8C6A54] shrink-0 mt-0.5" />
-                  <p className="text-[10px] text-[#736B63] leading-relaxed">
-                    Add <strong>{formatPrice(config.shipping.freeShippingThreshold - cartSubtotal)}</strong> more to your bag to qualify for <strong>Free UK Shipping</strong>.
-                  </p>
-                </div>
-              </div>
+          <button 
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-[#2B2623] text-white text-xs font-bold uppercase tracking-widest py-4 rounded-sm hover:bg-[#47403C] disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+          >
+            {isSubmitting ? 'Processing...' : (
+              <>
+                <Lock className="w-3.5 h-3.5" />
+                Place Order • {formatPrice(total)}
+              </>
             )}
+          </button>
+        </section>
+      </form>
+
+      <div className="space-y-6">
+        <div className="bg-[#FAF8F5] p-6 rounded-sm border border-[#EAE3D9]">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-[#2B2623] mb-4">Order Summary</h3>
+          <div className="space-y-4 max-h-[300px] overflow-y-auto mb-4">
+            {cart.map((item) => (
+              <div key={item.id} className="flex gap-3">
+                <div className="w-12 h-14 relative bg-white border border-[#EAE3D9] rounded-xs overflow-hidden shrink-0">
+                  <img src={item.image} alt={item.name} className="object-cover w-full h-full" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-bold text-[#2B2623]">{item.name}</p>
+                  <p className="text-[10px] text-[#736B63]">{item.color} • {item.size} • x{item.quantity}</p>
+                </div>
+                <p className="text-xs font-semibold text-[#2B2623]">{formatPrice(item.price * item.quantity)}</p>
+              </div>
+            ))}
+          </div>
+          <div className="space-y-3 pt-4 border-t border-[#EAE3D9]">
+            <div className="flex justify-between text-xs text-[#5C554F]">
+              <span>Subtotal</span>
+              <span>{formatPrice(cartSubtotal)}</span>
+            </div>
+            <div className="flex justify-between text-xs text-[#5C554F]">
+              <span>Shipping</span>
+              <span>{shippingCost === 0 ? 'FREE' : formatPrice(shippingCost)}</span>
+            </div>
+            <div className="flex justify-between text-sm font-bold text-[#2B2623] pt-3 border-t border-[#EAE3D9]">
+              <span>Total</span>
+              <span>{formatPrice(total)}</span>
+            </div>
           </div>
         </div>
-
-        <div className="mt-8 px-6 text-center space-y-4">
-          <p className="text-[10px] text-[#A3998F] leading-relaxed">
-            By completing your purchase you agree to our <Link href="/terms-and-conditions" className="underline hover:text-[#2B2623]">Terms of Service</Link> and <Link href="/privacy-policy" className="underline hover:text-[#2B2623]">Privacy Policy</Link>.
-          </p>
+        <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-[#3C6E47] uppercase tracking-wider">
+          <ShieldCheck className="w-4 h-4" />
+          <span>Secure Checkout Protocol</span>
         </div>
       </div>
     </div>
