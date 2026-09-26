@@ -50,7 +50,6 @@ export async function POST(req: NextRequest) {
       metadata: {
         shipping_address: JSON.stringify(shippingAddress),
       },
-      mode: 'payment',
     });
 
     return NextResponse.json({ url: session.url });
