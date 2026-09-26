@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { useStore } from '@/lib/store-context';
 import { useRouter } from 'next/navigation';
 import { formatPrice } from '@/lib/utils';
-import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins, Globe } from 'lucide-react';
+import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins } from 'lucide-react';
 
-type PaymentMethod = 'bank_transfer' | 'crypto' | 'wise';
+type PaymentMethod = 'bank_transfer' | 'crypto';
 
 export default function CheckoutForm() {
   const { cart, cartSubtotal, createOrder, isFreeShippingEligible, config } = useStore();
@@ -67,8 +67,7 @@ export default function CheckoutForm() {
       // 2. Send email notifications via internal API
       const paymentMethodLabel = {
         bank_transfer: 'Bank Transfer (UK Only)',
-        crypto: 'Crypto (BTC / USDT)',
-        wise: 'Wise Transfer'
+        crypto: 'Crypto (BTC / USDT)'
       }[paymentMethod];
 
       await fetch('/api/checkout', {
@@ -236,27 +235,12 @@ export default function CheckoutForm() {
               <Coins className="w-4 h-4 text-[#8C6A54]" />
             </label>
 
-            <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${paymentMethod === 'wise' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
-              <div className="flex items-center gap-3">
-                <input 
-                  type="radio" 
-                  className="accent-[#2B2623]" 
-                  name="paymentMethod" 
-                  checked={paymentMethod === 'wise'}
-                  onChange={() => setPaymentMethod('wise')}
-                />
-                <div>
-                  <p className="text-xs font-bold text-[#2B2623]">Wise Transfer</p>
-                  <p className="text-[10px] text-[#736B63]">Fast international bank transfer</p>
-                </div>
-              </div>
-              <Globe className="w-4 h-4 text-[#8C6A54]" />
-            </label>
+
           </div>
 
           <div className="bg-[#FAF5EE] p-4 rounded-sm border border-[#EAE3D9] mb-6">
             <p className="text-[11px] text-[#5C554F] leading-relaxed">
-              <strong>Note:</strong> To complete your purchase, place the order first. You will receive an email with the specific payment details for your chosen method. Your order will be processed as soon as the transfer is verified.
+              <strong>Note:</strong> To complete your purchase, place the order first. You will receive an email with payment details for your chosen method. Your order will be processed as soon as the transfer is verified. Thanks.
             </p>
           </div>
 
