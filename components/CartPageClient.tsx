@@ -72,6 +72,11 @@ export default function CartPageClient() {
           )}
         </div>
 
+        {/* Christmas Sale Banner */}
+        <div className="bg-[#FAF0EC] border border-[#F2D7D0] p-4 rounded-sm text-xs text-[#B86246] font-medium flex items-center gap-2">
+          <span>🎄 <strong>Christmas Sale Offer:</strong> 10% OFF orders over £200 with promo code <strong className="uppercase">COZY-CHRISTMAS</strong> at checkout.</span>
+        </div>
+
         {/* Item List */}
         <div className="bg-white rounded-sm border border-[#EAE3D9] overflow-hidden shadow-xs divide-y divide-[#EAE3D9]">
           {cart.map((item) => (

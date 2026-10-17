@@ -80,6 +80,11 @@ export default function CartDrawer() {
             )}
           </div>
 
+          {/* Christmas Sale Promo Notice */}
+          <div className="bg-[#FAF0EC] px-6 py-2.5 border-b border-[#F2D7D0] text-[11px] text-[#B86246] font-medium">
+            🎄 <strong>10% OFF</strong> on orders over £200 with code <strong className="uppercase">COZY-CHRISTMAS</strong>
+          </div>
+
           {/* Cart Item List */}
           <div className="flex-1 overflow-y-auto p-6 divide-y divide-[#EAE3D9]">
             {cart.length === 0 ? (

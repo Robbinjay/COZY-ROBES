@@ -11,6 +11,7 @@ export async function POST(req: Request) {
       paymentMethod, 
       cart, 
       cartSubtotal, 
+      discount,
       shippingCost, 
       orderTotal 
     } = data;
@@ -41,6 +42,7 @@ export async function POST(req: Request) {
       <h3>Order Summary</h3>
       <ul>${itemsListHtml}</ul>
       <p><strong>Subtotal:</strong> £${cartSubtotal.toFixed(2)}</p>
+      ${discount && discount > 0 ? `<p><strong>Christmas Discount (COZY-CHRISTMAS):</strong> -£${discount.toFixed(2)}</p>` : ''}
       <p><strong>Shipping (${shippingMethod.label}):</strong> £${shippingCost.toFixed(2)}</p>
       <p><strong>Total:</strong> £${orderTotal.toFixed(2)}</p>
       

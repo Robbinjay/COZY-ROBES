@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useStore } from '@/lib/store-context';
 import { useRouter } from 'next/navigation';
 import { formatPrice, getWhatsAppCartOrderUrl, WHATSAPP_PHONE_DISPLAY } from '@/lib/utils';
-import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins, MessageCircle } from 'lucide-react';
+import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins, MessageCircle, Sparkles } from 'lucide-react';
 
 type PaymentMethod = 'bank_transfer' | 'crypto';
 
@@ -26,8 +26,32 @@ export default function CheckoutForm() {
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('bank_transfer');
 
+  const [promoInput, setPromoInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState('');
+  const [promoError, setPromoError] = useState('');
+  const [promoSuccess, setPromoSuccess] = useState('');
+
+  const isChristmasEligible = cartSubtotal >= 200;
+  const discountAmount = appliedPromo === 'COZY-CHRISTMAS' && isChristmasEligible ? cartSubtotal * 0.10 : 0;
   const shippingCost = isFreeShippingEligible ? 0 : config.shipping.standardShippingRate;
-  const total = cartSubtotal + shippingCost;
+  const total = Math.max(0, cartSubtotal - discountAmount) + shippingCost;
+
+  const handleApplyPromo = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPromoError('');
+    setPromoSuccess('');
+    const code = promoInput.trim().toUpperCase();
+    if (code !== 'COZY-CHRISTMAS') {
+      setPromoError('Invalid promo code. Use COZY-CHRISTMAS.');
+      return;
+    }
+    if (!isChristmasEligible) {
+      setPromoError('Order subtotal must be above £200 to apply COZY-CHRISTMAS (10% OFF).');
+      return;
+    }
+    setAppliedPromo('COZY-CHRISTMAS');
+    setPromoSuccess('Christmas discount of 10% applied successfully!');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +83,7 @@ export default function CheckoutForm() {
           image: item.image,
         })),
         subtotal: cartSubtotal,
-        discount: 0,
+        discount: discountAmount,
         shippingCost: shippingCost,
         tax: 0,
         total: total,
@@ -84,6 +108,7 @@ export default function CheckoutForm() {
           paymentMethod: { label: paymentMethodLabel },
           cart: order.items,
           cartSubtotal: order.subtotal,
+          discount: order.discount,
           shippingCost: order.shippingCost,
           orderTotal: order.total
         }),
@@ -303,11 +328,49 @@ export default function CheckoutForm() {
               </div>
             ))}
           </div>
-          <div className="space-y-3 pt-4 border-t border-[#EAE3D9]">
+
+          {/* Promo Code Box */}
+          <div className="pt-4 border-t border-[#EAE3D9] mt-4 space-y-2">
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-[#736B63] flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#B86246]" />
+              <span>Christmas Promo Code</span>
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="COZY-CHRISTMAS"
+                value={promoInput}
+                onChange={(e) => setPromoInput(e.target.value)}
+                className="flex-1 bg-white border border-[#D9D0C3] rounded-sm p-2 text-xs uppercase focus:outline-none focus:border-[#8C6A54]"
+              />
+              <button
+                type="button"
+                onClick={handleApplyPromo}
+                className="bg-[#2B2623] text-white text-xs font-bold px-4 py-2 rounded-sm hover:bg-[#47403C] transition-colors cursor-pointer"
+              >
+                Apply
+              </button>
+            </div>
+            {promoError && <p className="text-[11px] text-red-600 font-medium">{promoError}</p>}
+            {promoSuccess && <p className="text-[11px] text-emerald-600 font-medium">{promoSuccess}</p>}
+            {!appliedPromo && (
+              <p className="text-[10px] text-[#736B63] leading-relaxed">
+                🎄 <strong>10% OFF</strong> on orders over £200 with code <code className="bg-[#F0EBE1] px-1 py-0.5 rounded text-[#2B2623] font-bold">COZY-CHRISTMAS</code>.
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-3 pt-4 border-t border-[#EAE3D9] mt-4">
             <div className="flex justify-between text-xs text-[#5C554F]">
               <span>Subtotal</span>
               <span>{formatPrice(cartSubtotal)}</span>
             </div>
+            {discountAmount > 0 && (
+              <div className="flex justify-between text-xs text-[#B86246] font-semibold">
+                <span>Christmas Discount (10%)</span>
+                <span>-{formatPrice(discountAmount)}</span>
+              </div>
+            )}
             <div className="flex justify-between text-xs text-[#5C554F]">
               <span>Shipping</span>
               <span>{shippingCost === 0 ? 'FREE' : formatPrice(shippingCost)}</span>
