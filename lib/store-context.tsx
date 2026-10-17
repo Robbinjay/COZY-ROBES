@@ -197,6 +197,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           if (parsed?.announcementBar?.text?.includes('150')) {
             parsed.announcementBar.text = DEFAULT_STORE_CONFIG.announcementBar.text;
           }
+          if (parsed?.socialLinks?.whatsapp?.includes('447000000000') || !parsed?.socialLinks?.whatsapp) {
+            if (!parsed.socialLinks) parsed.socialLinks = {};
+            parsed.socialLinks.whatsapp = 'https://wa.me/447402233804';
+          }
+          if (!parsed?.brand?.phone || parsed?.brand?.phone?.includes('0912')) {
+            if (!parsed.brand) parsed.brand = {};
+            parsed.brand.phone = '+44 7402233804';
+          }
           setConfig({ ...DEFAULT_STORE_CONFIG, ...parsed });
         }
         const savedOrders = localStorage.getItem(ORDERS_STORAGE_KEY);

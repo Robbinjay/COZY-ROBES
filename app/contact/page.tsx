@@ -7,6 +7,7 @@ import ContactForm from '@/components/ContactForm';
 import OrderLookupForm from '@/components/OrderLookupForm';
 import { Mail, Clock, HelpCircle, Package, MapPin, Zap, MessageCircle } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
+import { WHATSAPP_PHONE_DISPLAY } from '@/lib/utils';
 
 export default function ContactPage() {
   const { config } = useStore();
@@ -70,19 +71,23 @@ export default function ContactPage() {
 
               {config.socialLinks.whatsapp && (
                 <div className="flex items-center gap-3 text-[#2B2623]">
-                  <div className="w-9 h-9 rounded-sm bg-[#EBF7EE] border border-[#CDE9D2] flex items-center justify-center text-[#25D366]">
+                  <div className="w-9 h-9 rounded-sm bg-[#EBF7EE] border border-[#CDE9D2] flex items-center justify-center text-[#25D366] shrink-0">
                     <MessageCircle className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-serif text-sm font-bold">WhatsApp Support</h3>
+                    <h3 className="font-serif text-sm font-bold flex items-center gap-1.5">
+                      <span>WhatsApp Live Support &amp; Orders</span>
+                      <span className="w-2 h-2 rounded-full bg-[#25D366] inline-block animate-pulse"></span>
+                    </h3>
+                    <p className="text-xs font-semibold text-[#2B2623]">{WHATSAPP_PHONE_DISPLAY}</p>
                     <a
                       id="whatsapp-support-link"
                       href={config.socialLinks.whatsapp}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-[#25D366] font-bold hover:underline"
+                      className="text-xs text-[#25D366] font-bold hover:underline inline-block mt-0.5"
                     >
-                      Chat with us now &rarr;
+                      Chat &amp; Place Order on WhatsApp &rarr;
                     </a>
                   </div>
                 </div>

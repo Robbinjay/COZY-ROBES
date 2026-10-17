@@ -15,6 +15,7 @@ export const DEFAULT_STORE_CONFIG: StoreConfig = {
     tagline: 'Warmth You Can Wear.',
     supportEmail: 'support@cozyrobe.co.uk',
     supportHours: 'Monday – Friday, 9:00 AM – 5:00 PM GMT',
+    phone: '+44 7402233804',
     address: 'CozyCorobes UK, 71–75 Shelton Street, Covent Garden, London, WC2H 9JQ, United Kingdom',
   },
   shipping: {
@@ -31,7 +32,7 @@ export const DEFAULT_STORE_CONFIG: StoreConfig = {
   socialLinks: {
     instagram: 'https://www.instagram.com/cozyrobes_?stkn=NGNhd2hvZmtoNWVr&utm_source=qr',
     tiktok: 'https://www.tiktok.com/@cozyrobes_?_r=1&_t=ZN-99xyUM5S0al',
-    whatsapp: 'https://wa.me/447000000000',
+    whatsapp: 'https://wa.me/447402233804',
   },
 };
 

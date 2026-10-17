@@ -4,114 +4,18 @@ import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { CheckCircle2, User, Package, Loader2, ArrowLeft, Mail, MapPin, Calendar, CreditCard, AlertCircle } from 'lucide-react';
+import { CheckCircle2, User, Package, Loader2, ArrowLeft, Mail, MapPin, Calendar, CreditCard, AlertCircle, MessageCircle } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, WHATSAPP_PHONE_DISPLAY, WHATSAPP_PHONE_CLEAN } from '@/lib/utils';
 import { motion } from 'motion/react';
 
 function ConfirmationContent() {
   const searchParams = useSearchParams();
-  const sessionId = searchParams.get('session_id');
   const urlOrderId = searchParams.get('orderId');
-  const { lookupOrder, createOrder, cart, clearCart } = useStore();
-  const [isVerifying, setIsVerifying] = React.useState(!!sessionId);
-  const [verifiedOrder, setVerifiedOrder] = React.useState<any>(null);
-  const [error, setError] = React.useState<string | null>(null);
+  const { lookupOrder } = useStore();
 
-  React.useEffect(() => {
-    if (sessionId && !verifiedOrder) {
-      fetch('/api/checkout/bachs/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId }),
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.error) {
-            setError(data.error);
-          } else {
-            const existing = lookupOrder(data.id);
-            if (existing) {
-              setVerifiedOrder(existing);
-            } else {
-              const shippingAddress = data.metadata.shipping_address ? JSON.parse(data.metadata.shipping_address) : {};
-              
-              const newOrder = createOrder({
-                email: data.customer_details.email,
-                customerName: data.metadata.customer_name || data.customer_details.name,
-                shippingAddress: {
-                  address1: shippingAddress.address1 || '',
-                  address2: '',
-                  city: shippingAddress.city || '',
-                  state: '',
-                  postalCode: shippingAddress.postalCode || '',
-                  country: shippingAddress.country || 'United Kingdom',
-                },
-                shippingMethod: 'Bachs Secure Checkout',
-                items: cart.length > 0 ? cart.map(item => ({
-                  productId: item.productId,
-                  name: item.name,
-                  color: item.color,
-                  size: item.size,
-                  quantity: item.quantity,
-                  price: item.price,
-                  image: item.image,
-                })) : [],
-                subtotal: (data.amount_total / 100),
-                discount: 0,
-                shippingCost: 0,
-                tax: 0,
-                total: (data.amount_total / 100),
-              }, data.id);
-              
-              setVerifiedOrder(newOrder);
-              clearCart();
-            }
-          }
-          setIsVerifying(false);
-        })
-        .catch(err => {
-          console.error('Verification error:', err);
-          setError('Could not verify payment status.');
-          setIsVerifying(false);
-        });
-    }
-  }, [sessionId, verifiedOrder, createOrder, lookupOrder, cart, clearCart]);
-
-  const orderId = verifiedOrder?.id || urlOrderId || 'CCR-782194';
-  const order = verifiedOrder || lookupOrder(orderId);
-
-  if (isVerifying) {
-    return (
-      <div className="max-w-3xl mx-auto py-32 text-center space-y-6">
-        <Loader2 className="w-16 h-16 animate-spin text-[#8C6A54] mx-auto opacity-20" />
-        <div className="space-y-2">
-          <h2 className="text-2xl font-serif font-bold text-[#2B2623]">Finalizing Your Order</h2>
-          <p className="text-sm text-[#736B63]">We are securing your payment details and preparing your confirmation.</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="max-w-md mx-auto py-24 text-center space-y-8">
-        <div className="w-20 h-20 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto">
-          <AlertCircle className="w-10 h-10" />
-        </div>
-        <div className="space-y-3">
-          <h2 className="text-2xl font-serif font-bold text-[#2B2623]">Payment Verification Failed</h2>
-          <p className="text-sm text-[#736B63] leading-relaxed">{error}</p>
-        </div>
-        <Link 
-          href="/checkout"
-          className="inline-block w-full bg-[#2B2623] text-white text-xs font-bold uppercase tracking-widest py-4 rounded-sm hover:bg-[#47403C] transition-all shadow-sm"
-        >
-          Return to Checkout
-        </Link>
-      </div>
-    );
-  }
+  const orderId = urlOrderId || 'CCR-782194';
+  const order = lookupOrder(orderId);
 
   if (!order) {
     return (
@@ -261,6 +165,26 @@ function ConfirmationContent() {
             <p className="text-[10px] text-[#3C6E47] leading-relaxed italic">
               Need to change something? Reply to your confirmation email or contact our support team within 24 hours.
             </p>
+          </div>
+
+          <div className="bg-[#EBF7EE] border border-[#CDE9D2] rounded-sm p-4 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#1E7E34]">
+              <MessageCircle className="w-4 h-4 fill-[#1E7E34] text-[#1E7E34]" />
+              <span>WhatsApp Live Support</span>
+            </div>
+            <p className="text-[11px] text-[#2B5435] leading-relaxed">
+              Need immediate help with payment verification, bank details, or delivery? Chat with our team on WhatsApp: <strong>{WHATSAPP_PHONE_DISPLAY}</strong>.
+            </p>
+            <a
+              id="confirmation-whatsapp-btn"
+              href={`https://wa.me/${WHATSAPP_PHONE_CLEAN}?text=${encodeURIComponent(`Hello CozyCorobes! 🛍️ I have an inquiry regarding my order #${order.id} (${order.customerName}). Could you please assist me?`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider py-2.5 px-3 rounded-xs transition-colors"
+            >
+              <MessageCircle className="w-4 h-4 fill-white" />
+              <span>Chat on WhatsApp ({WHATSAPP_PHONE_DISPLAY})</span>
+            </a>
           </div>
         </div>
       </div>

@@ -21,10 +21,11 @@ import {
   Send,
   Plug,
   Plus,
+  MessageCircle,
 } from 'lucide-react';
 import { Product, ProductReview } from '@/lib/types';
 import { useStore } from '@/lib/store-context';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, getWhatsAppProductOrderUrl, WHATSAPP_PHONE_DISPLAY } from '@/lib/utils';
 import { PRODUCTS } from '@/lib/store-data';
 import ProductCard from './ProductCard';
 
@@ -504,6 +505,24 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
             >
               <span>Buy It Now &rarr;</span>
             </button>
+
+            {/* Order via WhatsApp Button */}
+            <a
+              id="product-detail-whatsapp-btn"
+              href={getWhatsAppProductOrderUrl(
+                product.name,
+                selectedColor,
+                selectedSize,
+                quantity,
+                product.price
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs sm:text-sm font-semibold tracking-wider uppercase h-[48px] px-6 rounded-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+            >
+              <MessageCircle className="w-4 h-4 fill-white" />
+              <span>Order via WhatsApp ({WHATSAPP_PHONE_DISPLAY})</span>
+            </a>
 
             {/* Cross-sell Accessories (Only for the Robe) */}
             {isRobe && (

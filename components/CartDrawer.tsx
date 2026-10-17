@@ -3,10 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck } from 'lucide-react';
+import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, MessageCircle } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 import { MINIMUM_ORDER_AMOUNT } from '@/lib/store-data';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, getWhatsAppCartOrderUrl, WHATSAPP_PHONE_DISPLAY } from '@/lib/utils';
 
 export default function CartDrawer() {
   const {
@@ -207,6 +207,17 @@ export default function CartDrawer() {
                   <span>Proceed to Checkout</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
+
+                <a
+                  id="cart-drawer-whatsapp-btn"
+                  href={getWhatsAppCartOrderUrl(cart, cartSubtotal + (isFreeShippingEligible ? 0 : config.shipping.standardShippingRate))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white py-3 px-4 rounded-sm font-semibold text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>Order via WhatsApp ({WHATSAPP_PHONE_DISPLAY})</span>
+                </a>
 
                 <div className="flex items-center justify-between text-xs pt-1">
                   <Link

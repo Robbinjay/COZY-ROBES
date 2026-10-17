@@ -16,8 +16,8 @@ export default function AdminDashboard() {
   const [standardShippingRate, setStandardShippingRate] = useState(config.shipping.standardShippingRate);
   const [returnWindowDays, setReturnWindowDays] = useState(config.returns.returnWindowDays);
   const [supportEmail, setSupportEmail] = useState(config.brand.supportEmail);
-  const [supportPhone, setSupportPhone] = useState(config.brand.phone || '+44 20 7946 0912');
-  const [whatsappLink, setWhatsappLink] = useState(config.socialLinks.whatsapp || '');
+  const [supportPhone, setSupportPhone] = useState(config.brand.phone || '+44 7402233804');
+  const [whatsappLink, setWhatsappLink] = useState(config.socialLinks.whatsapp || 'https://wa.me/447402233804');
 
   const [saved, setSaved] = useState(false);
 
@@ -229,7 +229,7 @@ export default function AdminDashboard() {
                 type="text"
                 value={whatsappLink}
                 onChange={(e) => setWhatsappLink(e.target.value)}
-                placeholder="https://wa.me/447000000000"
+                placeholder="https://wa.me/447402233804"
                 className="w-full bg-[#FAF8F5] border border-[#D9D0C3] rounded-sm p-2.5 text-xs text-[#2B2623] focus:outline-none focus:border-[#8C6A54]"
               />
             </div>

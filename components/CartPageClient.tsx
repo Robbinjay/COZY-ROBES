@@ -3,10 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trash2, Plus, Minus, ArrowRight, ShieldCheck, ShoppingBag, Truck } from 'lucide-react';
+import { Trash2, Plus, Minus, ArrowRight, ShieldCheck, ShoppingBag, Truck, MessageCircle } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 import { MINIMUM_ORDER_AMOUNT } from '@/lib/store-data';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, getWhatsAppCartOrderUrl, WHATSAPP_PHONE_DISPLAY } from '@/lib/utils';
 
 export default function CartPageClient() {
   const {
@@ -196,13 +196,26 @@ export default function CartPageClient() {
           </div>
         )}
 
-        <Link
-          href="/checkout"
-          className="w-full bg-[#2B2623] hover:bg-[#47403C] text-white py-3.5 px-4 rounded-sm font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
-        >
-          <span>Proceed to Checkout</span>
-          <ArrowRight className="w-4 h-4" />
-        </Link>
+        <div className="space-y-2.5">
+          <Link
+            href="/checkout"
+            className="w-full bg-[#2B2623] hover:bg-[#47403C] text-white py-3.5 px-4 rounded-sm font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+          >
+            <span>Proceed to Checkout</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+
+          <a
+            id="cart-page-whatsapp-btn"
+            href={getWhatsAppCartOrderUrl(cart, cartSubtotal + (isFreeShippingEligible ? 0 : config.shipping.standardShippingRate))}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white py-3 px-4 rounded-sm font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+          >
+            <MessageCircle className="w-4 h-4 fill-white" />
+            <span>Place Order via WhatsApp ({WHATSAPP_PHONE_DISPLAY})</span>
+          </a>
+        </div>
 
         <div className="pt-2 text-center text-[11px] text-[#736B63] space-y-1">
           <div className="flex items-center justify-center gap-1.5">

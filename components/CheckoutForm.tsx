@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useStore } from '@/lib/store-context';
 import { useRouter } from 'next/navigation';
-import { formatPrice } from '@/lib/utils';
-import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins } from 'lucide-react';
+import { formatPrice, getWhatsAppCartOrderUrl, WHATSAPP_PHONE_DISPLAY } from '@/lib/utils';
+import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins, MessageCircle } from 'lucide-react';
 
 type PaymentMethod = 'bank_transfer' | 'crypto';
 
@@ -195,10 +196,36 @@ export default function CheckoutForm() {
         </section>
 
         <section className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-sm">
-          <h2 className="text-sm font-serif font-bold text-[#2B2623] mb-6 flex items-center gap-2">
+          <h2 className="text-sm font-serif font-bold text-[#2B2623] mb-4 flex items-center gap-2">
             <CreditCard className="w-4 h-4 text-[#8C6A54]" />
             Payment Method
           </h2>
+
+          {/* WhatsApp Direct Ordering & Live Support Box */}
+          <div className="bg-[#EBF7EE] p-4 rounded-sm border border-[#CDE9D2] space-y-2.5 mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#1E7E34] uppercase tracking-wider">
+                <MessageCircle className="w-4 h-4 fill-[#1E7E34] text-[#1E7E34]" />
+                <span>WhatsApp Live Support &amp; Order Placement</span>
+              </div>
+              <span className="text-[10px] font-bold bg-[#25D366] text-white px-2 py-0.5 rounded-full">
+                Online
+              </span>
+            </div>
+            <p className="text-[11px] text-[#2B5435] leading-relaxed">
+              Prefer to place your order directly via WhatsApp or need help? Chat with our team at <strong>{WHATSAPP_PHONE_DISPLAY}</strong> to complete your order and confirm payment details.
+            </p>
+            <a
+              id="checkout-whatsapp-btn"
+              href={getWhatsAppCartOrderUrl(cart, total)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider py-3 px-4 rounded-xs transition-colors cursor-pointer shadow-xs"
+            >
+              <MessageCircle className="w-4 h-4 fill-white" />
+              <span>Place Order via WhatsApp ({WHATSAPP_PHONE_DISPLAY})</span>
+            </a>
+          </div>
           
           <div className="space-y-4 mb-8">
             <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${paymentMethod === 'bank_transfer' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
@@ -266,7 +293,7 @@ export default function CheckoutForm() {
             {cart.map((item) => (
               <div key={item.id} className="flex gap-3">
                 <div className="w-12 h-14 relative bg-white border border-[#EAE3D9] rounded-xs overflow-hidden shrink-0">
-                  <img src={item.image} alt={item.name} className="object-cover w-full h-full" />
+                  <Image src={item.image} alt={item.name} fill sizes="48px" className="object-cover" referrerPolicy="no-referrer" />
                 </div>
                 <div className="flex-1">
                   <p className="text-xs font-bold text-[#2B2623]">{item.name}</p>

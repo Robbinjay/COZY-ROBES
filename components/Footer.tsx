@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail, ShieldCheck, Truck, RotateCcw, Check, Instagram, Phone, Music2, MessageCircle } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
+import { WHATSAPP_PHONE_DISPLAY } from '@/lib/utils';
 
 export default function Footer() {
   const { config } = useStore();
@@ -242,11 +243,23 @@ export default function Footer() {
               </li>
             </ul>
 
-            <div className="mt-6 pt-4 border-t border-[#383330] text-xs text-[#9E948B] space-y-1">
+            <div className="mt-6 pt-4 border-t border-[#383330] text-xs text-[#9E948B] space-y-1.5">
               <p className="font-medium text-[#D9CFC4]">Direct Support:</p>
               <p>
                 <a href={`mailto:${config.brand.supportEmail}`} className="hover:text-white underline underline-offset-2">
                   {config.brand.supportEmail}
+                </a>
+              </p>
+              <p className="flex items-center gap-1.5 text-[#BDB2A7]">
+                <span className="w-2 h-2 rounded-full bg-[#25D366] inline-block animate-pulse"></span>
+                <span>WhatsApp Live Support:</span>
+                <a
+                  href={whatsapp || 'https://wa.me/447402233804'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#25D366] font-bold hover:underline"
+                >
+                  {WHATSAPP_PHONE_DISPLAY}
                 </a>
               </p>
               <p>{config.brand.supportHours}</p>
