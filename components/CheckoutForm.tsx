@@ -32,7 +32,7 @@ export default function CheckoutForm() {
   const [promoSuccess, setPromoSuccess] = useState('');
 
   const isChristmasEligible = cartSubtotal >= 200;
-  const discountAmount = appliedPromo === 'COZY-CHRISTMAS' && isChristmasEligible ? cartSubtotal * 0.10 : 0;
+  const discountAmount = appliedPromo === 'COZY-CHRISTMAS' && isChristmasEligible ? cartSubtotal * 0.30 : 0;
   const shippingCost = isFreeShippingEligible ? 0 : config.shipping.standardShippingRate;
   const total = Math.max(0, cartSubtotal - discountAmount) + shippingCost;
 
@@ -46,11 +46,11 @@ export default function CheckoutForm() {
       return;
     }
     if (!isChristmasEligible) {
-      setPromoError('Order subtotal must be above £200 to apply COZY-CHRISTMAS (10% OFF).');
+      setPromoError('Order subtotal must be above £200 to apply COZY-CHRISTMAS (30% OFF).');
       return;
     }
     setAppliedPromo('COZY-CHRISTMAS');
-    setPromoSuccess('Christmas discount of 10% applied successfully!');
+    setPromoSuccess('Christmas discount of 30% applied successfully!');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -355,7 +355,7 @@ export default function CheckoutForm() {
             {promoSuccess && <p className="text-[11px] text-emerald-600 font-medium">{promoSuccess}</p>}
             {!appliedPromo && (
               <p className="text-[10px] text-[#736B63] leading-relaxed">
-                🎄 <strong>10% OFF</strong> on orders over £200 with code <code className="bg-[#F0EBE1] px-1 py-0.5 rounded text-[#2B2623] font-bold">COZY-CHRISTMAS</code>.
+                🎄 <strong>30% OFF</strong> on orders over £200 with code <code className="bg-[#F0EBE1] px-1 py-0.5 rounded text-[#2B2623] font-bold">COZY-CHRISTMAS</code>.
               </p>
             )}
           </div>
@@ -367,7 +367,7 @@ export default function CheckoutForm() {
             </div>
             {discountAmount > 0 && (
               <div className="flex justify-between text-xs text-[#B86246] font-semibold">
-                <span>Christmas Discount (10%)</span>
+                <span>Christmas Discount (30%)</span>
                 <span>-{formatPrice(discountAmount)}</span>
               </div>
             )}

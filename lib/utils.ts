@@ -17,7 +17,7 @@ export const WHATSAPP_PHONE_CLEAN = '447402233804';
 export const WHATSAPP_BASE_URL = 'https://wa.me/447402233804';
 
 export function getWhatsAppSupportUrl(customMessage?: string): string {
-  const text = customMessage || 'Hello CozyCorobes Live Support! I have a question and would love some assistance with your products and orders.';
+  const text = customMessage || 'Hello Cozy Robe, I would like to place an order via WhatsApp. How do i proceed';
   return `https://wa.me/${WHATSAPP_PHONE_CLEAN}?text=${encodeURIComponent(text)}`;
 }
 
@@ -28,7 +28,7 @@ export function getWhatsAppProductOrderUrl(
   quantity: number = 1,
   price?: number
 ): string {
-  let message = `Hello CozyCorobes! 🛍️ I would like to place an order via WhatsApp:\n\n• Item: ${productName}`;
+  let message = `Hello Cozy Robe, I would like to place an order via WhatsApp. How do i proceed\n\n• Item: ${productName}`;
   if (color) message += `\n• Colour: ${color}`;
   if (size) message += `\n• Size: ${size}`;
   message += `\n• Quantity: ${quantity}`;
@@ -42,9 +42,9 @@ export function getWhatsAppCartOrderUrl(
   total: number
 ): string {
   if (!items || items.length === 0) {
-    return getWhatsAppSupportUrl('Hello CozyCorobes! I would like to place an order via WhatsApp. Could you assist me with the available items?');
+    return getWhatsAppSupportUrl('Hello Cozy Robe, I would like to place an order via WhatsApp. How do i proceed');
   }
-  let message = `Hello CozyCorobes! 🛍️ I would like to place an order for my shopping bag via WhatsApp:\n\nItems in my order:\n`;
+  let message = `Hello Cozy Robe, I would like to place an order via WhatsApp. How do i proceed\n\nItems in my order:\n`;
   items.forEach((item, index) => {
     message += `${index + 1}. ${item.name} (${item.color || 'Standard'}, ${item.size || 'One Size'}) x${item.quantity} - £${(item.price * item.quantity).toFixed(2)}\n`;
   });
