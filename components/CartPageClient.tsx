@@ -74,7 +74,8 @@ export default function CartPageClient() {
 
         {/* Christmas Sale Banner */}
         <div className="bg-[#FAF0EC] border border-[#F2D7D0] p-4 rounded-sm text-xs text-[#B86246] font-medium flex items-center gap-2">
-          <span>🎄 <strong>Christmas Sale Offer:</strong> 30% OFF orders over £200 with promo code <strong className="uppercase">COZY-CHRISTMAS</strong> at checkout.</span>
+          <span className="inline-block animate-bounce text-base">🎅</span>
+          <span><strong>Christmas Sale Offer:</strong> 30% OFF orders over £200 with promo code <strong className="uppercase">COZY-CHRISTMAS</strong> at checkout.</span>
         </div>
 
         {/* Item List */}

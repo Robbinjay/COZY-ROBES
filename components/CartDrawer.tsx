@@ -81,8 +81,9 @@ export default function CartDrawer() {
           </div>
 
           {/* Christmas Sale Promo Notice */}
-          <div className="bg-[#FAF0EC] px-6 py-2.5 border-b border-[#F2D7D0] text-[11px] text-[#B86246] font-medium">
-            🎄 <strong>30% OFF</strong> on orders over £200 with code <strong className="uppercase">COZY-CHRISTMAS</strong>
+          <div className="bg-[#FAF0EC] px-6 py-2.5 border-b border-[#F2D7D0] text-[11px] text-[#B86246] font-medium flex items-center gap-1.5">
+            <span className="inline-block animate-bounce">🎅</span>
+            <span><strong>30% OFF</strong> on orders over £200 with code <strong className="uppercase">COZY-CHRISTMAS</strong></span>
           </div>
 
           {/* Cart Item List */}

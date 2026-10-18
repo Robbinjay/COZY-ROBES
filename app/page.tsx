@@ -44,7 +44,8 @@ export default function HomePage() {
             {/* Left Copy */}
             <div className="lg:col-span-6 space-y-6 text-left">
               <div className="inline-flex items-center gap-2 bg-[#FAF0EC] border border-[#F2D7D0] text-[#B86246] text-xs font-bold px-3.5 py-1.5 rounded-full tracking-wide shadow-2xs">
-                <span>🎄 Christmas Sale: 30% OFF Orders Over £200 • Use Code: COZY-CHRISTMAS</span>
+                <span className="inline-block animate-bounce text-sm">🎅</span>
+                <span>Christmas Sale: 30% OFF Orders Over £200 • Use Code: COZY-CHRISTMAS</span>
               </div>
 
               <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#2B2623] leading-[1.12]">
