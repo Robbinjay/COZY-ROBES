@@ -19,11 +19,13 @@ export const DEFAULT_STORE_CONFIG: StoreConfig = {
     address: 'CozyCorobes UK, 71–75 Shelton Street, Covent Garden, London, WC2H 9JQ, United Kingdom',
   },
   shipping: {
-    freeShippingThreshold: 100,
-    standardShippingRate: 3.99,
-    expressShippingRate: 6.99,
+    freeShippingThreshold: 130,
+    standardShippingRate: 6.99,
+    expressShippingRate: 14.99,
+    ultraFastRate: 59.99,
+    internationalRate: 19.99,
     processingTime: '1 to 2 business days',
-    deliveryTime: '2 to 4 business days via Royal Mail / DPD',
+    deliveryTime: '3 to 5 business days via Royal Mail',
   },
   returns: {
     returnWindowDays: 30,

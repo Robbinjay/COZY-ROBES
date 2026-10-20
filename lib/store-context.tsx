@@ -191,8 +191,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         if (savedConfig) {
           const parsed = JSON.parse(savedConfig);
           // Migrate legacy £150 threshold to £100 threshold
-          if (parsed?.shipping?.freeShippingThreshold !== 100) {
-            parsed.shipping.freeShippingThreshold = 100;
+          if (parsed?.shipping?.freeShippingThreshold !== 130) {
+            parsed.shipping.freeShippingThreshold = 130;
           }
           if (parsed?.announcementBar?.text?.includes('150')) {
             parsed.announcementBar.text = DEFAULT_STORE_CONFIG.announcementBar.text;

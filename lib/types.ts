@@ -155,6 +155,8 @@ export interface StoreConfig {
     freeShippingThreshold: number;
     standardShippingRate: number;
     expressShippingRate: number;
+    ultraFastRate: number;
+    internationalRate: number;
     processingTime: string;
     deliveryTime: string;
   };

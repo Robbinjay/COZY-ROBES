@@ -5,12 +5,13 @@ import Image from 'next/image';
 import { useStore } from '@/lib/store-context';
 import { useRouter } from 'next/navigation';
 import { formatPrice, getWhatsAppCartOrderUrl, WHATSAPP_PHONE_DISPLAY } from '@/lib/utils';
-import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins, MessageCircle, Sparkles } from 'lucide-react';
+import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins, MessageCircle, Sparkles, Truck } from 'lucide-react';
 
 type PaymentMethod = 'bank_transfer' | 'crypto';
+type ShippingMethodType = 'standard' | 'express' | 'ultrafast' | 'international';
 
 export default function CheckoutForm() {
-  const { cart, cartSubtotal, createOrder, isFreeShippingEligible, config } = useStore();
+  const { cart, cartSubtotal, createOrder, config } = useStore();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -25,6 +26,7 @@ export default function CheckoutForm() {
   });
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('bank_transfer');
+  const [shippingType, setShippingType] = useState<ShippingMethodType>('standard');
 
   const [promoInput, setPromoInput] = useState('');
   const [appliedPromo, setAppliedPromo] = useState('');
@@ -33,7 +35,20 @@ export default function CheckoutForm() {
 
   const isChristmasEligible = cartSubtotal >= 200;
   const discountAmount = appliedPromo === 'COZY-CHRISTMAS' && isChristmasEligible ? cartSubtotal * 0.30 : 0;
-  const shippingCost = isFreeShippingEligible ? 0 : config.shipping.standardShippingRate;
+  
+  const isFreeAll = cartSubtotal >= 130;
+
+  const standardRate = isFreeAll ? 0 : 6.99;
+  const expressRate = isFreeAll ? 0 : 14.99;
+  const ultraFastRate = isFreeAll ? 0 : 59.99;
+  const internationalRate = isFreeAll ? 0 : 19.99;
+
+  const shippingCost = 
+    shippingType === 'express' ? expressRate :
+    shippingType === 'ultrafast' ? ultraFastRate :
+    shippingType === 'international' ? internationalRate :
+    standardRate;
+
   const total = Math.max(0, cartSubtotal - discountAmount) + shippingCost;
 
   const handleApplyPromo = (e: React.FormEvent) => {
@@ -61,6 +76,12 @@ export default function CheckoutForm() {
     try {
       const orderId = `CCR-${Math.floor(100000 + Math.random() * 900000)}`;
       
+      const shippingLabel = 
+        shippingType === 'express' ? `Express Shipping (£${expressRate.toFixed(2)})` :
+        shippingType === 'ultrafast' ? `Ultra fast 1 day delivery (£${ultraFastRate.toFixed(2)})` :
+        shippingType === 'international' ? `International shipping (£${internationalRate.toFixed(2)})` :
+        `Standard Shipping (£${standardRate.toFixed(2)})`;
+
       // 1. Create order in local store
       const order = createOrder({
         email: formData.email,
@@ -72,7 +93,7 @@ export default function CheckoutForm() {
           postalCode: formData.postcode,
           country: 'United Kingdom',
         },
-        shippingMethod: isFreeShippingEligible ? 'Free UK Shipping' : 'Standard Shipping',
+        shippingMethod: shippingLabel,
         items: cart.map(item => ({
           productId: item.productId,
           name: item.name,
@@ -217,6 +238,95 @@ export default function CheckoutForm() {
                 onChange={e => setFormData({...formData, postcode: e.target.value})}
               />
             </div>
+          </div>
+        </section>
+
+        {/* Shipping Method Section */}
+        <section className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-sm">
+          <h2 className="text-sm font-serif font-bold text-[#2B2623] mb-4 flex items-center gap-2">
+            <Truck className="w-4 h-4 text-[#8C6A54]" />
+            Shipping Method
+          </h2>
+          <div className="space-y-3">
+            {/* Standard Shipping */}
+            <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${shippingType === 'standard' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="radio" 
+                  className="accent-[#2B2623]" 
+                  name="shippingMethod" 
+                  checked={shippingType === 'standard'}
+                  onChange={() => setShippingType('standard')}
+                />
+                <div>
+                  <p className="text-xs font-bold text-[#2B2623]">Standard Shipping</p>
+                  <p className="text-[10px] text-[#736B63]">3 to 5 business days via Royal Mail</p>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-[#2B2623]">
+                {standardRate === 0 ? 'FREE' : formatPrice(standardRate)}
+              </span>
+            </label>
+
+            {/* Express Shipping */}
+            <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${shippingType === 'express' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="radio" 
+                  className="accent-[#2B2623]" 
+                  name="shippingMethod" 
+                  checked={shippingType === 'express'}
+                  onChange={() => setShippingType('express')}
+                />
+                <div>
+                  <p className="text-xs font-bold text-[#2B2623]">Express Shipping</p>
+                  <p className="text-[10px] text-[#736B63]">1 to 2 business days</p>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-[#2B2623]">
+                {expressRate === 0 ? 'FREE' : formatPrice(expressRate)}
+              </span>
+            </label>
+
+            {/* Ultra Fast 1 Day Delivery */}
+            <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${shippingType === 'ultrafast' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="radio" 
+                  className="accent-[#2B2623]" 
+                  name="shippingMethod" 
+                  checked={shippingType === 'ultrafast'}
+                  onChange={() => setShippingType('ultrafast')}
+                />
+                <div>
+                  <p className="text-xs font-bold text-[#2B2623]">Ultra fast 1 day delivery</p>
+                  <p className="text-[10px] text-[#736B63]">Guaranteed next business day delivery</p>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-[#2B2623]">
+                {ultraFastRate === 0 ? 'FREE' : formatPrice(ultraFastRate)}
+              </span>
+            </label>
+
+            {/* International Shipping */}
+            <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${shippingType === 'international' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="radio" 
+                  className="accent-[#2B2623]" 
+                  name="shippingMethod" 
+                  checked={shippingType === 'international'}
+                  onChange={() => setShippingType('international')}
+                />
+                <div>
+                  <p className="text-xs font-bold text-[#2B2623]">International shipping</p>
+                  <p className="text-[10px] text-[#736B63]">5-7 Days delivery worldwide</p>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-[#2B2623]">
+                {internationalRate === 0 ? 'FREE' : formatPrice(internationalRate)}
+              </span>
+            </label>
           </div>
         </section>
 
@@ -372,7 +482,11 @@ export default function CheckoutForm() {
               </div>
             )}
             <div className="flex justify-between text-xs text-[#5C554F]">
-              <span>Shipping</span>
+              <span>Shipping ({
+                shippingType === 'express' ? 'Express' :
+                shippingType === 'ultrafast' ? 'Ultra Fast 1-Day' :
+                shippingType === 'international' ? 'International' : 'Standard'
+              })</span>
               <span>{shippingCost === 0 ? 'FREE' : formatPrice(shippingCost)}</span>
             </div>
             <div className="flex justify-between text-sm font-bold text-[#2B2623] pt-3 border-t border-[#EAE3D9]">
