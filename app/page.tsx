@@ -19,6 +19,7 @@ import {
 import { PRODUCTS, FAQ_ITEMS } from '@/lib/store-data';
 import FeaturedProductSection from '@/components/FeaturedProductSection';
 import ProductCard from '@/components/ProductCard';
+import SalesNotificationPopup from '@/components/SalesNotificationPopup';
 import { getFaqSchema } from '@/lib/seo';
 import { formatPrice } from '@/lib/utils';
 
@@ -612,6 +613,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      <SalesNotificationPopup />
     </>
   );
 }
