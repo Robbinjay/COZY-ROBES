@@ -6,9 +6,23 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { amount, currency, customer, reference, cart, shippingCost, discount } = body;
 
-    const domain = req.headers.get('host') || 'localhost:3000';
+    const origin = req.headers.get('origin');
+    const forwardedHost = req.headers.get('x-forwarded-host');
+    const host = req.headers.get('host');
     const protocol = req.headers.get('x-forwarded-proto') || 'https';
-    const baseUrl = `${protocol}://${domain}`;
+
+    let baseUrl = process.env.APP_URL;
+    if (!baseUrl || baseUrl.includes('localhost')) {
+      if (origin && !origin.includes('localhost')) {
+        baseUrl = origin;
+      } else if (forwardedHost) {
+        baseUrl = `${protocol}://${forwardedHost}`;
+      } else if (host && !host.includes('localhost')) {
+        baseUrl = `${protocol}://${host}`;
+      } else {
+        baseUrl = 'https://ais-dev-bqskk4xil4jnqpvregvhxi-490993910955.europe-west3.run.app';
+      }
+    }
 
     const successUrl = `${baseUrl}/checkout?payment_status=success&session_id={checkout_id}&order_ref=${reference}`;
     const cancelUrl = `${baseUrl}/checkout?payment_status=cancelled&order_ref=${reference}`;

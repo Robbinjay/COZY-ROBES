@@ -518,6 +518,8 @@ function CheckoutContent() {
             </label>
           </div>
 
+
+
           <div className="bg-[#FAF5EE] p-4 rounded-sm border border-[#EAE3D9] mb-6">
             <p className="text-[11px] text-[#5C554F] leading-relaxed">
               <strong>Note:</strong> Card payments are securely processed through Bachs payment gateway. Other methods will provide payment instructions upon order submission.
