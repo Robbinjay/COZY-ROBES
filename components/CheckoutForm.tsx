@@ -34,7 +34,7 @@ function CheckoutContent() {
     postcode: '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('bank_transfer');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('bach_card');
   const [shippingType, setShippingType] = useState<ShippingMethodType>('standard');
 
   const [promoInput, setPromoInput] = useState('');
