@@ -1,19 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { useStore } from '@/lib/store-context';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { formatPrice, getWhatsAppCartOrderUrl, WHATSAPP_PHONE_DISPLAY } from '@/lib/utils';
-import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins, MessageCircle, Sparkles, Truck } from 'lucide-react';
+import { ShoppingBag, MapPin, CreditCard, Lock, ShieldCheck, Landmark, Coins, MessageCircle, Sparkles, Truck, Loader2, AlertCircle } from 'lucide-react';
 
-type PaymentMethod = 'bank_transfer' | 'crypto';
+type PaymentMethod = 'bank_transfer' | 'crypto' | 'bach_card';
 type ShippingMethodType = 'standard' | 'express' | 'ultrafast' | 'international';
 
-export default function CheckoutForm() {
-  const { cart, cartSubtotal, createOrder, config } = useStore();
+function CheckoutContent() {
+  const { cart, cartSubtotal, createOrder } = useStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const paymentStatus = searchParams.get('payment_status');
+  const sessionId = searchParams.get('session_id');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVerifyingBach, setIsVerifyingBach] = useState(false);
+  const [cancelMessage, setCancelMessage] = useState<string | null>(
+    paymentStatus === 'cancelled' ? 'Card payment was cancelled. You may retry or select another payment method below.' : null
+  );
   
   const [formData, setFormData] = useState({
     email: '',
@@ -51,6 +60,45 @@ export default function CheckoutForm() {
 
   const total = Math.max(0, cartSubtotal - discountAmount) + shippingCost;
 
+  // Handle return from Bachs payment gateway
+  useEffect(() => {
+    if (paymentStatus === 'success' && sessionId) {
+      const verifyBachOrder = async () => {
+        setIsVerifyingBach(true);
+        try {
+          const rawPending = sessionStorage.getItem('pending_bach_order');
+          if (!rawPending) {
+            throw new Error('Pending order session not found. Please try again.');
+          }
+          const orderData = JSON.parse(rawPending);
+
+          const res = await fetch('/api/payments/bach/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ checkoutId: sessionId, orderData }),
+          });
+          const data = await res.json();
+
+          if (!res.ok || !data.verified) {
+            throw new Error(data.error || data.message || 'Payment verification failed');
+          }
+
+          // Create order locally
+          const order = createOrder(orderData, orderData.id);
+          sessionStorage.removeItem('pending_bach_order');
+
+          router.push(`/order-confirmation?orderId=${order.id}`);
+        } catch (err: any) {
+          console.error('Bach Verification Error:', err);
+          setCancelMessage(err.message || 'Payment verification failed.');
+          setIsVerifyingBach(false);
+        }
+      };
+
+      verifyBachOrder();
+    }
+  }, [paymentStatus, sessionId, createOrder, router]);
+
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
     setPromoError('');
@@ -82,8 +130,8 @@ export default function CheckoutForm() {
         shippingType === 'international' ? `International shipping (£${internationalRate.toFixed(2)})` :
         `Standard Shipping (£${standardRate.toFixed(2)})`;
 
-      // 1. Create order in local store
-      const order = createOrder({
+      const orderData = {
+        id: orderId,
         email: formData.email,
         customerName: `${formData.firstName} ${formData.lastName}`,
         shippingAddress: {
@@ -108,9 +156,42 @@ export default function CheckoutForm() {
         shippingCost: shippingCost,
         tax: 0,
         total: total,
-      }, orderId);
+      };
 
-      // 2. Send email notifications via internal API
+      if (paymentMethod === 'bach_card') {
+        // Save to sessionStorage for verification return
+        sessionStorage.setItem('pending_bach_order', JSON.stringify(orderData));
+
+        const sessionRes = await fetch('/api/payments/bach/create-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: total,
+            currency: 'GBP',
+            customer: {
+              name: `${formData.firstName} ${formData.lastName}`,
+              email: formData.email,
+              phone: formData.phone,
+            },
+            reference: orderId,
+            cart: orderData.items,
+            shippingCost,
+            discount: discountAmount,
+          }),
+        });
+
+        const sessionData = await sessionRes.json();
+        if (!sessionRes.ok || !sessionData.success || !sessionData.checkoutUrl) {
+          throw new Error(sessionData.error || 'Failed to initialize Bach checkout session');
+        }
+
+        window.location.href = sessionData.checkoutUrl;
+        return;
+      }
+
+      // Standard Local Order (Bank Transfer / Crypto)
+      const order = createOrder(orderData, orderId);
+
       const paymentMethodLabel = {
         bank_transfer: 'Bank Transfer',
         crypto: 'Crypto (BTC / USDT)'
@@ -136,13 +217,24 @@ export default function CheckoutForm() {
       });
 
       router.push(`/order-confirmation?orderId=${order.id}`);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Order Submission Error:', err);
-      alert('There was an issue processing your order. Please try again or contact support.');
-    } finally {
+      alert(err.message || 'There was an issue processing your order. Please try again or contact support.');
       setIsSubmitting(false);
     }
   };
+
+  if (isVerifyingBach) {
+    return (
+      <div className="max-w-md mx-auto py-28 text-center space-y-6">
+        <Loader2 className="w-16 h-16 animate-spin text-[#8C6A54] mx-auto" />
+        <div className="space-y-2">
+          <h2 className="text-2xl font-serif font-bold text-[#2B2623]">Verifying Card Payment...</h2>
+          <p className="text-sm text-[#736B63]">Please wait while we confirm your transaction securely with Bachs.</p>
+        </div>
+      </div>
+    );
+  }
 
   if (cart.length === 0) {
     return (
@@ -162,6 +254,16 @@ export default function CheckoutForm() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
       <form onSubmit={handleSubmit} className="space-y-8">
+        {cancelMessage && (
+          <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-sm text-xs flex items-start gap-3">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold">Payment Notice</p>
+              <p className="mt-0.5">{cancelMessage}</p>
+            </div>
+          </div>
+        )}
+
         <section className="bg-white p-6 rounded-sm border border-[#EAE3D9] shadow-sm">
           <h2 className="text-sm font-serif font-bold text-[#2B2623] mb-6 flex items-center gap-2">
             <MapPin className="w-4 h-4 text-[#8C6A54]" />
@@ -363,6 +465,24 @@ export default function CheckoutForm() {
           </div>
           
           <div className="space-y-4 mb-8">
+            {/* Credit / Debit Card via Bachs */}
+            <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${paymentMethod === 'bach_card' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="radio" 
+                  className="accent-[#2B2623]" 
+                  name="paymentMethod" 
+                  checked={paymentMethod === 'bach_card'}
+                  onChange={() => setPaymentMethod('bach_card')}
+                />
+                <div>
+                  <p className="text-xs font-bold text-[#2B2623]">Credit / Debit Card (Visa, Mastercard)</p>
+                  <p className="text-[10px] text-[#736B63]">Securely processed via Bachs (USD equivalent)</p>
+                </div>
+              </div>
+              <CreditCard className="w-4 h-4 text-[#8C6A54]" />
+            </label>
+
             <label className={`flex items-center justify-between p-4 border rounded-sm cursor-pointer transition-all ${paymentMethod === 'bank_transfer' ? 'bg-[#FAF8F5] border-[#8C6A54]' : 'bg-white border-[#EAE3D9] hover:border-[#D9D0C3]'}`}>
               <div className="flex items-center gap-3">
                 <input 
@@ -396,13 +516,11 @@ export default function CheckoutForm() {
               </div>
               <Coins className="w-4 h-4 text-[#8C6A54]" />
             </label>
-
-
           </div>
 
           <div className="bg-[#FAF5EE] p-4 rounded-sm border border-[#EAE3D9] mb-6">
             <p className="text-[11px] text-[#5C554F] leading-relaxed">
-              <strong>Note:</strong> To complete your purchase, place the order first. You will receive an email with payment details for your chosen method. Your order will be processed as soon as the transfer is verified. Thanks.
+              <strong>Note:</strong> Card payments are securely processed through Bachs payment gateway. Other methods will provide payment instructions upon order submission.
             </p>
           </div>
 
@@ -411,10 +529,15 @@ export default function CheckoutForm() {
             disabled={isSubmitting}
             className="w-full bg-[#2B2623] text-white text-xs font-bold uppercase tracking-widest py-4 rounded-sm hover:bg-[#47403C] disabled:opacity-50 transition-all flex items-center justify-center gap-2"
           >
-            {isSubmitting ? 'Processing...' : (
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Processing...
+              </>
+            ) : (
               <>
                 <Lock className="w-3.5 h-3.5" />
-                Place Order • {formatPrice(total)}
+                {paymentMethod === 'bach_card' ? 'Proceed to Secure Card Payment • ' : 'Place Order • '} {formatPrice(total)}
               </>
             )}
           </button>
@@ -501,5 +624,13 @@ export default function CheckoutForm() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutForm() {
+  return (
+    <Suspense fallback={<div className="py-24 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-[#8C6A54]" /></div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }
