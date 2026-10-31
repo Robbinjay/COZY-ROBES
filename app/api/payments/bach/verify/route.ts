@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
           <h3>Order Details (#${orderData.id})</h3>
           <p><strong>Name:</strong> ${orderData.customerName}</p>
           <p><strong>Email:</strong> ${orderData.email}</p>
+          <p><strong>Phone:</strong> ${orderData.phone || 'N/A'}</p>
           <p><strong>Payment Method:</strong> Credit / Debit Card (Bachs)</p>
           <p><strong>Shipping Address:</strong> ${orderData.shippingAddress?.address1}, ${orderData.shippingAddress?.city}, ${orderData.shippingAddress?.postalCode}, ${orderData.shippingAddress?.country}</p>
           

@@ -749,6 +749,7 @@ export default function AccountDashboard() {
                       </h4>
                       <p className="text-[#5C554F] leading-relaxed">
                         Email: {selectedOrder.email}<br />
+                        {selectedOrder.phone && <>Phone: {selectedOrder.phone}<br /></>}
                         Courier Updates: Sent to your email upon dispatch.
                       </p>
                     </div>

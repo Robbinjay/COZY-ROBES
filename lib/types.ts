@@ -114,6 +114,7 @@ export interface Order {
   date: string;
   email: string;
   customerName: string;
+  phone?: string;
   shippingAddress: {
     address1: string;
     address2?: string;

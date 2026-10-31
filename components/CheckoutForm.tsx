@@ -134,6 +134,7 @@ function CheckoutContent() {
         id: orderId,
         email: formData.email,
         customerName: `${formData.firstName} ${formData.lastName}`,
+        phone: formData.phone,
         shippingAddress: {
           address1: formData.address,
           city: formData.city,
