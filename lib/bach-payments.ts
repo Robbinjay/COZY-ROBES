@@ -46,7 +46,7 @@ export interface CreateSessionParams {
 }
 
 export async function createBachCheckoutSession(params: CreateSessionParams) {
-  const secretKey = process.env.BACH_SECRET_KEY || process.env.BACH_API_KEY;
+  const secretKey = process.env.BACH_SECRET_KEY || process.env.BACH_API_KEY || 'sk_live_0c62bfd9_grSbY7xWS3jXPuPKDKZYIh2vFJjOc2yA_zFuihV0iy4';
   
   const originalCurrency = params.currency || 'GBP';
   const originalAmount = params.amount;
@@ -148,7 +148,7 @@ export async function createBachCheckoutSession(params: CreateSessionParams) {
 }
 
 export async function verifyBachPayment(checkoutId: string) {
-  const secretKey = process.env.BACH_SECRET_KEY || process.env.BACH_API_KEY;
+  const secretKey = process.env.BACH_SECRET_KEY || process.env.BACH_API_KEY || 'sk_live_0c62bfd9_grSbY7xWS3jXPuPKDKZYIh2vFJjOc2yA_zFuihV0iy4';
 
   if (!secretKey || secretKey.includes('your_bachs') || checkoutId.startsWith('bach_sandbox_')) {
     return {
