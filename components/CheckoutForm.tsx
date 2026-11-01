@@ -20,6 +20,7 @@ function CheckoutContent() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVerifyingBach, setIsVerifyingBach] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [cancelMessage, setCancelMessage] = useState<string | null>(
     paymentStatus === 'cancelled' ? 'Card payment was cancelled. You may retry or select another payment method below.' : null
   );
@@ -120,6 +121,7 @@ function CheckoutContent() {
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
+    setCheckoutError(null);
 
     try {
       const orderId = `CCR-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -183,7 +185,7 @@ function CheckoutContent() {
 
         const sessionData = await sessionRes.json();
         if (!sessionRes.ok || !sessionData.success || !sessionData.checkoutUrl) {
-          throw new Error(sessionData.error || 'Failed to initialize Bach checkout session');
+          throw new Error(sessionData.error || sessionData.detail || 'Failed to initialize Bach checkout session');
         }
 
         window.location.href = sessionData.checkoutUrl;
@@ -220,7 +222,7 @@ function CheckoutContent() {
       router.push(`/order-confirmation?orderId=${order.id}`);
     } catch (err: any) {
       console.error('Order Submission Error:', err);
-      alert(err.message || 'There was an issue processing your order. Please try again or contact support.');
+      setCheckoutError(err.message || 'There was an issue processing your order. Please try again or contact support.');
       setIsSubmitting(false);
     }
   };
@@ -255,6 +257,16 @@ function CheckoutContent() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
       <form onSubmit={handleSubmit} className="space-y-8">
+        {checkoutError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-sm text-xs flex items-start gap-3">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold">Payment Initialization Error</p>
+              <p className="mt-0.5">{checkoutError}</p>
+            </div>
+          </div>
+        )}
+
         {cancelMessage && (
           <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-sm text-xs flex items-start gap-3">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />

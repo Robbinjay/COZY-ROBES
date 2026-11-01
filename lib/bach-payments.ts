@@ -46,7 +46,7 @@ export interface CreateSessionParams {
 }
 
 export async function createBachCheckoutSession(params: CreateSessionParams) {
-  const rawKey = process.env.BACH_SECRET_KEY || process.env.BACH_API_KEY;
+  const rawKey = (process.env.BACH_SECRET_KEY || process.env.BACH_API_KEY || '').trim();
   const secretKey = (rawKey && !rawKey.includes('your_bachs')) 
     ? rawKey 
     : 'sk_live_0c62bfd9_grSbY7xWS3jXPuPKDKZYIh2vFJjOc2yA_zFuihV0iy4';
@@ -84,56 +84,40 @@ export async function createBachCheckoutSession(params: CreateSessionParams) {
     },
   };
 
-  // Attempt live Bachs API call, with graceful fallback to sandbox simulation on HTTP errors
-  try {
-    const response = await fetch('https://api.bachs.io/v1/checkout-sessions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${secretKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+  const response = await fetch('https://api.bachs.io/v1/checkout-sessions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${secretKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
 
-    const data = await response.json();
+  const data = await response.json();
 
-    if (response.ok && data) {
-      const checkoutUrl = data.checkout_url || data.url || data.data?.checkout_url;
-      const checkoutId = data.checkout_id || data.id || data.data?.id || params.reference;
-
-      if (checkoutUrl) {
-        return {
-          success: true,
-          checkoutUrl,
-          checkoutId,
-          convertedAmount: convertedAmountStr,
-          convertedCurrency,
-        };
-      }
-    }
-    console.warn('Bachs API returned non-200 or missing URL. Falling back to sandbox simulation:', data);
-  } catch (err) {
-    console.warn('Bachs API request exception. Falling back to sandbox simulation:', err);
+  if (!response.ok || !data) {
+    const errorMsg = data?.detail || data?.error || data?.message || `Bachs API error (${response.status})`;
+    throw new Error(errorMsg);
   }
 
-  // Fallback sandbox simulation if live API call encounters issues
-  const sandboxCheckoutId = `bach_sandbox_${Math.random().toString(36).substring(7)}`;
-  const sandboxUrl = new URL(params.successUrl);
-  sandboxUrl.searchParams.set('session_id', sandboxCheckoutId);
-  sandboxUrl.searchParams.set('payment_status', 'success');
-  sandboxUrl.searchParams.set('order_ref', params.reference);
+  const checkoutUrl = data.checkout_url || data.url || data.data?.checkout_url;
+  const checkoutId = data.checkout_id || data.id || data.data?.id || params.reference;
+
+  if (!checkoutUrl) {
+    throw new Error('Bachs API response missing checkout_url');
+  }
 
   return {
     success: true,
-    checkoutUrl: sandboxUrl.toString(),
-    checkoutId: sandboxCheckoutId,
+    checkoutUrl,
+    checkoutId,
     convertedAmount: convertedAmountStr,
     convertedCurrency,
   };
 }
 
 export async function verifyBachPayment(checkoutId: string) {
-  const rawKey = process.env.BACH_SECRET_KEY || process.env.BACH_API_KEY;
+  const rawKey = (process.env.BACH_SECRET_KEY || process.env.BACH_API_KEY || '').trim();
   const secretKey = (rawKey && !rawKey.includes('your_bachs')) 
     ? rawKey 
     : 'sk_live_0c62bfd9_grSbY7xWS3jXPuPKDKZYIh2vFJjOc2yA_zFuihV0iy4';
