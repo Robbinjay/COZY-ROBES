@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
         await transporter.sendMail({
           from: `"CozyCorobes Store" <${process.env.ZOHO_EMAIL}>`,
           to: adminEmail,
+          replyTo: `"${orderData.customerName}" <${orderData.email}>`,
           subject: `Paid Order Received #${orderData.id} (Card via Bachs)`,
           html: `<h2>New Paid Order!</h2>${customerHtml}`,
         });
