@@ -1,10 +1,28 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { verifyAntiSpam } from '@/lib/anti-spam';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, subject, orderNumber, message } = body;
+    const { name, email, subject, orderNumber, message, website_hp, clientTimestamp } = body;
+
+    const clientIp = req.headers.get('x-forwarded-for') || '127.0.0.1';
+    const antiSpam = verifyAntiSpam({
+      honeypot: website_hp,
+      clientTimestamp,
+      email,
+      message,
+      identifier: clientIp,
+      jsToken: body.jsToken,
+    });
+
+    if (antiSpam.isSpam) {
+      return NextResponse.json(
+        { success: false, error: antiSpam.reason || 'Spam security check failed.' },
+        { status: 400 }
+      );
+    }
 
     // Validation
     if (!name || typeof name !== 'string' || !name.trim()) {

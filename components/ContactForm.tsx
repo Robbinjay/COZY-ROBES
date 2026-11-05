@@ -1,11 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, CheckCircle2, Clock, AlertCircle, Sparkles, ShieldCheck } from 'lucide-react';
 import { useStore } from '@/lib/store-context';
 
 export default function ContactForm() {
   const { customer } = useStore();
+  const formLoadTimeRef = useRef(0);
+  useEffect(() => {
+    formLoadTimeRef.current = Date.now();
+  }, []);
 
   const [formData, setFormData] = useState({
     name: customer ? `${customer.firstName} ${customer.lastName}`.trim() || customer.displayName || '' : '',
@@ -15,6 +19,7 @@ export default function ContactForm() {
     message: '',
   });
 
+  const [websiteHp, setWebsiteHp] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -36,6 +41,9 @@ export default function ContactForm() {
           subject: formData.subject,
           orderNumber: formData.orderNumber,
           message: formData.message,
+          website_hp: websiteHp,
+          clientTimestamp: formLoadTimeRef.current,
+          jsToken: 'ct_verified_browser_pass',
         }),
       });
 
@@ -152,6 +160,20 @@ export default function ContactForm() {
           <span>{errorMessage}</span>
         </div>
       )}
+
+      {/* Anti-Spam Honeypot Field (Hidden from real users) */}
+      <div className="hidden opacity-0 pointer-events-none absolute -left-[9999px]" aria-hidden="true" tabIndex={-1}>
+        <label htmlFor="website_hp">Website URL</label>
+        <input
+          type="text"
+          id="website_hp"
+          name="website_hp"
+          value={websiteHp}
+          onChange={(e) => setWebsiteHp(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
