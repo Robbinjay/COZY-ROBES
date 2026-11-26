@@ -26,7 +26,7 @@ import { formatPrice } from '@/lib/utils';
 
 export default function HomePage() {
   const featuredProduct = PRODUCTS.find((p) => p.slug === 'cozy-co-robes') || PRODUCTS[0];
-  const catalogProducts = PRODUCTS.slice(0, 4);
+  const catalogProducts = PRODUCTS;
   const bundleProducts = PRODUCTS.filter((p) => p.slug !== 'cozy-co-robes').slice(0, 3);
   const homepageFaqs = FAQ_ITEMS.slice(0, 8);
   const faqSchema = getFaqSchema(homepageFaqs);
@@ -58,10 +58,10 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
                 <Link
                   id="hero-primary-cta"
-                  href="/collections/heated-robes"
+                  href="/shop"
                   className="bg-[#2B2623] hover:bg-[#47403C] text-[#FAF8F5] text-xs sm:text-sm font-semibold tracking-wider uppercase px-8 py-4 rounded-sm transition-all duration-200 text-center shadow-xs hover:shadow-md cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <span>Shop Heated Robes</span>
+                  <span>Shop All Products</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
 
@@ -148,8 +148,39 @@ export default function HomePage() {
       {/* SECTION 3: FEATURED PRODUCT */}
       <FeaturedProductSection product={featuredProduct} />
 
-      {/* SECTION 4: WHY COZY COROBES */}
-      <section id="why-cozycorobes" className="py-16 sm:py-24 bg-[#F5EFEB] border-t border-[#EAE3D9]">
+      {/* SECTION 4: PRODUCT COLLECTION GRID (ALL PRODUCTS) */}
+      <section id="collection-grid" className="py-16 sm:py-20 bg-[#F5EFEB] border-t border-[#EAE3D9]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center max-w-2xl mx-auto mb-10 space-y-2.5">
+            <p className="text-xs font-bold uppercase tracking-widest text-[#8C6A54]">
+              Curated Comfort Catalog
+            </p>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#2B2623]">
+              Shop CozyCorobes
+            </h2>
+            <div className="pt-1">
+              <Link
+                href="/shop"
+                className="text-xs font-bold uppercase tracking-wider text-[#2B2623] hover:text-[#8C6A54] inline-flex items-center gap-1.5 underline underline-offset-4"
+              >
+                <span>View All Products</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {catalogProducts.map((prod, idx) => (
+              <ProductCard key={prod.id} product={prod} priority={idx < 4} />
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* SECTION 5: WHY COZY COROBES */}
+      <section id="why-cozycorobes" className="py-16 sm:py-24 bg-[#FAF8F5] border-t border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto mb-14">
@@ -453,39 +484,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 8: PRODUCT COLLECTION GRID */}
-      <section id="collection-grid" className="py-16 sm:py-24 bg-[#F5EFEB] border-t border-[#EAE3D9]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#8C6A54] mb-2">
-                Curated Comfort Catalog
-              </p>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#2B2623]">
-                Shop CozyCorobes
-              </h2>
-            </div>
-            <Link
-              href="/shop"
-              className="text-xs font-bold uppercase tracking-wider text-[#2B2623] hover:text-[#8C6A54] flex items-center gap-1.5 underline underline-offset-4"
-            >
-              <span>View All Products</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {catalogProducts.map((prod) => (
-              <ProductCard key={prod.id} product={prod} />
-            ))}
-          </div>
-
-        </div>
-      </section>
-
       {/* SECTION 9: BUNDLE / MULTI-PRODUCT SECTION */}
-      <section id="bundles" className="py-16 sm:py-20 bg-[#FAF8F5]">
+      <section id="bundles" className="py-16 sm:py-20 bg-[#F5EFEB] border-t border-[#EAE3D9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="bg-[#EFE9DF] p-8 sm:p-12 rounded-sm border border-[#DDD4C7]">
@@ -542,7 +542,7 @@ export default function HomePage() {
       </section>
 
       {/* SECTION 10: FAQ */}
-      <section id="faq-section" className="py-16 sm:py-24 bg-[#F5EFEB] border-t border-[#EAE3D9]">
+      <section id="faq-section" className="py-16 sm:py-24 bg-[#FAF8F5] border-t border-[#EAE3D9]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center mb-12">

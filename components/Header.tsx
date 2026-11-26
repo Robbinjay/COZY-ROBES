@@ -49,6 +49,30 @@ export default function Header() {
       badge: null,
     },
     {
+      name: 'CozyCo SleepCloud Wrap',
+      href: '/products/cozyco-cloud-wrap',
+      description: '4-in-1 travel sleep set with blackout mask, neck support & arm wrap',
+      badge: 'New',
+    },
+    {
+      name: 'Cozy Co. Cozy Chair',
+      href: '/products/cozy-co-cozy-chair',
+      description: 'Heart-backed bouclé desk chair with wide seat & rolling leg platform',
+      badge: 'New',
+    },
+    {
+      name: 'CozyCo CloudRest™',
+      href: '/products/cozyco-cloudrest',
+      description: 'Ergonomic nursing & lounging support cushion with arm rests',
+      badge: 'Best Seller',
+    },
+    {
+      name: 'CozyCo Bedside Pet Bed',
+      href: '/products/cozyco-bedside-pet-bed',
+      description: 'Tool-free clamp-on mattress-level sleeper for cats & small dogs',
+      badge: 'New',
+    },
+    {
       name: 'New Arrivals',
       href: '/collections/new-arrivals',
       description: 'Newly released winter essentials & colorways',
@@ -64,7 +88,13 @@ export default function Header() {
     { label: 'Contact', href: '/contact' },
   ];
 
-  const isShopActive = pathname === '/shop' || pathname.startsWith('/collections/');
+  const isShopActive =
+    pathname === '/shop' ||
+    pathname.startsWith('/collections/') ||
+    pathname === '/products/cozyco-cloud-wrap' ||
+    pathname === '/products/cozy-co-cozy-chair' ||
+    pathname === '/products/cozyco-cloudrest' ||
+    pathname === '/products/cozyco-bedside-pet-bed';
 
   return (
     <header
@@ -174,7 +204,7 @@ export default function Header() {
                     : 'opacity-0 invisible -translate-y-1 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:pointer-events-auto'
                 }`}
               >
-                <div className="bg-white rounded-sm border border-[#EAE3D9] shadow-[0_14px_35px_-8px_rgba(43,38,35,0.14)] p-2">
+                <div className="bg-white rounded-sm border border-[#EAE3D9] shadow-[0_14px_35px_-8px_rgba(43,38,35,0.14)] p-2 max-h-[78vh] overflow-y-auto">
                   <div className="px-3 py-1.5 border-b border-[#F5EFE6] mb-1">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-[#8C6A54]">
                       Product Categories

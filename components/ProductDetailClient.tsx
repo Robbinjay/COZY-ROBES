@@ -153,6 +153,32 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
 
   const handleColorSelect = (colorName: string) => {
     setSelectedColor(colorName);
+    if (product.slug === 'cozyco-cloud-wrap') {
+      if (colorName.toLowerCase().includes('pink')) {
+        setSelectedImage(0);
+      } else if (colorName.toLowerCase().includes('black')) {
+        if (product.images.length > 1) setSelectedImage(1);
+      }
+      return;
+    }
+    if (product.slug === 'cozyco-cloudrest') {
+      if (colorName.toLowerCase().includes('charcoal')) {
+        if (product.images.length > 5) setSelectedImage(5);
+      } else if (colorName.toLowerCase().includes('gray')) {
+        if (product.images.length > 6) setSelectedImage(6);
+      } else if (colorName.toLowerCase().includes('pink')) {
+        if (product.images.length > 7) setSelectedImage(7);
+      }
+      return;
+    }
+    if (product.slug === 'cozy-co-cozy-chair') {
+      if (colorName.toLowerCase().includes('white')) {
+        setSelectedImage(0);
+      } else if (colorName.toLowerCase().includes('pink')) {
+        if (product.images.length > 1) setSelectedImage(1);
+      }
+      return;
+    }
     // If color changes and we have corresponding image, preview first image
     if (colorName.toLowerCase().includes('charcoal')) {
       setSelectedImage(0);

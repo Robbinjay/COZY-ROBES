@@ -383,6 +383,367 @@ export const PRODUCTS: Product[] = [
         verifiedPurchase: true,
       }
     ],
+  },
+  {
+    id: 'prod-cozyco-cloud-wrap',
+    slug: 'cozyco-cloud-wrap',
+    name: 'CozyCo SleepCloud Wrap',
+    subtitle: '4-Piece Travel Sleep Set | Head & Neck Support, Arm Wrap, Blackout Eye Mask & Pouch',
+    tagline: 'The best travel set for sleeping on any flight — anchors to any headrest to stop forward head drop and cradle your arms.',
+    price: 38.13,
+    compareAtPrice: 73.24,
+    rating: 4.8,
+    reviewCount: 563,
+    category: 'cozy-accessories',
+    featured: true,
+    isNewArrival: true,
+    isBestSeller: true,
+    images: [
+      '/images/products/cozyco-cloud-wrap/img_1.png',
+      '/images/products/cozyco-cloud-wrap/img_2.png',
+      '/images/products/cozyco-cloud-wrap/img_3.png',
+      '/images/products/cozyco-cloud-wrap/img_4.png',
+      '/images/products/cozyco-cloud-wrap/img_5.png',
+      '/images/products/cozyco-cloud-wrap/img_6.png',
+      '/images/products/cozyco-cloud-wrap/img_7.png',
+      '/images/products/cozyco-cloud-wrap/img_8.png',
+    ],
+    description: 'The CozyCo SleepCloud Wrap is the complete 4-in-1 travel sleep system engineered for deep, restful sleep on flights, trains, and coaches—even in a middle seat. Unlike bulky neck pillows that let your head fall forward, it buckles smoothly around any standard headrest to hold your head upright, blocks out cabin light with an adjustable blackout eye mask, and cradles your arms and shoulders in a plush padded sling.',
+    features: [
+      '✈️ Stops Forward Head Drop: Anchors securely to any headrest so your head stays comfortably upright without needing a window wall',
+      '😴 Adjustable Blackout Eye Mask Included: Soft contoured mask blocks cabin light completely without pressing tightly against your eyes',
+      '🤗 Plush Arm Wrap with Built-In Sling: Padded breathable wrap supports your arms and shoulders instead of awkwardly crossing them',
+      '💺 Works in Every Seat (Including Middle Seats): Fits coach, train, and virtually all economy aircraft headrests in seconds',
+      '🎒 4-in-1 Compact Travel Pouch: Includes 1x blackout eye mask, 1x headrest neck support, 1x padded arm wrap, and 1x travel pouch'
+    ],
+    specs: [
+      { label: 'Included in Pouch', value: '1x Blackout Eye Mask, 1x Head & Neck Support, 1x Soft Arm Wrap Sling, 1x Travel Pouch' },
+      { label: 'Seat Compatibility', value: 'Fits Standard Aircraft, Train & Coach Headrests (Window, Aisle & Middle Seats)' },
+      { label: 'Fabric Material', value: 'Ultra-Soft Breathable Plush Fleece & Padded Cotton Blend' },
+      { label: 'Pack Weight', value: '200 g (Ultra-Lightweight Carry-On Friendly)' },
+      { label: 'Setup Time', value: 'Ready in Seconds — 4 Simple Steps' },
+    ],
+    howItWorks: [
+      'Strap It On: Buckle the ergonomic head and neck support around the seat headrest.',
+      'Drape the Wrap: Hang the soft padded arm wrap sling smoothly over the support.',
+      'Slip On the Mask: Adjust the breathable blackout eye mask comfortably over your eyes.',
+      'Tuck In & Drift Off: Slide your arms into the built-in sling, relax, and sleep soundly the whole flight.'
+    ],
+    careInstructions: [
+      'Spot clean or hand wash in cold water with mild detergent after travel.',
+      'Air dry flat completely before packing back into the travel pouch.',
+      'Do not bleach or iron padded straps.'
+    ],
+    colors: [
+      { name: 'Pink', hex: '#F4C2C2', inStock: true },
+      { name: 'Black', hex: '#1F1F1F', inStock: true }
+    ],
+    sizes: ['One Size Fits All'],
+    variants: [
+      { id: 'ccw-pink-os', name: 'Pink / One Size Fits All', colorName: 'Pink', colorHex: '#F4C2C2', size: 'One Size Fits All', inStock: true, sku: 'CCW-PNK-OS' },
+      { id: 'ccw-black-os', name: 'Black / One Size Fits All', colorName: 'Black', colorHex: '#1F1F1F', size: 'One Size Fits All', inStock: true, sku: 'CCW-BLK-OS' }
+    ],
+    inStock: true,
+    shippingNote: 'In stock. Dispatches via Royal Mail Tracked within 24 hours.',
+    reviews: [
+      {
+        id: 'rev-cw1',
+        author: 'Hannah S.',
+        location: 'London, England',
+        rating: 5,
+        date: '18 November 2026',
+        title: 'Actually sleep most of the flight now',
+        comment: 'Awesome product!! Soft material that is very comfortable to sleep in. I actually sleep most of the flight now instead of waking up with a sore neck.',
+        verifiedPurchase: true,
+        colorPurchased: 'Pink',
+      },
+      {
+        id: 'rev-cw2',
+        author: 'Totiana S.',
+        location: 'Manchester, England',
+        rating: 5,
+        date: '14 November 2026',
+        title: 'Super soft and padded arm wrap',
+        comment: 'I love how comfortable everything feels! The arm wrap is super soft and padded, so I finally have somewhere to rest my arms instead of awkwardly crossing them. The head support keeps my head from falling forward every time I doze off, and the eye mask is adjustable.',
+        verifiedPurchase: true,
+        colorPurchased: 'Black',
+      },
+      {
+        id: 'rev-cw3',
+        author: 'Sophia S.',
+        location: 'Edinburgh, Scotland',
+        rating: 5,
+        date: '10 November 2026',
+        title: 'So much more than just a travel pillow',
+        comment: 'Honestly, it is so much more than just a pillow! It comes with an adjustable eye mask, head support, an arm wrap, and a neat travel pouch. Getting the entire set at over half off the regular price is such a steal.',
+        verifiedPurchase: true,
+        colorPurchased: 'Pink',
+      },
+      {
+        id: 'rev-cw4',
+        author: 'Linda R.',
+        location: 'Bristol, England',
+        rating: 5,
+        date: '05 November 2026',
+        title: 'No more stiff neck on overnight flights',
+        comment: 'I used to get off every flight with a stiff neck, especially on overnight flights. This has honestly made such a difference! It only takes four simple steps to set up, and everything fits right back into the little travel pouch.',
+        verifiedPurchase: true,
+        colorPurchased: 'Black',
+      }
+    ],
+  },
+  {
+    id: 'prod-cozy-co-cozy-chair',
+    slug: 'cozy-co-cozy-chair',
+    name: 'Cozy Co. Cozy Chair',
+    subtitle: 'Heart-Backed Bouclé Desk Chair with Wide Seat & Rolling Leg Platform',
+    tagline: 'Sit the way you actually sit — a heart-shaped bouclé backrest, extra-wide seat, and rolling leg platform for criss-cross, knees-up, and curled-up comfort.',
+    price: 91.58,
+    compareAtPrice: 305.27,
+    rating: 4.9,
+    reviewCount: 412,
+    category: 'cozy-accessories',
+    featured: true,
+    isNewArrival: true,
+    isBestSeller: true,
+    images: [
+      '/images/products/cozy-co-cozy-chair/img_1.png',
+      '/images/products/cozy-co-cozy-chair/img_2.png',
+      '/images/products/cozy-co-cozy-chair/img_3.png',
+      '/images/products/cozy-co-cozy-chair/img_4.png',
+      '/images/products/cozy-co-cozy-chair/img_5.png',
+      '/images/products/cozy-co-cozy-chair/img_6.png',
+      '/images/products/cozy-co-cozy-chair/img_7.png',
+      '/images/products/cozy-co-cozy-chair/img_8.png',
+    ],
+    description: 'Most desk chairs force you to sit stiffly upright with your feet flat on the floor. The Cozy Co. Cozy Chair lets you sit the way you actually want to sit—with a softly curved heart-shaped bouclé backrest, an extra-wide bean-shaped seat made for folding your legs criss-cross, and a dedicated cushioned leg platform on 360° smooth-rolling casters so your shins and feet always have a cozy place to rest.',
+    features: [
+      '🤍 Heart-Shaped Bouclé Backrest: Softly curved cloud-textured bouclé backrest that cradles your posture',
+      '🪑 Extra-Wide Bean-Shaped Seat: Generous seat width designed for sitting criss-cross, knees-up, or curled up comfortably',
+      '🦶 Dedicated Rolling Leg Platform: Cushioned platform on independent casters supports shins and feet—or swings aside like a classic desk chair',
+      '🛞 360° Smooth-Rolling Casters: Effortlessly glides from your desk to dressing table across carpet or hard floors',
+      '🛋️ 6 Ways to Sit: Criss-cross, kneeling, one foot tucked, classic upright, curled up, or sideways lounging'
+    ],
+    specs: [
+      { label: 'Upholstery', value: 'Cloud-Soft Textured Bouclé Fabric' },
+      { label: 'Seat Design', value: 'Extra-Wide Bean-Shaped Cross-Legged Seat' },
+      { label: 'Backrest', value: 'Ergonomic Curved Heart-Shaped Support' },
+      { label: 'Leg Platform', value: 'Dedicated Cushioned Platform on Independent 360° Casters' },
+      { label: 'Base Mobility', value: 'Smooth-Rolling 360° Swivel Casters' },
+    ],
+    howItWorks: [
+      'Set your chair at your desk, vanity, or reading nook and choose your preferred seat height.',
+      'Roll the dedicated leg platform into position for criss-cross, kneeling, or legs-up lounging—or swing it aside to use as a classic desk chair.',
+      'Lean back into the plush heart-shaped bouclé backrest and work, read, or relax in total comfort.'
+    ],
+    careInstructions: [
+      'Vacuum bouclé upholstery gently with a soft brush attachment to keep texture fresh.',
+      'Spot clean spills immediately using a damp cloth and mild fabric soap; blot dry.',
+      'Wipe casters periodically to ensure smooth rolling.'
+    ],
+    colors: [
+      { name: 'White', hex: '#FAF9F6', inStock: true },
+      { name: 'Blush Pink', hex: '#F4C2C2', inStock: true }
+    ],
+    sizes: ['Standard (With Leg Platform)'],
+    variants: [
+      { id: 'ccch-white-std', name: 'White / Standard (With Leg Platform)', colorName: 'White', colorHex: '#FAF9F6', size: 'Standard (With Leg Platform)', inStock: true, sku: 'CCCH-WHT-STD' },
+      { id: 'ccch-pink-std', name: 'Blush Pink / Standard (With Leg Platform)', colorName: 'Blush Pink', colorHex: '#F4C2C2', size: 'Standard (With Leg Platform)', inStock: true, sku: 'CCCH-PNK-STD' }
+    ],
+    inStock: true,
+    shippingNote: 'In stock in our UK warehouse. Dispatches via tracked courier within 24 hours.',
+    reviews: [
+      {
+        id: 'rev-ch1',
+        author: 'Amelia T.',
+        location: 'London, England',
+        rating: 5,
+        date: '20 November 2026',
+        title: 'Finally a desk chair made for sitting criss-cross',
+        comment: 'I have spent years tucking my feet under me on narrow office chairs. The wide bouclé seat and rolling leg platform on this chair are a total dream—and the heart backrest looks gorgeous in my study.',
+        verifiedPurchase: true,
+        colorPurchased: 'White',
+      },
+      {
+        id: 'rev-ch2',
+        author: 'Chloe B.',
+        location: 'Manchester, England',
+        rating: 5,
+        date: '16 November 2026',
+        title: 'So plush and surprisingly versatile',
+        comment: 'The Blush Pink bouclé looks adorable at my vanity and desk. Being able to swing the leg platform out of the way when I want to sit normally is super clever.',
+        verifiedPurchase: true,
+        colorPurchased: 'Blush Pink',
+      }
+    ],
+  },
+  {
+    id: 'prod-cozyco-cloudrest',
+    slug: 'cozyco-cloudrest',
+    name: 'CozyCo CloudRest™',
+    subtitle: 'Ergonomic Nursing & Lounging Support Pillow with Arm Rest & Storage Pockets',
+    tagline: 'Comfy feeds day or night — rest your arms, ditch the unstable pillow tower, and keep essentials right within reach.',
+    price: 61.05,
+    compareAtPrice: 137.38,
+    rating: 4.8,
+    reviewCount: 1073,
+    category: 'cozy-accessories',
+    featured: true,
+    isNewArrival: true,
+    isBestSeller: true,
+    images: [
+      '/images/products/cozyco-cloudrest/img_1.png',
+      '/images/products/cozyco-cloudrest/img_2.png',
+      '/images/products/cozyco-cloudrest/img_3.png',
+      '/images/products/cozyco-cloudrest/img_4.png',
+      '/images/products/cozyco-cloudrest/img_5.png',
+      '/images/products/cozyco-cloudrest/img_6.png',
+      '/images/products/cozyco-cloudrest/img_7.png',
+      '/images/products/cozyco-cloudrest/img_8.png',
+    ],
+    description: 'The CozyCo CloudRest™ replaces shaky stacks of sofa cushions with one sculpted, supportive wrap-around cushion engineered for effortless feeding, reading, and everyday lounging. Designed to take strain off your shoulders, wrists, and lower back while keeping bottles, burp cloths, remotes, or phones tucked safely in integrated side pockets.',
+    features: [
+      '🤱 Comfy Feeds, Day or Night: Ergonomic wrap-around elevation keeps posture comfortable during long sessions',
+      '💪 Rest Your Arms: Contoured supportive armrests relieve shoulder, neck, and wrist tension',
+      '🛏️ No More Pillow Tower: Single structured high-resilience core stays firm and stable without shifting',
+      '🍼 Essentials Within Reach: Built-in side pockets hold bottles, muslins, phones, or reading glasses right beside you',
+      '☁️ Soft Removable Cover: Breathable cloud-soft outer fabric zips off cleanly for easy machine washing'
+    ],
+    specs: [
+      { label: 'Core Material', value: 'High-Resilience Ergonomic Support Foam' },
+      { label: 'Outer Cover', value: 'Ultra-Soft Breathable Plush Cover (Zip-Off Washable)' },
+      { label: 'Storage', value: 'Integrated Side Organizer Pockets' },
+      { label: 'Fit', value: 'Wrap-Around Contoured Fit for Bed, Sofa & Nursery Chair' },
+      { label: 'Color Options', value: 'Charcoal, Cloud Gray, Blush Pink' },
+    ],
+    howItWorks: [
+      'Place the CozyCo CloudRest™ around your waist on your bed, sofa, or nursing armchair.',
+      'Rest your elbows and forearms comfortably on the sculpted side bolsters.',
+      'Store your water bottle, muslin cloth, or phone in the handy built-in side pockets so everything stays within arm’s reach.'
+    ],
+    careInstructions: [
+      'Unzip the removable plush outer cover and machine wash on a gentle cold cycle (30°C).',
+      'Tumble dry cover on low or air dry flat.',
+      'Spot clean the inner support core with a damp cloth only.'
+    ],
+    colors: [
+      { name: 'Charcoal', hex: '#3E424B', inStock: true },
+      { name: 'Cloud Gray', hex: '#C7C9CC', inStock: true },
+      { name: 'Blush Pink', hex: '#F4C2C2', inStock: true }
+    ],
+    sizes: ['One Size Fits All'],
+    variants: [
+      { id: 'ccr-charcoal-os', name: 'Charcoal / One Size Fits All', colorName: 'Charcoal', colorHex: '#3E424B', size: 'One Size Fits All', inStock: true, sku: 'CCR-CHR-OS' },
+      { id: 'ccr-gray-os', name: 'Cloud Gray / One Size Fits All', colorName: 'Cloud Gray', colorHex: '#C7C9CC', size: 'One Size Fits All', inStock: true, sku: 'CCR-GRY-OS' },
+      { id: 'ccr-pink-os', name: 'Blush Pink / One Size Fits All', colorName: 'Blush Pink', colorHex: '#F4C2C2', size: 'One Size Fits All', inStock: true, sku: 'CCR-PNK-OS' }
+    ],
+    inStock: true,
+    shippingNote: 'In stock. Dispatches via Royal Mail Tracked within 24 hours.',
+    reviews: [
+      {
+        id: 'rev-cr1',
+        author: 'Rachel W.',
+        location: 'Leeds, England',
+        rating: 5,
+        date: '21 November 2026',
+        title: 'Saved my back and shoulders during night feeds',
+        comment: 'Before getting the CloudRest I was propping up four regular pillows every night and they always slipped apart. This stays put, supports my arms completely, and the pocket for my phone and muslin is genius.',
+        verifiedPurchase: true,
+        colorPurchased: 'Cloud Gray',
+      },
+      {
+        id: 'rev-cr2',
+        author: 'Olivia H.',
+        location: 'Oxford, England',
+        rating: 5,
+        date: '15 November 2026',
+        title: 'Best baby shower gift we bought',
+        comment: 'Super soft fabric and very supportive without feeling stiff. Works brilliantly on both our bedroom glider and the sofa.',
+        verifiedPurchase: true,
+        colorPurchased: 'Blush Pink',
+      }
+    ],
+  },
+  {
+    id: 'prod-cozyco-bedside-pet-bed',
+    slug: 'cozyco-bedside-pet-bed',
+    name: 'CozyCo Bedside Pet Bed',
+    subtitle: 'Clamp-On Mattress-Level Bedside Sleeper for Cats & Small Dogs',
+    tagline: 'Keep your pet sleeping right beside you at mattress level—clamps onto your bed frame in 2 minutes with zero tools and a machine-washable cover.',
+    price: 38.16,
+    compareAtPrice: 91.58,
+    rating: 4.8,
+    reviewCount: 326,
+    category: 'cozy-accessories',
+    featured: true,
+    isNewArrival: true,
+    isBestSeller: false,
+    images: [
+      '/images/products/cozyco-bedside-pet-bed/img_1.png',
+      '/images/products/cozyco-bedside-pet-bed/img_2.png',
+      '/images/products/cozyco-bedside-pet-bed/img_3.png',
+      '/images/products/cozyco-bedside-pet-bed/img_4.png',
+      '/images/products/cozyco-bedside-pet-bed/img_5.png',
+      '/images/products/cozyco-bedside-pet-bed/img_6.png',
+    ],
+    description: 'The CozyCo Bedside Pet Bed gives your cat or small dog their own cozy sanctuary right beside your pillow without crowding your mattress. Designed to sit flush and level with your bed, it clamps securely onto standard bed frames in under 2 minutes with no tools required, and features a soft bolstered cushion with a zip-off, machine-washable cover.',
+    features: [
+      '🌙 Sleeps Right Beside You: Keeps your pet close and comforted through the night while freeing up your mattress space',
+      '🔧 Clamps On in 2 Minutes, No Tools: Heavy-duty adjustable clamp mounts securely to bed frames without drilling or damage',
+      '🛏️ Level With Your Mattress: Sits flush beside your bed so pets can step comfortably between the bed and their cozy perch',
+      '🧺 Zip-Off Cover, Machine Washable: Removable plush fleece sleeper pad zips off effortlessly for quick laundry days',
+      '🐾 Raised Cozy Bolsters: Cushioned perimeter supports your pet’s head and neck for deeper sleep'
+    ],
+    specs: [
+      { label: 'Installation', value: 'Tool-Free Adjustable Bed Frame Clamp (2-Minute Setup)' },
+      { label: 'Height Alignment', value: 'Sits Flush & Level With Standard Mattresses' },
+      { label: 'Cover Fabric', value: 'Plush Pet-Safe Fleece (Zip-Off & Machine Washable)' },
+      { label: 'Suitable For', value: 'Cats, Kittens & Small Dogs' },
+      { label: 'Frame Support', value: 'Sturdy Reinforced Steel Support Brackets' },
+    ],
+    howItWorks: [
+      'Slide the adjustable support brackets onto the side rail of your bed frame.',
+      'Tighten the hand-turn clamps until snug and level with your mattress—no tools needed.',
+      'Drop in the bolstered cushion and let your cat or small dog curl up right next to you.'
+    ],
+    careInstructions: [
+      'Unzip the plush outer cover from the bolster cushion.',
+      'Machine wash cover cold on a gentle pet-friendly cycle and air dry.',
+      'Wipe the metal clamp brackets with a dry or slightly damp cloth.'
+    ],
+    colors: [
+      { name: 'Warm Oat Cream', hex: '#EBE4D8', inStock: true }
+    ],
+    sizes: ['Standard (Clamps to Bed Frame)'],
+    variants: [
+      { id: 'cbpb-oat-std', name: 'Warm Oat Cream / Standard (Clamps to Bed Frame)', colorName: 'Warm Oat Cream', colorHex: '#EBE4D8', size: 'Standard (Clamps to Bed Frame)', inStock: true, sku: 'CBPB-OAT-STD' }
+    ],
+    inStock: true,
+    shippingNote: 'In stock. Dispatches via Royal Mail Tracked within 24 hours.',
+    reviews: [
+      {
+        id: 'rev-pb1',
+        author: 'Laura K.',
+        location: 'Brighton, England',
+        rating: 5,
+        date: '23 November 2026',
+        title: 'Got my side of the bed back and my cat loves it!',
+        comment: 'Took literally two minutes to clamp onto our bed frame. My cat immediately curled up in it right next to my pillow instead of sleeping on my chest all night. Sturdy and washes brilliantly.',
+        verifiedPurchase: true,
+        colorPurchased: 'Warm Oat Cream',
+      },
+      {
+        id: 'rev-pb2',
+        author: 'Tom G.',
+        location: 'York, England',
+        rating: 5,
+        date: '19 November 2026',
+        title: 'Solid, easy to fit, and super soft',
+        comment: 'Our miniature dachshund uses it every night. Very stable once tightened and sits right level with the top of our mattress.',
+        verifiedPurchase: true,
+        colorPurchased: 'Warm Oat Cream',
+      }
+    ],
   }
 ];
 
