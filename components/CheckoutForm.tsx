@@ -44,13 +44,13 @@ function CheckoutContent() {
   const [promoSuccess, setPromoSuccess] = useState('');
 
   const isChristmasEligible = cartSubtotal >= 200;
-  const discountAmount = appliedPromo === 'COZY-CHRISTMAS' && isChristmasEligible ? cartSubtotal * 0.30 : 0;
+  const discountAmount = appliedPromo === 'COZY-CHRISTMAS' && isChristmasEligible ? cartSubtotal * 0.10 : 0;
   
   const isFreeAll = cartSubtotal >= 130;
 
-  const standardRate = isFreeAll ? 0 : 6.99;
+  const standardRate = isFreeAll ? 0 : 9.99;
   const expressRate = isFreeAll ? 0 : 14.99;
-  const ultraFastRate = isFreeAll ? 0 : 59.99;
+  const ultraFastRate = 59.99;
   const internationalRate = isFreeAll ? 0 : 19.99;
 
   const shippingCost = 
@@ -110,11 +110,11 @@ function CheckoutContent() {
       return;
     }
     if (!isChristmasEligible) {
-      setPromoError('Order subtotal must be above £200 to apply COZY-CHRISTMAS (30% OFF).');
+      setPromoError('Order subtotal must be above £200 to apply COZY-CHRISTMAS (10% OFF).');
       return;
     }
     setAppliedPromo('COZY-CHRISTMAS');
-    setPromoSuccess('Christmas discount of 30% applied successfully!');
+    setPromoSuccess('Christmas discount of 10% applied successfully!');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -419,7 +419,7 @@ function CheckoutContent() {
                 </div>
               </div>
               <span className="text-xs font-bold text-[#2B2623]">
-                {ultraFastRate === 0 ? 'FREE' : formatPrice(ultraFastRate)}
+                {formatPrice(ultraFastRate)}
               </span>
             </label>
 
@@ -603,7 +603,7 @@ function CheckoutContent() {
             {promoSuccess && <p className="text-[11px] text-emerald-600 font-medium">{promoSuccess}</p>}
             {!appliedPromo && (
               <p className="text-[10px] text-[#736B63] leading-relaxed">
-                🎄 <strong>30% OFF</strong> on orders over £200 with code <code className="bg-[#F0EBE1] px-1 py-0.5 rounded text-[#2B2623] font-bold">COZY-CHRISTMAS</code>.
+                🎄 <strong>10% OFF</strong> on orders over £200 with code <code className="bg-[#F0EBE1] px-1 py-0.5 rounded text-[#2B2623] font-bold">COZY-CHRISTMAS</code>.
               </p>
             )}
           </div>
@@ -615,7 +615,7 @@ function CheckoutContent() {
             </div>
             {discountAmount > 0 && (
               <div className="flex justify-between text-xs text-[#B86246] font-semibold">
-                <span>Christmas Discount (30%)</span>
+                <span>Christmas Discount (10%)</span>
                 <span>-{formatPrice(discountAmount)}</span>
               </div>
             )}

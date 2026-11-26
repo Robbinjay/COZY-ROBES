@@ -20,7 +20,7 @@ export const DEFAULT_STORE_CONFIG: StoreConfig = {
   },
   shipping: {
     freeShippingThreshold: 130,
-    standardShippingRate: 6.99,
+    standardShippingRate: 9.99,
     expressShippingRate: 14.99,
     ultraFastRate: 59.99,
     internationalRate: 19.99,

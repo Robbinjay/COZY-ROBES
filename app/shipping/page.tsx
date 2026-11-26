@@ -52,32 +52,52 @@ export default function ShippingPage() {
               <tbody className="divide-y divide-[#EAE3D9] text-[#5C554F]">
                 <tr>
                   <td className="py-4 px-6 font-medium text-[#2B2623]">
-                    Royal Mail Tracked 48
+                    Standard Shipping (Royal Mail)
                   </td>
-                  <td className="py-4 px-6">2–3 Working Days</td>
-                  <td className="py-4 px-6">Orders £100.00 and above</td>
+                  <td className="py-4 px-6">3–5 Business Days</td>
+                  <td className="py-4 px-6">Orders £130.00 and above</td>
                   <td className="py-4 px-6 text-right font-bold text-[#3C6E47]">
                     FREE
                   </td>
                 </tr>
                 <tr>
                   <td className="py-4 px-6 font-medium text-[#2B2623]">
-                    Royal Mail Tracked 48
+                    Standard Shipping (Royal Mail)
                   </td>
-                  <td className="py-4 px-6">2–3 Working Days</td>
-                  <td className="py-4 px-6">Orders under £100.00</td>
+                  <td className="py-4 px-6">3–5 Business Days</td>
+                  <td className="py-4 px-6">Orders under £130.00</td>
                   <td className="py-4 px-6 text-right font-semibold text-[#2B2623]">
-                    £3.99
+                    £9.99
                   </td>
                 </tr>
                 <tr>
                   <td className="py-4 px-6 font-medium text-[#2B2623]">
-                    Royal Mail Tracked 24 (Next Working Day)
+                    Express Shipping
                   </td>
-                  <td className="py-4 px-6">1–2 Working Days</td>
+                  <td className="py-4 px-6">1–2 Business Days</td>
+                  <td className="py-4 px-6">Orders under £130.00 (Free £130+)</td>
+                  <td className="py-4 px-6 text-right font-semibold text-[#2B2623]">
+                    £14.99
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium text-[#2B2623]">
+                    Ultra Fast 1-Day Delivery
+                  </td>
+                  <td className="py-4 px-6">Next Business Day</td>
                   <td className="py-4 px-6">All order values</td>
                   <td className="py-4 px-6 text-right font-semibold text-[#2B2623]">
-                    £6.99
+                    £59.99
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium text-[#2B2623]">
+                    International Shipping
+                  </td>
+                  <td className="py-4 px-6">5–7 Days Worldwide</td>
+                  <td className="py-4 px-6">Orders under £130.00 (Free £130+)</td>
+                  <td className="py-4 px-6 text-right font-semibold text-[#2B2623]">
+                    £19.99
                   </td>
                 </tr>
               </tbody>

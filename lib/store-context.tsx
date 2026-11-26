@@ -194,6 +194,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           if (parsed?.shipping?.freeShippingThreshold !== 130) {
             parsed.shipping.freeShippingThreshold = 130;
           }
+          if (
+            parsed?.shipping?.standardShippingRate === 3.99 ||
+            parsed?.shipping?.standardShippingRate === 6.99 ||
+            !parsed?.shipping?.standardShippingRate
+          ) {
+            parsed.shipping.standardShippingRate = 9.99;
+          }
           if (parsed?.announcementBar?.text?.includes('150')) {
             parsed.announcementBar.text = DEFAULT_STORE_CONFIG.announcementBar.text;
           }
